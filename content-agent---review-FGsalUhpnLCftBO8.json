@@ -1,0 +1,239 @@
+{
+  "updatedAt": "2025-09-24T10:24:17.000Z",
+  "createdAt": "2025-09-10T10:41:12.230Z",
+  "id": "FGsalUhpnLCftBO8",
+  "name": "Content Agent - Review",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "76e2bdc0-5c4f-4c6d-9a70-22a5e135d684",
+      "name": "When executed by another node",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1824,
+        -256
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "4341231c-9042-4a6d-aec6-ce839f1fd993",
+      "name": "Assemble Review Package",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -1504,
+        -256
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "ba414772-e375-4178-8060-d877ae15f904",
+      "name": "SharePoint — Save legal_package.json",
+      "type": "n8n-nodes-base.microsoftSharepoint",
+      "typeVersion": 1,
+      "position": [
+        -1232,
+        -256
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "374fd5f3-eaea-4408-81ee-7389f5b1db02",
+      "name": "Expose Approve/Reject URLs",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -992,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "options": {}
+      },
+      "id": "fa71c880-2bb6-428e-82fe-0c77c24b9207",
+      "name": "WAIT for approval",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        -784,
+        -320
+      ],
+      "webhookId": "cfb45c65-99f4-4ab5-8948-98247a9fd773"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.query.action}}",
+              "operation": "equal",
+              "value2": "approve"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "291c5c53-36a8-48a3-84c0-7fc17d4b3365",
+      "name": "Approved?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -592,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "3261c9a7-f7f1-4770-8e05-a0b54681f2ae",
+      "name": "Return Approved",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -368,
+        -400
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "e88617c9-2a04-4548-8f30-9c52703778db",
+      "name": "Return Rejected",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -368,
+        -224
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "passThrough",
+        "options": {}
+      },
+      "id": "f233e63a-7c99-49ac-903c-7cba7a8298e6",
+      "name": "Return to parent",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [
+        -144,
+        -304
+      ]
+    }
+  ],
+  "connections": {
+    "When executed by another node": {
+      "main": [
+        [
+          {
+            "node": "Assemble Review Package",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assemble Review Package": {
+      "main": [
+        [
+          {
+            "node": "Expose Approve/Reject URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Expose Approve/Reject URLs": {
+      "main": [
+        [
+          {
+            "node": "WAIT for approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WAIT for approval": {
+      "main": [
+        [
+          {
+            "node": "Approved?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approved?": {
+      "main": [
+        [
+          {
+            "node": "Return Approved",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return Rejected",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Approved": {
+      "main": [
+        [
+          {
+            "node": "Return to parent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Rejected": {
+      "main": [
+        [
+          {
+            "node": "Return to parent",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "65033b55-8844-41dc-9c35-60cee98c2ebf",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-09-10T10:41:12.232Z",
+      "createdAt": "2025-09-10T10:41:12.232Z",
+      "role": "workflow:owner",
+      "workflowId": "FGsalUhpnLCftBO8",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
