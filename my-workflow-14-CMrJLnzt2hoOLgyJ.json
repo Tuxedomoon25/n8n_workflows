@@ -1,0 +1,94 @@
+{
+  "updatedAt": "2025-08-27T12:27:30.049Z",
+  "createdAt": "2025-08-27T12:27:30.049Z",
+  "id": "CMrJLnzt2hoOLgyJ",
+  "name": "My workflow 14",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "36478228-a79c-4603-9faf-7af852b23ba2",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Je bent een assistent die altijd antwoorden geeft met cijfers, nooit letters",
+              "role": "system"
+            },
+            {
+              "content": "1246425"
+            },
+            {
+              "content": "Hallo",
+              "role": "assistant"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        208,
+        0
+      ],
+      "id": "1b0728ca-b86e-4b7d-ac86-5f0c293e0131",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "BXQ4vUjtWypRq3eL",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "af6d114b-d199-407b-881e-c194a7e36148",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-08-27T12:27:30.053Z",
+      "createdAt": "2025-08-27T12:27:30.053Z",
+      "role": "workflow:owner",
+      "workflowId": "CMrJLnzt2hoOLgyJ",
+      "projectId": "sOkLWMWXpC3Wjh6d"
+    }
+  ],
+  "tags": []
+}
