@@ -1,0 +1,91 @@
+{
+  "updatedAt": "2025-08-29T12:43:38.000Z",
+  "createdAt": "2025-08-29T06:49:54.269Z",
+  "id": "JVMMZud1T6MecWQK",
+  "name": "My workflow 15",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d4587f10-9779-4634-8d90-6ef4b1b701c1",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { orders: [\n  { id: 1, total: 10 }, { id: 2, total: 30 }, { id: 3, total: 25 }\n]}}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "5e7079f0-614d-4c9c-9470-1fa9894c2f3d",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ $jmespath($json.orders,'[?total > `20`].id')}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "f5441e10-cc1f-4ff5-a300-cd4cb96d4645",
+      "name": "Edit Fields"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "dfc7e844-15e6-4d53-b482-4d5bd7b9095b",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-08-29T06:49:54.275Z",
+      "createdAt": "2025-08-29T06:49:54.275Z",
+      "role": "workflow:owner",
+      "workflowId": "JVMMZud1T6MecWQK",
+      "projectId": "sOkLWMWXpC3Wjh6d"
+    }
+  ],
+  "tags": []
+}
