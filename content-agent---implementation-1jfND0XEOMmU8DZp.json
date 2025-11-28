@@ -1,0 +1,271 @@
+{
+  "updatedAt": "2025-09-24T10:24:15.000Z",
+  "createdAt": "2025-09-10T10:41:33.601Z",
+  "id": "1jfND0XEOMmU8DZp",
+  "name": "Content Agent - Implementation",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "58092947-c061-492b-9235-b5da9df86de6",
+      "name": "When executed by another node",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2256,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://YOUR-AEM-URL/api/assets/cf",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "id": "b87906c2-4007-48ac-9ed6-9f309b9e5bbb",
+      "name": "AEM — Create/Update CF (placeholder)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        -1920,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "1da3e188-c7af-4945-ad7a-4545072fd64a",
+      "name": "Prepare JSON",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -1648,
+        -112
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "ae954db2-7e47-45da-b319-c17144898be6",
+      "name": "SharePoint — Save aem_response.json",
+      "type": "n8n-nodes-base.microsoftSharepoint",
+      "typeVersion": 1,
+      "position": [
+        -1376,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "cb19b6e1-d4df-49c2-887f-f715208a7ba0",
+      "name": "Expose Approve/Reject URLs",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -1136,
+        -176
+      ]
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "options": {}
+      },
+      "id": "a77acf24-5cd5-441a-b3ef-bb87d4ecc93f",
+      "name": "WAIT for approval",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        -928,
+        -176
+      ],
+      "webhookId": "dacb0119-14ea-46c5-af8b-c90a71a93a08"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.query.action}}",
+              "operation": "equal",
+              "value2": "approve"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6e06ceb6-ed5e-4ff2-ae7a-378ac6af4bed",
+      "name": "Approved?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -704,
+        -176
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "e9263f69-e9c0-4a81-873a-3f18fb841dc7",
+      "name": "Return Approved",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -480,
+        -256
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "47d32704-9d58-4571-9beb-0d4693f1f4eb",
+      "name": "Return Rejected",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -480,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "passThrough",
+        "options": {}
+      },
+      "id": "e12c3e80-e4d8-4d9c-959c-8f9d6dd56c0a",
+      "name": "Return to parent",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [
+        -256,
+        -160
+      ]
+    }
+  ],
+  "connections": {
+    "When executed by another node": {
+      "main": [
+        [
+          {
+            "node": "AEM — Create/Update CF (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AEM — Create/Update CF (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Prepare JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare JSON": {
+      "main": [
+        [
+          {
+            "node": "Expose Approve/Reject URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Expose Approve/Reject URLs": {
+      "main": [
+        [
+          {
+            "node": "WAIT for approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WAIT for approval": {
+      "main": [
+        [
+          {
+            "node": "Approved?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approved?": {
+      "main": [
+        [
+          {
+            "node": "Return Approved",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return Rejected",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Approved": {
+      "main": [
+        [
+          {
+            "node": "Return to parent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Rejected": {
+      "main": [
+        [
+          {
+            "node": "Return to parent",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "19b68dfd-9755-444a-874f-bd76d03619ba",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-09-10T10:41:33.603Z",
+      "createdAt": "2025-09-10T10:41:33.603Z",
+      "role": "workflow:owner",
+      "workflowId": "1jfND0XEOMmU8DZp",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
