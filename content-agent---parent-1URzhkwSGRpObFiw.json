@@ -1,0 +1,502 @@
+{
+  "updatedAt": "2025-09-24T10:24:23.000Z",
+  "createdAt": "2025-09-10T10:37:06.192Z",
+  "id": "1URzhkwSGRpObFiw",
+  "name": "Content Agent - Parent",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "path": "content-factory/new",
+        "formTitle": "Content Intake",
+        "options": {}
+      },
+      "id": "5d38cb4a-3734-46ea-b068-4ee6cffa4012",
+      "name": "Form Trigger",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 1,
+      "position": [
+        -624,
+        144
+      ],
+      "webhookId": "733b5f81-9ec4-4e8c-866e-a6393c7846e5"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "75045484-9091-47c2-a52c-2825f9318e28",
+      "name": "Init Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -288,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "94bc9012-1aa5-4180-80d0-b9a6778f600a",
+      "name": "STEP 1 — Research",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.status}}",
+              "operation": "equal",
+              "value2": "approved"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b974bd4d-9f45-4927-9c11-074699b2784d",
+      "name": "Approved Research?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "ab7b5146-cdaf-4321-8cbc-127f310e1d5a",
+      "name": "STEP 2 — Briefing",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        464,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.status}}",
+              "operation": "equal",
+              "value2": "approved"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "69bc28fb-c5a3-454a-a5c1-23825e998e44",
+      "name": "Approved Briefing?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        688,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "e6582f73-fb38-4735-a460-e3e5788ae4a7",
+      "name": "STEP 3 — Text Generation",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        928,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.status}}",
+              "operation": "equal",
+              "value2": "approved"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4c68ad31-5a61-40cf-8ca4-c0657fb3df64",
+      "name": "Approved Text?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1152,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "1c765d83-dfa4-466a-81d1-40b70dd41fb6",
+      "name": "STEP 4 — Image Generation",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1392,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.status}}",
+              "operation": "equal",
+              "value2": "approved"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6befce92-3403-43a4-8df8-8a3470d5733e",
+      "name": "Approved Images?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "2559aae1-a022-4183-aaab-a784c1b4db81",
+      "name": "STEP 5 — Legal & Compliance Review",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.status}}",
+              "operation": "equal",
+              "value2": "approved"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9fc099ed-a82e-4118-a225-9e4c64530c80",
+      "name": "Approved Legal?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2064,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "2598f9fa-98bd-4cea-95ba-5ef530d04c3d",
+      "name": "STEP 6 — AEM Implementation",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        2304,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.status}}",
+              "operation": "equal",
+              "value2": "approved"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ff149af2-d11e-4bc7-a435-6d4b4d3e60a0",
+      "name": "Approved AEM?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2528,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "e7b95d15-de56-4b80-8737-f8f3c626396a",
+      "name": "STEP 7 — Performance Monitoring",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        2768,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "9f941911-176d-4daa-9a71-e58aa3d42844",
+      "name": "Done / Halted",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        3008,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Form Trigger": {
+      "main": [
+        [
+          {
+            "node": "Init Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Init Context": {
+      "main": [
+        [
+          {
+            "node": "STEP 1 — Research",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "STEP 1 — Research": {
+      "main": [
+        [
+          {
+            "node": "Approved Research?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approved Research?": {
+      "main": [
+        [
+          {
+            "node": "STEP 2 — Briefing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Done / Halted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "STEP 2 — Briefing": {
+      "main": [
+        [
+          {
+            "node": "Approved Briefing?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approved Briefing?": {
+      "main": [
+        [
+          {
+            "node": "STEP 3 — Text Generation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Done / Halted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "STEP 3 — Text Generation": {
+      "main": [
+        [
+          {
+            "node": "Approved Text?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approved Text?": {
+      "main": [
+        [
+          {
+            "node": "STEP 4 — Image Generation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Done / Halted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "STEP 4 — Image Generation": {
+      "main": [
+        [
+          {
+            "node": "Approved Images?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approved Images?": {
+      "main": [
+        [
+          {
+            "node": "STEP 5 — Legal & Compliance Review",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Done / Halted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "STEP 5 — Legal & Compliance Review": {
+      "main": [
+        [
+          {
+            "node": "Approved Legal?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approved Legal?": {
+      "main": [
+        [
+          {
+            "node": "STEP 6 — AEM Implementation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Done / Halted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "STEP 6 — AEM Implementation": {
+      "main": [
+        [
+          {
+            "node": "Approved AEM?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approved AEM?": {
+      "main": [
+        [
+          {
+            "node": "STEP 7 — Performance Monitoring",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Done / Halted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "STEP 7 — Performance Monitoring": {
+      "main": [
+        [
+          {
+            "node": "Done / Halted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "ff467eeb-dc89-46f0-a825-0fd936bc070e",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-09-10T10:37:06.210Z",
+      "createdAt": "2025-09-10T10:37:06.210Z",
+      "role": "workflow:owner",
+      "workflowId": "1URzhkwSGRpObFiw",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
