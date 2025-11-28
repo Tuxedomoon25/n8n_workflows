@@ -1,0 +1,1418 @@
+{
+  "updatedAt": "2025-11-15T15:19:51.000Z",
+  "createdAt": "2025-11-13T09:27:04.445Z",
+  "id": "HFahzXbfSZIfjSQW",
+  "name": "Getting Fathom Summary Starter Template - Timo de Groot Draft",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Generate Proposal",
+        "formDescription": "Click the button to start, it will fetch the last recording and generate a proposal based on that",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "notes",
+              "placeholder": "=any instructions for the ai that should be taken into consideration, for example to focus the proposal only on one aspect of the conversation"
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Start the workflow",
+          "path": "proposal_generation",
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "Your AI Agent Is Drafting The Proposal As We Speak 🤖"
+            }
+          },
+          "ignoreBots": true,
+          "customCss": ":root {\n  /* Typography */\n  --font-family: 'Open Sans', sans-serif;\n  --font-weight-normal: 400;\n  --font-weight-bold: 600;\n\n  --font-size-body: 14px;\n  --font-size-label: 16px;\n  --font-size-input: 16px;\n  --font-size-header: 24px;\n  --font-size-paragraph: 16px;\n  --font-size-subheader: 18px;\n  --font-size-test-notice: 14px;\n\n  /* HTML Headings */\n  --font-size-html-h1: 32px;\n  --font-size-html-h2: 28px;\n  --font-size-html-h3: 22px;\n  --font-size-html-h4: 18px;\n  --font-size-html-h5: 16px;\n  --font-size-html-h6: 14px;\n\n  /* Brand Colors */\n  --color-primary: #1F1672;       /* Extracted from logo */\n  --color-secondary: #342b93;     /* Slightly lighter version for highlights if needed */\n\n  --color-background: #ffffff;\n  --color-page-bg: #f5f6fa;\n\n  --color-card-bg: #ffffff;\n  --color-card-border: #e0e2e7;\n  --color-card-shadow: rgba(31, 22, 114, 0.06);\n\n  --color-link: var(--color-primary);\n  --color-header: var(--color-primary);\n  --color-label: #5a5d6a;\n\n  --color-input-border: #d0d4e0;\n  --color-input-text: #333;\n  --color-focus-border: var(--color-primary);\n\n  --color-submit-btn-bg: var(--color-primary);\n  --color-submit-btn-text: #ffffff;\n\n  --color-error: #ea1f30;\n  --color-required: var(--color-primary);\n  --color-clear-button-bg: #999ca8;\n\n  --color-test-notice-text: var(--color-primary);\n  --color-test-notice-bg: #f3f2fa;  /* Very light purple background */\n  --color-test-notice-border: #d6d3f0;\n\n  --color-html-text: #333333;\n  --color-html-link: var(--color-primary);\n  --color-header-subtext: #888fa4;\n\n  /* Border Radii */\n  --border-radius-card: 8px;\n  --border-radius-input: 6px;\n  --border-radius-clear-btn: 50%;\n\n  /* Spacing */\n  --padding-container-top: 32px;\n  --padding-card: 32px;\n  --padding-test-notice-vertical: 14px;\n  --padding-test-notice-horizontal: 28px;\n  --margin-bottom-card: 20px;\n  --padding-form-input: 14px;\n\n  /* Dimensions */\n  --container-width: 480px;\n  --submit-btn-height: 52px;\n  --checkbox-size: 20px;\n\n  /* Shadows */\n  --box-shadow-card: 0 4px 16px 0 var(--color-card-shadow);\n  --opacity-placeholder: 0.5;\n}\n"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -4752,
+        1776
+      ],
+      "id": "6b652ab4-7dd7-4493-9b09-1297e215d713",
+      "name": "On form submission",
+      "webhookId": "aaa1df17-46ae-4ff6-8029-76517d9718d6"
+    },
+    {
+      "parameters": {
+        "url": "https://api.fathom.ai/external/v1/meetings",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -4432,
+        1776
+      ],
+      "id": "a6025807-7bcf-460b-929c-ee720bbad89e",
+      "name": "Get All Recordings ",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "7av6FBtZg8ji6YjR",
+          "name": "Fathom Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.fathom.ai/external/v1/recordings/{{ $('Get All Recordings ').item.json.items[0].recording_id }}/transcript",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -3840,
+        1776
+      ],
+      "id": "05058b41-6e4f-4d4f-bc9c-ca2532eb800e",
+      "name": "Get the transcript of the first recording",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "7av6FBtZg8ji6YjR",
+          "name": "Fathom Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1zKU8Rbv5GVP7ImfCwlRvxNAGfar1j_3vD3TkcC2uT-g"
+        },
+        "name": "=Proposal: {{ $('Get the name & email of the guest').item.json.Guest }} {{ $now.format(\"dd.LL.yyyy\") }}",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1II265jNapzAV0eXb0Hh4YDPyg1GDBg1v",
+          "mode": "list",
+          "cachedResultName": "Proposals For Review",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1II265jNapzAV0eXb0Hh4YDPyg1GDBg1v"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1440,
+        1648
+      ],
+      "id": "fdbbcc89-bcde-480a-8fee-b6ec1a9fa9fe",
+      "name": "Copy Proposal Template",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "OOgkw5hSy8ONsrbB",
+          "name": "Google Drive account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "simple": false,
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "replaceAll",
+              "text": "[project_title]",
+              "replaceText": "=your company Proposal for {{ $('Get the name & email of the guest').item.json.Guest }} ",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "[project_objective]",
+              "replaceText": "={{ $('AI Generated Project Details').item.json.project_objective }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "[date]",
+              "replaceText": "= {{ $now.format('yyyy-MM-dd') }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "[project_scope]",
+              "replaceText": "={{ $('AI Generated Project Details').item.json.scope_of_work }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "[client_name]",
+              "replaceText": "={{ $('Get the name & email of the guest').item.json.Guest }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "[project_price]",
+              "replaceText": "={{ $('AI Generated Project Details').item.json.price_estimate }}",
+              "matchCase": true
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        2096,
+        1648
+      ],
+      "id": "27a86e1a-0e47-4384-9d75-5b53c3ff3cd6",
+      "name": "Replace Placeholders With AI Content",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "DMF0US2wzutvmZiH",
+          "name": "Google Docs account 2"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Call Transcript: \"\"\"\" {{ $json.concatenated_text }} \"\"\""
+            },
+            {
+              "content": "=#Role\n\nYou are a senior AI automation consultant and proposal writer. Your job is to convert sales discovery transcripts into a professional Project Objective section for an AI automation proposal.\n\n#Tone & Style\n\n1. Professional and concise\n2. Strategic and value-driven\n3. Uses business language, not sales hype\n4. No assumptions beyond transcript\n5. No references to notes, prompt, or transcripts\n\n#Output Format\nReturn only this format:\n{\nproject_objective: text/markdown; {Detailed summary of the client's goals & AI automation opportunity}\n}\n1. Focus on Key Challenges identified\n2. Current clients'pain associated with the challenge\n3. Processed automation solution\n4. Expected business impact\n\n**Important**: Apply extra markdown tags in bold, such as highlighting important words in bold or creating bullet lists for content that can be in a list for extra scannability.\n\nIf information is missing, state:\n\"Additional discovery is required to conform scope details.\"\n\nDo not include pricing, timeline, or next stage.\n\nSave its output as project_objective.\nStart by directly mentioning the project objective\n\nUse these notes to focus on specific part of the transcript:\n{{ $('On form submission').item.json.notes }}\n\n#Note\nThe output will be directly injected in a section called Project Objective",
+              "role": "system"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -880,
+        1648
+      ],
+      "id": "cc038e43-d530-4887-acdc-f1490c2b6bbf",
+      "name": "Create a Project Objective",
+      "credentials": {
+        "openAiApi": {
+          "id": "2SEnYMIY90aMM4SC",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "1EicKLwpyUH8EkfmeGtrYDeTC6M7iZEZuv7WkcY1ac9k"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        1984
+      ],
+      "id": "15bc73e9-9477-4f41-83b4-bf2e6954b1b5",
+      "name": "Get a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "DMF0US2wzutvmZiH",
+          "name": "Google Docs account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Call Transcript: \"\"\"{{ $json.concatenated_text }} \"\"\"\""
+            },
+            {
+              "content": "=# Role\nYou are a senior AI automation consultant and proposal writer. Your job is to convert sales discovery transcripts into a professional scope of work section for an AI automation proposal.\n\n# Task\n\nProduce a consulting-grade, detailed, realistic scope of Work including specific tasks, activitities and deliverables. You can directly write the scope without explanation of who is the client or the project objective. The scope of work need to have also a time estimate in days/weeks with each section.\n\n# Scope logic\nFrom the transcript, you must:\n\nIdentify what the client wants (examples: chatbot, automation build, AI agent, audit, workshop, CRM workflow, process automation, dashboard, RAG system, custom AI tool, etc.)\nConvert chat into a detailed, tailored scope.\nIf unclear - make reasonable, explicit assumptions.\nAlso add the requirements that the client needs to provide or prepare to make sure the project is completed successfully. \n\n# Output format\n\nReturn only the following structure:\n(scope_of_work: st-)\nYou can use the best practice cases to software development and AI automation as guideline\n\n**Important**: Apply extra markdown tags in bold, such as highlighting important words in bold or creating bullet lists for content that can be in a list for extra scannability.\n\nUse these notes to focus on specific part of the transcript:\n{{ $('On form submission').item.json.notes }}\n\n# Note\n\n- The output of this will be directly injected in a section called Scope of Work. Don't add the workd Scope of work, directly state what it is and the different phases.\n- Format the points inside the phases as numbers so that the formatting looks good in Google Docs.",
+              "role": "system"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -880,
+        1904
+      ],
+      "id": "2914ddb7-e7f8-4cf5-bdb2-40abbf3c2111",
+      "name": "Create a scope of work",
+      "credentials": {
+        "openAiApi": {
+          "id": "2SEnYMIY90aMM4SC",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Scope of work: \"\"\"\"{{ $('Create a scope of work').item.json.message.content.scope_of_work }}\"\"\""
+            },
+            {
+              "content": "=# Role\nYou are a senior AI automation consultant and proposal writer. Your job is to convert sales discovery transcripts into a professional scope of work section for an AI automation proposal.\n\n# Task\n\nWrite an estimate for the investment that the company need to pay us to get the deliverable. You can use the previous projects we sold as guideline. If a project was not sold before, use the figures as guide and not divert too much from these figures.\n\n# Previous projects examples:\n\n{{ $json.content }}\n\n\n# Output\n\nReturn only the following structure:\n(price_estimate: str // include directly the text that should be added directly to the proposal. So write the estimate carefully.)\n\n1. If I offered a service in the past take the exact firgures of the entire service.\n2. If you can't find the service, try to estimate the figure based on the hourly inevestment, paying 100 euros per hour. GIve a range wherever you do so.\n\nThis is the structure of the output:\nThe total investment of the engagement should be around ...\nTo kick of the project a deposit payment of 50% is necessary at the start of the project, the rest should be paid upon project completion.\n\n**Important**: Apply extra markdown tags in bold, such as highlighting important words in bold or creating bullet lists for content that can be in a list for extra scannability.\n\nWhen you are writing the estimate don't justify why, just mention the estimate.\n\nFor project that are >10<, ask for milestone payment. FOr example after feasibility test.\n\nNote: you really need to adhere to the pricing that was given to you, even if the project was not done before try to find similar projects that were done and estimate based on that. If you do this wrong you will cause a lot of extra work for the evaluator.\n\nAlso check the transcript for price in case something was discussed in the call:\n{{ $('No Operation, do nothing').item.json.concatenated_text }}",
+              "role": "system"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -176,
+        2000
+      ],
+      "id": "56abc3a2-4dfd-4f94-a91e-1e45335e0da5",
+      "name": "Create price estimate",
+      "credentials": {
+        "openAiApi": {
+          "id": "2SEnYMIY90aMM4SC",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "source": "googleSheets",
+        "documentId": {
+          "__rl": true,
+          "value": "1FYzUeS5VIHTb9DEF55uay7mOIXGt53nkxeQzkVZIGEE",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FYzUeS5VIHTb9DEF55uay7mOIXGt53nkxeQzkVZIGEE/edit#gid=0"
+        },
+        "limitRows": true,
+        "maxRows": 5
+      },
+      "type": "n8n-nodes-base.evaluationTrigger",
+      "typeVersion": 4.7,
+      "position": [
+        -2944,
+        2400
+      ],
+      "id": "774039dc-dcdb-4400-b58c-fa855c41bf16",
+      "name": "When fetching a dataset row",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "nxUtUSoHkodZnHLw",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "checkIfEvaluating"
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.8,
+      "position": [
+        768,
+        1712
+      ],
+      "id": "5fd6133f-25ed-4b76-acf6-a11512e20c8f",
+      "name": "Evaluation1"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        320,
+        1728
+      ],
+      "id": "03594739-1436-4ad2-b2d4-9b604d790461",
+      "name": "Merge"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -1360,
+        1872
+      ],
+      "id": "6b31371c-6f9d-4ee3-bea8-73a413b18d1c",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "content": "# Get the transcript data from Fathom",
+        "height": 576,
+        "width": 1856,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4544,
+        1504
+      ],
+      "id": "c73cf431-457b-40b4-86b6-8ca155412e31",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d43dbedd-0a34-4c7f-8cce-2597e86d837c",
+              "name": "Guest",
+              "value": "={{ $json.items[0].calendar_invitees.map(item => item.name).filter(item => item != \"Serop Baghdadlian\")[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "b1b44feb-9f67-4e8d-b44c-7a2f84a91cb7",
+              "name": "Guest Email",
+              "value": "={{ $json.items[0].calendar_invitees.map(item => item.email).filter(item => item != \"serop@neuronnix.com\")[0] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -4128,
+        1776
+      ],
+      "id": "b89ad2fe-1317-4ff2-b21d-0ea25ac7990f",
+      "name": "Get the name & email of the guest"
+    },
+    {
+      "parameters": {
+        "content": "# Extract Project Objective, Calculate Estimate and Project Scope (usually estimated if not discussed in the call), you can change the models ",
+        "height": 832,
+        "width": 1856,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2176,
+        1472
+      ],
+      "id": "cab28df1-19b0-4087-a5aa-90f249250a21",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "# TODO  Get Proposal template and replace with AI generated Content",
+        "height": 560,
+        "width": 784
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        48,
+        1456
+      ],
+      "id": "54d6264d-2271-4eae-88f6-eb309805f13c",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Send For Approval",
+        "height": 560,
+        "width": 256,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        848,
+        1456
+      ],
+      "id": "c92dab55-6510-4b2c-a26a-bd0f2c0878f2",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Convert Docs to PDF and Send to client",
+        "height": 560,
+        "width": 560,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        1456
+      ],
+      "id": "928566ee-f9f7-414f-a884-8b7dca6af608",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## Evaluation Block",
+        "height": 304,
+        "width": 336,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3056,
+        2320
+      ],
+      "id": "39a65e65-83bb-42bc-9bbc-d87414168fe0",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "# Convert the Fathom sentences into one dialogue ",
+        "height": 576,
+        "width": 944,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3632,
+        1504
+      ],
+      "id": "19c4dd30-4e8f-48af-ab20-72b6302c6fe7",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "options": {
+          "formTitle": "Proposal Review",
+          "formDescription": "=Click Here To Review the Proposal: \n\n\nhttps://docs.google.com/document/d/{{ $('Copy Proposal Template').item.json.id }}/edit?tab=t.0\n\n\nOnce reviewed and ready to send.\n\nClick the button below.",
+          "buttonLabel": "Send To Client"
+        }
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 1,
+      "position": [
+        2352,
+        1648
+      ],
+      "id": "3ecd561d-e252-4f88-aa0b-90f9c3c6e3e4",
+      "name": "Wait for Human Approval",
+      "webhookId": "e7a6c733-a4e1-410a-8204-013bdf9a6e1b"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Copy Proposal Template').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "application/pdf"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2672,
+        1648
+      ],
+      "id": "4fe5e1c0-7c31-4489-9365-6e87e8bd194e",
+      "name": "Convert To PDF",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "OOgkw5hSy8ONsrbB",
+          "name": "Google Drive account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "=tdgcontent@gmail.com",
+        "subject": "=[your company]Proposal for {{ $('Get the name & email of the guest').item.json.Guest }}",
+        "emailType": "text",
+        "message": "=",
+        "options": {
+          "appendAttribution": false,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2992,
+        1648
+      ],
+      "id": "21916c34-c404-4963-996f-78b48d9ee357",
+      "name": "Send the Proposal To the Client ",
+      "webhookId": "82126543-7247-4806-9a51-255737e00a25",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8f151a07-03b4-44bf-9e72-1704aa20f1e2",
+              "name": "project_objective",
+              "value": "={{ $('Create a Project Objective').item.json.message.content.project_objective }}",
+              "type": "string"
+            },
+            {
+              "id": "1d7a82c9-ee30-4e2b-a3d2-0516db415fd5",
+              "name": "scope_of_work",
+              "value": "={{ $('Create a scope of work').item.json.message.content.scope_of_work }}",
+              "type": "string"
+            },
+            {
+              "id": "d83267b7-ce5e-491d-baf5-25842e342d11",
+              "name": "price_estimate",
+              "value": "={{ $json.message.content.price_estimate }}",
+              "type": "string"
+            },
+            {
+              "id": "6d6b5573-ec7d-442e-be9c-bce742b2eebc",
+              "name": "date",
+              "value": "= {{ $now.format('yyyy-MM-dd') }}",
+              "type": "string"
+            },
+            {
+              "id": "08ec01ea-bc42-47ff-b5e6-8353a6f19b4f",
+              "name": "project_title",
+              "value": "=AI proposal for {{ $('Get the name & email of the guest').item.json.Guest }}",
+              "type": "string"
+            },
+            {
+              "id": "3ec10083-c6ca-4904-8e27-3776cdd54526",
+              "name": "client_name",
+              "value": "={{ $('Get the name & email of the guest').item.json.Guest }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1216,
+        1648
+      ],
+      "id": "81bd77a6-dbac-4ca2-ba5f-10daae6e886c",
+      "name": "AI Generated Project Details"
+    },
+    {
+      "parameters": {
+        "content": "# TODO: Add the URLS + Auth",
+        "height": 432,
+        "width": 864
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4528,
+        1632
+      ],
+      "id": "b1c18f35-b653-4abf-8c07-916bb0f4fd54",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "# TODO:  Make the transcript one dialoge",
+        "height": 432,
+        "width": 864
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3584,
+        1648
+      ],
+      "id": "34593b4e-e030-4da2-88fc-516ccf513924",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "# TODO:  Add the system prompts",
+        "height": 720,
+        "width": 1168
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2080,
+        1584
+      ],
+      "id": "502508a1-b566-4eda-aecc-0952af7bd38f",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "# TODO  adjust to your company\n",
+        "height": 288,
+        "width": 560
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        1568
+      ],
+      "id": "116d5eb4-728c-4073-b2c5-4f208db3534d",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "source": "googleSheets",
+        "documentId": {
+          "__rl": true,
+          "value": "1FYzUeS5VIHTb9DEF55uay7mOIXGt53nkxeQzkVZIGEE",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FYzUeS5VIHTb9DEF55uay7mOIXGt53nkxeQzkVZIGEE/edit#gid=0"
+        },
+        "outputs": {
+          "values": [
+            {
+              "outputName": "ai_project_objective",
+              "outputValue": "={{ $json.message.content.project_objective }}"
+            },
+            {
+              "outputName": "ai_scope_of_work",
+              "outputValue": "={{ $json.message.content.scope_of_work }}"
+            },
+            {
+              "outputName": "ai_price_estimate",
+              "outputValue": "={{ $json.message.content.price_estimate }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.8,
+      "position": [
+        1424,
+        208
+      ],
+      "id": "6d3ae7a3-f55b-41a8-a358-0e09602f6109",
+      "name": "Evaluation",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "nxUtUSoHkodZnHLw",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2080,
+        272
+      ],
+      "id": "bab0b764-98a7-4211-a34c-4547102e042c",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "2SEnYMIY90aMM4SC",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "setMetrics",
+        "expectedAnswer": "={{ $('When fetching a dataset row').item.json.expected_price_estimate }}",
+        "actualAnswer": "={{ $json.message.content.price_estimate }}",
+        "prompt": "=You are an expert factual evaluator assessing the accuracy of answers compared to established ground truths.\n\nEvaluate the factual correctness of a given output compared to the provided ground truth on a scale from 1 to 5. Use detailed reasoning to thoroughly analyze all claims before determining the final score.\n\n# Scoring Criteria\n\n- 5: Highly similar - The output and ground truth are nearly identical, with only minor, insignificant differences.\n- 4: Somewhat similar - The output is largely similar to the ground truth but has few noticeable differences.\n- 3: Moderately similar - There are some evident differences, but the core essence is captured in the output.\n- 2: Slightly similar - The output only captures a few elements of the ground truth and contains several differences.\n- 1: Not similar - The output is significantly different from the ground truth, with few or no matching elements.\n\n# Evaluation Steps\n\n1. Identify and list the key elements present in both the output and the ground truth.\n2. Compare these key elements to evaluate their similarities and differences, considering both content and structure.\n3. Analyze the the price stated by two vartiants, the closer the range the better.\n4. only focus on the price, nothing else. \n\n# Output Format\n\nProvide:\n- A detailed analysis of the comparison (extended reasoning)\n- A one-sentence summary highlighting key differences (not similarities)\n- The final similarity score as an integer (1, 2, 3, 4, or 5)\n\nAlways follow the JSON format below and return nothing else:\n{\n  \"extended_reasoning\": \"<detailed step-by-step analysis of factual accuracy and similarity>\",\n  \"reasoning_summary\": \"<one sentence summary focusing on key differences>\",\n  \"score\": <number: integer from 1 to 5>\n}\n\n# Notes\n\n- Focus primarily on the estimated price not the writing or the style.\n- Be consistent in your scoring approach across different evaluations.\n- if the two estimate are within the same range give high value",
+        "options": {
+          "metricName": "price estimate correctness",
+          "inputPrompt": "Output: {actual_answer}\n\nGround truth: {expected_answer}"
+        }
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.8,
+      "position": [
+        1760,
+        176
+      ],
+      "id": "7285b2fe-4178-4184-ba14-062bb8cb47c9",
+      "name": "Evaluate Price Estimate "
+    },
+    {
+      "parameters": {
+        "operation": "setMetrics",
+        "expectedAnswer": "={{ $('When fetching a dataset row').item.json.expected_scope_of_work }}",
+        "actualAnswer": "={{ $json.message.content.scope_of_work }}",
+        "prompt": "=You are an expert factual evaluator assessing the accuracy of answers compared to established ground truths.\n\nEvaluate the factual correctness of a given output compared to the provided ground truth on a scale from 1 to 5. Use detailed reasoning to thoroughly analyze all claims before determining the final score.\n\n# Scoring Criteria\n\n- 5: Highly similar - The output and ground truth are nearly identical, with only minor, insignificant differences.\n- 4: Somewhat similar - The output is largely similar to the ground truth but has few noticeable differences.\n- 3: Moderately similar - There are some evident differences, but the core essence is captured in the output.\n- 2: Slightly similar - The output only captures a few elements of the ground truth and contains several differences.\n- 1: Not similar - The output is significantly different from the ground truth, with few or no matching elements.\n\n# Evaluation Steps\n\n1. Identify and list the key elements present in both the output and the ground truth.\n2. Compare these key elements to evaluate their similarities and differences, considering both content and structure.\n3. Analyze the semantic meaning conveyed by both the output and the ground truth, noting any significant deviations.\n4. Consider factual accuracy of specific details, including names, dates, numbers, and relationships.\n5. Assess whether the output maintains the factual integrity of the ground truth, even if phrased differently.\n6. Determine the overall level of similarity and accuracy according to the defined criteria.\n\n# Output Format\n\nProvide:\n- A detailed analysis of the comparison (extended reasoning)\n- A one-sentence summary highlighting key differences (not similarities)\n- The final similarity score as an integer (1, 2, 3, 4, or 5)\n\nAlways follow the JSON format below and return nothing else:\n{\n  \"extended_reasoning\": \"<detailed step-by-step analysis of factual accuracy and similarity>\",\n  \"reasoning_summary\": \"<one sentence summary focusing on key differences>\",\n  \"score\": <number: integer from 1 to 5>\n}\n\n# Examples\n\n**Example 1:**\n\nInput:\n- Output: \"The cat sat on the mat.\"\n- Ground Truth: \"The feline is sitting on the rug.\"\n\nExpected Output:\n{\n  \"extended_reasoning\": \"I need to compare 'The cat sat on the mat' with 'The feline is sitting on the rug.' First, let me identify the key elements: both describe an animal ('cat' vs 'feline') in a position ('sat' vs 'sitting') on a surface ('mat' vs 'rug'). The subject is semantically identical - 'cat' and 'feline' refer to the same animal. The action is also semantically equivalent - 'sat' and 'sitting' both describe the same position, though one is past tense and one is present continuous. The location differs in specific wording ('mat' vs 'rug') but both refer to floor coverings that serve the same function. The basic structure and meaning of both sentences are preserved, though they use different vocabulary and slightly different tense. The core information being conveyed is the same, but there are noticeable wording differences.\",\n  \"reasoning_summary\": \"The sentences differ in vocabulary choice ('cat' vs 'feline', 'mat' vs 'rug') and verb tense ('sat' vs 'is sitting').\",\n  \"score\": 3\n}\n\n**Example 2:**\n\nInput:\n- Output: \"The quick brown fox jumps over the lazy dog.\"\n- Ground Truth: \"A fast brown animal leaps over a sleeping canine.\"\n\nExpected Output:\n{\n  \"extended_reasoning\": \"I need to compare 'The quick brown fox jumps over the lazy dog' with 'A fast brown animal leaps over a sleeping canine.' Starting with the subjects: 'quick brown fox' vs 'fast brown animal'. Both describe the same entity (a fox is a type of animal) with the same attributes (quick/fast and brown). The action is described as 'jumps' vs 'leaps', which are synonymous verbs describing the same motion. The object in both sentences is a dog, described as 'lazy' in one and 'sleeping' in the other, which are related concepts (a sleeping dog could be perceived as lazy). The structure follows the same pattern: subject + action + over + object. The sentences convey the same scene with slightly different word choices that maintain the core meaning. The level of specificity differs slightly ('fox' vs 'animal', 'dog' vs 'canine'), but the underlying information and imagery remain very similar.\",\n  \"reasoning_summary\": \"The sentences use different but synonymous terminology ('quick' vs 'fast', 'jumps' vs 'leaps', 'lazy' vs 'sleeping') and varying levels of specificity ('fox' vs 'animal', 'dog' vs 'canine').\",\n  \"score\": 4\n}\n\n# Notes\n\n- Focus primarily on factual accuracy and semantic similarity, not writing style or phrasing differences.\n- Identify specific differences rather than making general assessments.\n- Pay special attention to dates, numbers, names, locations, and causal relationships when present.\n- Consider the significance of each difference in the context of the overall information.\n- Be consistent in your scoring approach across different evaluations.",
+        "options": {
+          "metricName": "Scope of work correctness",
+          "inputPrompt": "Output: {actual_answer}\n\nGround truth: {expected_answer}"
+        }
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.8,
+      "position": [
+        1760,
+        16
+      ],
+      "id": "968e8060-09c7-4008-97bf-81aaebccfb87",
+      "name": "Evaluate Scope Of Work"
+    },
+    {
+      "parameters": {
+        "operation": "setMetrics",
+        "expectedAnswer": "={{ $('When fetching a dataset row').item.json.expected_project_objective }}",
+        "actualAnswer": "={{ $json.message.content.project_objective }}",
+        "prompt": "\nYou are an expert factual evaluator assessing the accuracy of answers compared to established ground truths.\n\nEvaluate the factual correctness of a given output compared to the provided ground truth on a scale from 1 to 5. Use detailed reasoning to thoroughly analyze all claims before determining the final score.\n\n# Scoring Criteria\n\n- 5: Highly similar - The output and ground truth are nearly identical, with only minor, insignificant differences.\n- 4: Somewhat similar - The output is largely similar to the ground truth but has few noticeable differences.\n- 3: Moderately similar - There are some evident differences, but the core essence is captured in the output.\n- 2: Slightly similar - The output only captures a few elements of the ground truth and contains several differences.\n- 1: Not similar - The output is significantly different from the ground truth, with few or no matching elements.\n\n# Evaluation Steps\n\n1. Identify and list the key elements present in both the output and the ground truth.\n2. Compare these key elements to evaluate their similarities and differences, considering both content and structure.\n3. Analyze the semantic meaning conveyed by both the output and the ground truth, noting any significant deviations.\n4. Consider factual accuracy of specific details, including names, dates, numbers, and relationships.\n5. Assess whether the output maintains the factual integrity of the ground truth, even if phrased differently.\n6. Determine the overall level of similarity and accuracy according to the defined criteria.\n\n# Output Format\n\nProvide:\n- A detailed analysis of the comparison (extended reasoning)\n- A one-sentence summary highlighting key differences (not similarities)\n- The final similarity score as an integer (1, 2, 3, 4, or 5)\n\nAlways follow the JSON format below and return nothing else:\n{\n  \"extended_reasoning\": \"<detailed step-by-step analysis of factual accuracy and similarity>\",\n  \"reasoning_summary\": \"<one sentence summary focusing on key differences>\",\n  \"score\": <number: integer from 1 to 5>\n}\n\n# Examples\n\n**Example 1:**\n\nInput:\n- Output: \"The cat sat on the mat.\"\n- Ground Truth: \"The feline is sitting on the rug.\"\n\nExpected Output:\n{\n  \"extended_reasoning\": \"I need to compare 'The cat sat on the mat' with 'The feline is sitting on the rug.' First, let me identify the key elements: both describe an animal ('cat' vs 'feline') in a position ('sat' vs 'sitting') on a surface ('mat' vs 'rug'). The subject is semantically identical - 'cat' and 'feline' refer to the same animal. The action is also semantically equivalent - 'sat' and 'sitting' both describe the same position, though one is past tense and one is present continuous. The location differs in specific wording ('mat' vs 'rug') but both refer to floor coverings that serve the same function. The basic structure and meaning of both sentences are preserved, though they use different vocabulary and slightly different tense. The core information being conveyed is the same, but there are noticeable wording differences.\",\n  \"reasoning_summary\": \"The sentences differ in vocabulary choice ('cat' vs 'feline', 'mat' vs 'rug') and verb tense ('sat' vs 'is sitting').\",\n  \"score\": 3\n}\n\n**Example 2:**\n\nInput:\n- Output: \"The quick brown fox jumps over the lazy dog.\"\n- Ground Truth: \"A fast brown animal leaps over a sleeping canine.\"\n\nExpected Output:\n{\n  \"extended_reasoning\": \"I need to compare 'The quick brown fox jumps over the lazy dog' with 'A fast brown animal leaps over a sleeping canine.' Starting with the subjects: 'quick brown fox' vs 'fast brown animal'. Both describe the same entity (a fox is a type of animal) with the same attributes (quick/fast and brown). The action is described as 'jumps' vs 'leaps', which are synonymous verbs describing the same motion. The object in both sentences is a dog, described as 'lazy' in one and 'sleeping' in the other, which are related concepts (a sleeping dog could be perceived as lazy). The structure follows the same pattern: subject + action + over + object. The sentences convey the same scene with slightly different word choices that maintain the core meaning. The level of specificity differs slightly ('fox' vs 'animal', 'dog' vs 'canine'), but the underlying information and imagery remain very similar.\",\n  \"reasoning_summary\": \"The sentences use different but synonymous terminology ('quick' vs 'fast', 'jumps' vs 'leaps', 'lazy' vs 'sleeping') and varying levels of specificity ('fox' vs 'animal', 'dog' vs 'canine').\",\n  \"score\": 4\n}\n\n# Notes\n\n- Focus primarily on factual accuracy and semantic similarity, not writing style or phrasing differences.\n- Identify specific differences rather than making general assessments.\n- Pay special attention to dates, numbers, names, locations, and causal relationships when present.\n- Consider the significance of each difference in the context of the overall information.\n- Be consistent in your scoring approach across different evaluations.",
+        "options": {
+          "metricName": "project objective correctness",
+          "inputPrompt": "Output: {actual_answer}\n\nGround truth: {expected_answer}"
+        }
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.8,
+      "position": [
+        1728,
+        400
+      ],
+      "id": "fd7c57e4-9d74-41be-ba8f-2b136b255e4d",
+      "name": "Evaluate Project Objective"
+    },
+    {
+      "parameters": {
+        "operation": "setInputs",
+        "inputs": {
+          "values": [
+            {
+              "inputName": "expected_project_objective",
+              "inputValue": "={{ $('When fetching a dataset row').item.json.expected_project_objective }}"
+            },
+            {
+              "inputName": "expected_scope_of_work",
+              "inputValue": "={{ $('When fetching a dataset row').item.json.expected_scope_of_work }}"
+            },
+            {
+              "inputName": "expected_price_estimate",
+              "inputValue": "={{ $('When fetching a dataset row').item.json.expected_price_estimate }}"
+            },
+            {
+              "inputName": "experiment_details",
+              "inputValue": "={{ $('When fetching a dataset row').item.json.experiment_details }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.8,
+      "position": [
+        1120,
+        240
+      ],
+      "id": "4c8955aa-d3c3-49fe-8079-49dbfbc6630a",
+      "name": "Evaluation2"
+    },
+    {
+      "parameters": {
+        "content": "## Evaluation Block",
+        "height": 656,
+        "width": 1392,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "78aec36b-4d43-4540-ad6a-c7d4c18e3c51",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "transcript",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -3552,
+        1776
+      ],
+      "id": "a30298dd-da23-4e7b-8142-1cacc5c9b01b",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "aggregation": "concatenate",
+              "field": "text",
+              "separateBy": "\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.summarize",
+      "typeVersion": 1.1,
+      "position": [
+        -3104,
+        1776
+      ],
+      "id": "ec6575c7-502c-4d3b-a6f5-7d2c8d96a2c4",
+      "name": "Summarize"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ab9541ae-1586-43d3-9787-141b48462500",
+              "name": "text",
+              "value": "={{ $json.speaker.display_name }}.{{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3344,
+        1776
+      ],
+      "id": "cef6874d-dd00-46c6-8cc1-cb7e9512b897",
+      "name": "Set Text Field"
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * n8n Code node (JavaScript)\n * INPUT: none required (reads from other nodes)\n * OUTPUT: [{ json: { docId, requests } }]\n */\n\n// 1) Read dynamic values from other nodes\n// These helpers work inside Code/Function nodes and resolve node outputs.\nconst docId = String($('Copy Proposal Template').first().json.id || '').trim();\nif (!docId) throw new Error('Missing Google Doc ID from \"Copy Proposal Template\".');\n\nconst projectTitle = $('AI Generated Project Details').first().json.project_title || '';\nconst clientName = $('AI Generated Project Details').first().json.client_name|| '';\nconst date = $('AI Generated Project Details').first().json.date || '';\nconst projectObjective = $('AI Generated Project Details').first().json.project_objective || '';\nconst projectScope      = $('AI Generated Project Details').first().json.scope_of_work || '';\nconst projectPrice    = $('AI Generated Project Details').first().json.price_estimate || '';\n\n// 2) Configure your exact find (placeholder) strings here\n// Edit the left-side placeholders to match your template text 1:1.\nconst replacements = [\n  { placeholder: '[project_title]', text: String(projectTitle) },\n  { placeholder: '[client_name]', text: String(clientName) },\n  { placeholder: '[date]', text: String(date) },\n  { placeholder: '[project_objective]', text: String(projectObjective) },\n  { placeholder: '[project_scope]',     text: String(projectScope) },\n  { placeholder: '[project_price]',     text: String(projectPrice) },\n];\n\n// 3) Build Docs API requests\nconst requests = [];\n\n// 3a) Simple find/replace requests (plain text swap)\nfor (const r of replacements) {\n  if (!r.placeholder) continue;\n  requests.push({\n    replaceAllText: {\n      containsText: { text: r.placeholder, matchCase: true },\n      replaceText: r.text ?? '',\n    },\n  });\n}\n\n/* ------- OPTIONAL: Styled Markdown inserts (headings/lists) -------\n   If you also want to insert styled sections (e.g. make the objective\n   a Heading 2, etc.), add entries to `slots` below. Each slot can either:\n   - clear a known range (delete placeholder paragraph) and insert markdown\n   - or insert markdown at a fixed index (insertAt)\n------------------------------------------------------------------- */\n\nconst slots = [\n  // Example (delete placeholder region then insert styled markdown):\n  // {\n  //   name: 'OBJECTIVE_SECTION',\n  //   clearRange: { startIndex: 100, endIndex: 120 }, // <-- put your real indices here\n  //   markdown: `## Project Objective\\n${projectObjective}\\n`,\n  // },\n];\n\n// --- helpers for index-aware inserts + styles (Docs API) ---\nfunction insertTextAt(index, text) {\n  requests.push({ insertText: { location: { index }, text } });\n  return index + text.length;\n}\nfunction addHeading(start, end, level) {\n  requests.push({\n    updateParagraphStyle: {\n      range: { startIndex: start, endIndex: end },\n      paragraphStyle: { namedStyleType: `HEADING_${Math.min(Math.max(level,1),6)}` },\n      fields: 'namedStyleType',\n    },\n  });\n}\nfunction makeBullets(start, end, preset) {\n  requests.push({\n    createParagraphBullets: {\n      range: { startIndex: start, endIndex: end },\n      bulletPreset: preset, // 'BULLET_DISC_CIRCLE_SQUARE' or 'NUMBERED_DECIMAL_ALPHA_ROMAN'\n    },\n  });\n}\nfunction clearRange(range) {\n  if (\n    range &&\n    Number.isInteger(range.startIndex) &&\n    Number.isInteger(range.endIndex) &&\n    range.endIndex > range.startIndex\n  ) {\n    requests.push({ deleteContentRange: { range: { startIndex: range.startIndex, endIndex: range.endIndex } } });\n    return range.startIndex;\n  }\n  return null;\n}\n\nfunction renderMarkdownAt(md, initialIndex) {\n  let index = initialIndex;\n  const lines = String(md || '').replace(/\\r\\n/g, '\\n').split('\\n');\n\n  function classify(line) {\n    if (/^######\\s+/.test(line)) return { t: 'h', level: 6, text: line.replace(/^######\\s+/, '') };\n    if (/^#####\\s+/.test(line))  return { t: 'h', level: 5, text: line.replace(/^#####\\s+/, '') };\n    if (/^####\\s+/.test(line))   return { t: 'h', level: 4, text: line.replace(/^####\\s+/, '') };\n    if (/^###\\s+/.test(line))    return { t: 'h', level: 3, text: line.replace(/^###\\s+/, '') };\n    if (/^##\\s+/.test(line))     return { t: 'h', level: 2, text: line.replace(/^##\\s+/, '') };\n    if (/^#\\s+/.test(line))      return { t: 'h', level: 1, text: line.replace(/^#\\s+/, '') };\n    if (/^\\s*[-*]\\s+/.test(line)) return { t: 'ul', text: line.replace(/^\\s*[-*]\\s+/, '') };\n    if (/^\\s*(?:\\d+|[a-z]|[ivxlcdm]+)\\.\\s+/i.test(line))\n      return { t: 'ol', text: line.replace(/^\\s*(?:\\d+|[a-z]|[ivxlcdm]+)\\.\\s+/i, '') };\n    if (/^\\s*$/.test(line)) return { t: 'blank' };\n    return { t: 'p', text: line };\n  }\n\n  const blocks = [];\n  let para = [];\n  let list = null;\n  const flushPara = () => { if (para.length) { blocks.push({ type: 'p', text: para.join(' ') }); para = []; } };\n  const flushList = () => { if (list && list.items.length) blocks.push(list); list = null; };\n\n  for (const raw of lines) {\n    const l = classify(raw);\n    if (l.t === 'blank') { flushPara(); flushList(); continue; }\n    if (l.t === 'h') { flushPara(); flushList(); blocks.push({ type: 'h', level: l.level, text: l.text.trim() }); continue; }\n    if (l.t === 'ul' || l.t === 'ol') {\n      flushPara();\n      if (!list) list = { type: (l.t === 'ul' ? 'ul' : 'ol'), items: [] };\n      list.items.push({ text: l.text.trim() });\n      continue;\n    }\n    if (l.t === 'p') { flushList(); para.push(l.text.trim()); }\n  }\n  flushPara(); flushList();\n\n  for (const b of blocks) {\n    if (b.type === 'h') {\n      const start = index;\n      index = insertTextAt(index, b.text + '\\n');\n      const end = index;\n      addHeading(start, end, b.level);\n      index = insertTextAt(index, '\\n');\n    } else if (b.type === 'p') {\n      index = insertTextAt(index, b.text + '\\n\\n');\n    } else if (b.type === 'ul' || b.type === 'ol') {\n      const start = index;\n      index = insertTextAt(index, b.items.map(it => it.text).join('\\n') + '\\n\\n');\n      const end = index;\n      makeBullets(start, end, b.type === 'ol' ? 'NUMBERED_DECIMAL_ALPHA_ROMAN' : 'BULLET_DISC_CIRCLE_SQUARE');\n    }\n  }\n}\n\n// Render any optional styled slots\nfor (const slot of slots) {\n  const md = String(slot.markdown || '');\n  if (slot.clearRange) {\n    const start = clearRange(slot.clearRange);\n    if (start == null) throw new Error(`Invalid clearRange for slot \"${slot.name || 'unnamed'}\"`);\n    renderMarkdownAt(md, start);\n  } else if (Number.isInteger(slot.insertAt)) {\n    renderMarkdownAt(md, slot.insertAt);\n  }\n}\n\n// Return payload for the HTTP Request (Docs batchUpdate)\nreturn [{ json: { docId, requests } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1664,
+        1648
+      ],
+      "id": "f299d461-f505-491e-bfc7-d126c21788ea",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://docs.googleapis.com/v1/documents/{{ $json.docId }}:batchUpdate",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDocsOAuth2Api",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "requests",
+              "value": "={{ $json.requests }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1856,
+        1648
+      ],
+      "id": "9e30f93e-3dff-49f9-a057-b72e025ff445",
+      "name": "HTTP Request",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "DMF0US2wzutvmZiH",
+          "name": "Google Docs account 2"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Get All Recordings ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Recordings ": {
+      "main": [
+        [
+          {
+            "node": "Get the name & email of the guest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the transcript of the first recording": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Proposal Template": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Placeholders With AI Content": {
+      "main": [
+        [
+          {
+            "node": "Wait for Human Approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a Project Objective": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a scope of work": {
+      "main": [
+        [
+          {
+            "node": "Get a document",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Get a document": {
+      "main": [
+        [
+          {
+            "node": "Create price estimate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create price estimate": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "When fetching a dataset row": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluation1": {
+      "main": [
+        [
+          {
+            "node": "Evaluation2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Generated Project Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Evaluation1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Operation, do nothing": {
+      "main": [
+        [
+          {
+            "node": "Create a scope of work",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create a Project Objective",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the name & email of the guest": {
+      "main": [
+        [
+          {
+            "node": "Get the transcript of the first recording",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Human Approval": {
+      "main": [
+        [
+          {
+            "node": "Convert To PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert To PDF": {
+      "main": [
+        [
+          {
+            "node": "Send the Proposal To the Client ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Generated Project Details": {
+      "main": [
+        [
+          {
+            "node": "Copy Proposal Template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluation": {
+      "main": [
+        [
+          {
+            "node": "Evaluate Scope Of Work",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Evaluate Price Estimate ",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Evaluate Project Objective",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Evaluate Scope Of Work",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Evaluate Price Estimate ",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Evaluate Project Objective",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluation2": {
+      "main": [
+        [
+          {
+            "node": "Evaluation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Set Text Field",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Text Field": {
+      "main": [
+        [
+          {
+            "node": "Summarize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Replace Placeholders With AI Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "notes": "focus on chatbot project",
+          "submittedAt": "2025-11-13T10:38:36.584+01:00",
+          "formMode": "test"
+        }
+      }
+    ],
+    "Create a Project Objective": [
+      {
+        "json": {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": {
+              "project_objective": "The objective of this project is to develop a robust and secure **AI-powered chatbot** tailored for client-facing applications, specifically designed to enhance customer interaction and support. The key challenges identified include **managing prompt complexity**, **ensuring data privacy**, and **mitigating security risks such as prompt injections and denial-of-service attacks**. Current pain points for clients involve the risk of **exposing sensitive personal information** through chatbot interactions, **vulnerability to malicious user inputs**, and the difficulty in maintaining **stable and reliable chatbot performance** when integrating multiple tools or data sources.\n\nThe proposed automation solution involves creating a **custom chatbot platform** that incorporates **advanced prompt engineering techniques** to maintain clarity and simplicity, alongside **guardrails for sanitizing inputs and detecting violations** to prevent data breaches and malicious exploitation. The chatbot will utilize **structured JSON outputs** and **reasoning blocks** to improve transparency and traceability of AI decisions. Additionally, the solution includes **limiting conversation lengths** and **implementing CAPTCHA mechanisms** to reduce bot abuse and control resource consumption.\n\nExpected business impacts include:\n\n- **Improved customer engagement** through a responsive and context-aware chatbot\n- **Enhanced data security and compliance** by minimizing exposure of personal information and preventing prompt injection attacks\n- **Operational efficiency gains** by automating routine customer interactions while maintaining control over AI behavior\n- **Reduced risk of financial loss** from malicious API usage or denial-of-wallet attacks\n\nThis solution will provide a scalable and secure AI chatbot infrastructure that aligns with client business needs and safeguards sensitive data in customer-facing environments."
+            },
+            "refusal": null,
+            "annotations": []
+          },
+          "logprobs": null,
+          "finish_reason": "stop"
+        }
+      }
+    ],
+    "Get a document": [
+      {
+        "json": {
+          "documentId": "1EicKLwpyUH8EkfmeGtrYDeTC6M7iZEZuv7WkcY1ac9k",
+          "content": "Packaged services\nAI audit 2000 EUR\nAI Workshops and seminars 2000 EUR per day\nAI Hackathons 2000 EUR per day\nDevelopment services:\nSimple FAQ chatbot deployed to website 5000 EUR\nComplex Chatbot with high traffic 8000 - 15000 EUR\nSimple n8n Internal automation under 2000-5000 EUR\nComplex Internal automations with multiple API integrations, 5000- 10000 EUR\nLead reactivation system connected to CRM 5000- 10000 EUR\nInternal Agentic automation for complex jobs 5-10k Eur\nVoice agents, 2000-5000 setup fee\nFull-stack platform: MVP 5000-10000, full product 15-30k+\n\n\n"
+        }
+      }
+    ],
+    "Create a scope of work": [
+      {
+        "json": {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": {
+              "scope_of_work": "st-\n\n**Phase 1: Requirements Gathering and Analysis (1 week)**\n1. Conduct detailed discovery sessions to understand the chatbot’s intended use cases, target audience, and key functionalities.\n2. Identify and document the types of interactions the chatbot will handle, including business consulting queries and course-related content.\n3. Define security requirements, including conversation limits, CAPTCHA integration, and data privacy considerations to prevent misuse and denial-of-wallet attacks.\n4. Assess existing content and materials (e.g., course content, FAQs) to be used for training the chatbot.\n5. Determine integration points such as CRM systems, calendar tools, and any internal databases.\n\n**Phase 2: Chatbot Design and Prompt Engineering (2 weeks)**\n1. Design the chatbot conversational flow focusing on simplicity, clarity, and user engagement.\n2. Develop prompt frameworks with clear roles, tasks, and output structures in JSON format to facilitate reasoning and traceability.\n3. Implement reasoning blocks within prompts to improve model transparency and response accuracy.\n4. Create fallback and error-handling strategies to instruct the model on how to behave when data is insufficient or ambiguous.\n5. Collaborate with client to iteratively refine prompts using AI-assisted prompt generation tools (e.g., Google Gemini) and manual adjustments.\n\n**Phase 3: Chatbot Development and Integration (3 weeks)**\n1. Develop the chatbot backend using a suitable AI platform, ensuring support for multi-language inputs and outputs.\n2. Integrate chatbot with client’s course platform or custom landing page for user access.\n3. Implement conversation limits and security measures such as CAPTCHA to mitigate bot attacks and abuse.\n4. Connect chatbot to necessary tools and databases with strict access controls to protect sensitive data.\n5. Build monitoring and logging capabilities to track conversation metrics and detect suspicious activities.\n\n**Phase 4: Testing, Evaluation, and Optimization (2 weeks)**\n1. Perform functional testing to validate chatbot responses against a curated validation dataset.\n2. Conduct security testing including simulated prompt injection and jailbreak attempts to verify guardrails effectiveness.\n3. Utilize observability tools (e.g., Langsmith) for prompt versioning, performance tracking, and comparison of different prompt iterations.\n4. Analyze chatbot performance metrics and user feedback to identify areas for improvement.\n5. Optimize prompts and workflows based on testing outcomes and client feedback.\n\n**Phase 5: Deployment and Knowledge Transfer (1 week)**\n1. Deploy the chatbot to the production environment with necessary access controls.\n2. Provide documentation covering chatbot design, prompt structures, security measures, and maintenance procedures.\n3. Conduct training sessions for client’s team on chatbot management, prompt tuning, and monitoring tools.\n4. Establish a support plan for ongoing maintenance, prompt updates, and security monitoring.\n\n**Client Responsibilities:**\n- Provide access to all relevant content, including course materials, FAQs, and existing customer data.\n- Supply access credentials for integration systems such as CRM, calendar, and databases.\n- Designate key stakeholders for prompt review and feedback cycles.\n- Ensure availability for regular meetings and prompt approvals.\n- Prepare infrastructure or hosting environment for chatbot deployment if applicable.\n\nThis phased approach ensures delivery of a secure, efficient, and user-friendly AI-powered chatbot tailored to the client’s business consulting and educational needs, with robust prompt engineering and security guardrails to mitigate risks."
+            },
+            "refusal": null,
+            "annotations": []
+          },
+          "logprobs": null,
+          "finish_reason": "stop"
+        }
+      }
+    ],
+    "Create price estimate": [
+      {
+        "json": {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": {
+              "price_estimate": "**The total investment of the engagement should be around 12,000 - 15,000 EUR.**\n\nThis estimate aligns with the pricing range for a complex chatbot development project with high traffic and multiple integrations, including custom prompt engineering and security guardrails as detailed in the scope of work.\n\n**Payment terms:**\n- To kick off the project, a **deposit payment of 50%** (6,000 - 7,500 EUR) is necessary at the start.\n- The remaining balance should be paid upon project completion.\n\n**Note:** Given the project timeline and complexity exceeding 10 weeks, we recommend milestone payments:\n- Milestone 1: Completion of Phase 1 (Requirements Gathering and Analysis)\n- Milestone 2: Completion of Phase 2 (Chatbot Design and Prompt Engineering)\n- Milestone 3: Completion of Phase 3 (Chatbot Development and Integration)\n- Milestone 4: Completion of Phase 4 (Testing, Evaluation, and Optimization)\n- Final payment upon Phase 5 (Deployment and Knowledge Transfer)"
+            },
+            "refusal": null,
+            "annotations": []
+          },
+          "logprobs": null,
+          "finish_reason": "stop"
+        }
+      }
+    ]
+  },
+  "versionId": "a44b1f99-ccb8-41c7-b629-c1bf271071c2",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-13T09:27:04.462Z",
+      "createdAt": "2025-11-13T09:27:04.462Z",
+      "role": "workflow:owner",
+      "workflowId": "HFahzXbfSZIfjSQW",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
