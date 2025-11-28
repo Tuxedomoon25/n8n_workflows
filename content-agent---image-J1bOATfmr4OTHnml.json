@@ -1,0 +1,271 @@
+{
+  "updatedAt": "2025-09-24T10:24:18.000Z",
+  "createdAt": "2025-09-10T10:40:49.226Z",
+  "id": "J1bOATfmr4OTHnml",
+  "name": "Content Agent - Image",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "4d970366-5a89-45f3-8ab3-342e0c4209ce",
+      "name": "When executed by another node",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1760,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.pixeldojo.example/v1/generate",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "id": "5c3ba712-930a-4d51-9d7f-9432dba86393",
+      "name": "PixelDojo (placeholder)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        -1440,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "2b1e3201-0141-4504-8596-316163483c4e",
+      "name": "Prepare JSON",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -1168,
+        144
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "f63611a6-0eb5-47f4-ae6f-1a3ba3a509d5",
+      "name": "SharePoint — Save images.json",
+      "type": "n8n-nodes-base.microsoftSharepoint",
+      "typeVersion": 1,
+      "position": [
+        -896,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "4bc6b706-0703-4a2b-85cd-c02f6fd7d05c",
+      "name": "Expose Approve/Reject URLs",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -656,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "options": {}
+      },
+      "id": "b4177d05-da06-4676-b2d4-198332199523",
+      "name": "WAIT for approval",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        80
+      ],
+      "webhookId": "d4c20630-4236-4772-90dc-908e0fbdf4ac"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.query.action}}",
+              "operation": "equal",
+              "value2": "approve"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "eb5974b9-cbc3-462e-9ef1-0118f22ddd37",
+      "name": "Approved?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -224,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "2774f86f-d9e7-4afe-8c31-7447d67cefbd",
+      "name": "Return Approved",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "1306b436-916c-455c-ac59-d5e951a657ff",
+      "name": "Return Rejected",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        0,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "passThrough",
+        "options": {}
+      },
+      "id": "f96750d1-3585-43c4-94b0-89726771313f",
+      "name": "Return to parent",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [
+        224,
+        96
+      ]
+    }
+  ],
+  "connections": {
+    "When executed by another node": {
+      "main": [
+        [
+          {
+            "node": "PixelDojo (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PixelDojo (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Prepare JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare JSON": {
+      "main": [
+        [
+          {
+            "node": "Expose Approve/Reject URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Expose Approve/Reject URLs": {
+      "main": [
+        [
+          {
+            "node": "WAIT for approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WAIT for approval": {
+      "main": [
+        [
+          {
+            "node": "Approved?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approved?": {
+      "main": [
+        [
+          {
+            "node": "Return Approved",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return Rejected",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Approved": {
+      "main": [
+        [
+          {
+            "node": "Return to parent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Rejected": {
+      "main": [
+        [
+          {
+            "node": "Return to parent",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "67c63f46-4218-437f-b3c5-3a18c97d6316",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-09-10T10:40:49.228Z",
+      "createdAt": "2025-09-10T10:40:49.228Z",
+      "role": "workflow:owner",
+      "workflowId": "J1bOATfmr4OTHnml",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
