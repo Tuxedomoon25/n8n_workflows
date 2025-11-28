@@ -1,0 +1,177 @@
+{
+  "updatedAt": "2025-11-11T09:59:43.000Z",
+  "createdAt": "2025-11-08T15:58:52.094Z",
+  "id": "06PAtaANytmwRK9D",
+  "name": "TestParsers",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// Get the raw output from previous node\nconst rawOutput = $input.first().json?.output || $input.first().json || '';\n// Step 1: First try to extract from code blocks\nlet jsonText;\nconst codeBlockMatch = rawOutput.toString().match(/```(?:json)?\\s*([\\s\\S]*?)\\s*```/);\nif (codeBlockMatch && codeBlockMatch[1]) {\n  jsonText = codeBlockMatch[1];\n} else {\n  // If no code block, use the raw output\n  jsonText = rawOutput.toString();\n}\n// Step 2: Replace escaped newlines and clean whitespace\njsonText = jsonText.replace(/\\\\n/g, ' ').replace(/\\s+/g, ' ').trim();\n// Function to make any text JSON-safe\nfunction makeJsonSafe(text) {\n  if (text === undefined || text === null) return '';\n  \n  return text.toString()\n    .replace(/\\n/g, ' ')           // Replace newlines with spaces\n    .replace(/\\r/g, ' ')           // Replace carriage returns\n    .replace(/\\t/g, ' ')           // Replace tabs\n    .replace(/\\s+/g, ' ')          // Replace multiple spaces with single space\n    .replace(/[\\u0000-\\u001F]/g, ' ') // Replace control characters\n    .trim();                       // Trim leading/trailing whitespace\n}\n// Function to handle arrays safely\nfunction makeArraySafe(arr, joinChar) {\n  if (!Array.isArray(arr)) return '';\n  return arr.map(item => makeJsonSafe(item)).join(joinChar);\n}\n// Step 3: Try to parse the JSON with extra error handling\ntry {\n  const parsedData = JSON.parse(jsonText);\n  \n  // Step 4: Extract data with nested try/catch blocks for maximum safety\n  let formatted = { success: false };\n  \n  try {\n    // Process focused topic if it exists\n    if (parsedData.focused_topic) {\n      formatted.topic_title = makeJsonSafe(parsedData.focused_topic.title || '');\n      formatted.topic_keywords = makeArraySafe(parsedData.focused_topic.keywords || [], ', ');\n      formatted.topic_key_questions = makeArraySafe(parsedData.focused_topic.key_questions || [], '; ');\n    }\n    \n    // Process SEO recommendations if they exist\n    if (parsedData.seo_recommendations) {\n      formatted.seo_primary_keyword = makeJsonSafe(parsedData.seo_recommendations.primary_keyword || '');\n      formatted.seo_secondary_keywords = makeArraySafe(parsedData.seo_recommendations.secondary_keywords || [], ', ');\n      formatted.seo_suggested_titles = makeArraySafe(parsedData.seo_recommendations.suggested_title_formats || [], '; ');\n    }\n    \n    // Create a simple flat content string with NO newlines\n    formatted.formatted_content = \n      'Topic: ' + formatted.topic_title + ' | ' +\n      'Keywords: ' + formatted.topic_keywords + ' | ' +\n      'Key Questions: ' + formatted.topic_key_questions + ' | ' +\n      'SEO Primary Keyword: ' + formatted.seo_primary_keyword + ' | ' +\n      'Secondary Keywords: ' + formatted.seo_secondary_keywords + ' | ' +\n      'Suggested Titles: ' + formatted.seo_suggested_titles;\n    \n    // Mark as successful\n    formatted.success = true;\n    \n  } catch (dataError) {\n    // If data extraction failed, return a safe error object\n    return {\n      json: {\n        success: false,\n        error: 'Data extraction error: ' + makeJsonSafe(dataError.message),\n        data_error: true\n      }\n    };\n  }\n  \n  // Return the formatted data\n  return { json: formatted };\n  \n} catch (jsonError) {\n  // If JSON parsing failed completely, return error info\n  return {\n    json: {\n      success: false,\n      error: 'JSON parsing error: ' + makeJsonSafe(jsonError.message),\n      json_error: true,\n      cleaned_text: makeJsonSafe(jsonText).substring(0, 200) + '...'\n    }\n  };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        144,
+        -112
+      ],
+      "id": "b4c43cf8-5e76-413a-acba-6bce815f7050",
+      "name": "Topic to JSON"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Search Topic: Solar panels and home battery",
+        "options": {
+          "systemMessage": "=# Overview  \nYou are a research assistant AI designed to generate one highly relevant and in-depth search topic based on the provided input.\n\n## Instructions:\n1) Analyze the main topic for:  \n   - Trending elements  \n   - Controversial aspects  \n   - Technical depth  \n   - Practical applications  \n\n2) Develop **one focused subtopic** that explores this angle in detail.\n\n3) Identify:  \n   - Specific keywords  \n   - Key questions the content must answer  \n\n\n## Output Format (JSON):\n```json\n{\n  \"focused_topic\": {\n    \"title\": \"<Single in-depth search topic>\",\n    \"keywords\": [\"keyword1\", \"keyword2\", \"keyword3\"],\n    \"key_questions\": [\"question1\", \"question2\", \"question3\"]\n  },\n  \"seo_recommendations\": {\n    \"primary_keyword\": \"<main keyword>\",\n    \"secondary_keywords\": [\"keyword1\", \"keyword2\", \"keyword3\"],\n    \"suggested_title_formats\": [\"format1\", \"format2\"]\n  }\n}\n```"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -176,
+        -112
+      ],
+      "id": "a76fe68a-5523-45f6-be72-f011bf9f2f32",
+      "name": "Plan Research Topic",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        96
+      ],
+      "id": "080b4ffa-6888-42c6-a205-03db2774a1d4",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "TqCIN0wwnjZeEbNJ",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://docs.googleapis.com/v1/documents/19sRZOEhihprz7fRmUVP6KKcCV1gRZVUGuE9FTp6sf68:batchUpdate",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDocsOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        544,
+        -112
+      ],
+      "id": "e1b4ef32-a425-4feb-a55c-18f34a431aef",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "Mpl4fbUqzUMf9UYu",
+          "name": "Bearer Auth account Perplexity"
+        },
+        "googleDocsOAuth2Api": {
+          "id": "DMF0US2wzutvmZiH",
+          "name": "Google Docs account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Input: items[0].json.formatted_content  (string like \"## Topic: ... | ## Keywords: ...\")\n// Output: items[0].json.requests          (array for documents.batchUpdate)\n\nconst raw = ($json.formatted_content ?? \"\").trim();\n\n// Config: which sections should stay as a single heading line (label: value)\nconst inlineHeadingKeys = new Set([\n]);\n\n// Helper to push a paragraph and record heading ranges\nlet buffer = \"\";\nlet docStart = 1; // Google Docs body starts at 1\nconst headingRanges = []; // {start,end,level}\n\nfunction addParagraph(text, asHeadingLevel /* 1..6 or null */) {\n  const start = docStart + buffer.length;\n  const para = text + \"\\n\";\n  buffer += para;\n  const end = start + para.length;\n  if (asHeadingLevel) {\n    headingRanges.push({\n      start,\n      end,\n      level: asHeadingLevel,\n    });\n  }\n}\n\n// Parse: split by pipes into \"## Key: value\" segments\nconst segments = raw\n  .split(\"|\")\n  .map(s => s.trim())\n  .filter(Boolean);\n\n// For each segment, extract key/value from \"## Key: value\"\nfor (const seg of segments) {\n  // Strip optional leading ##\n  const cleaned = seg.replace(/^##\\s*/, \"\");\n  // Split on first colon\n  const m = cleaned.match(/^([^:]+):\\s*(.*)$/);\n  if (!m) {\n    // Not a key/value; just add as a normal paragraph to be safe\n    addParagraph(cleaned, null);\n    continue;\n  }\n  const key = m[1].trim();\n  const value = m[2].trim();\n\n  // Always add a heading for the key (H2)\n  if (inlineHeadingKeys.has(key)) {\n    // Keep value inline in the heading, as per your example\n    addParagraph(`${key}: ${value}`, 2);\n  } else {\n    // Heading on its own line\n    addParagraph(`## ${key}`, 2);\n    // Value as normal paragraph on next line\n    if (value) addParagraph(value, null);\n  }\n\n  // Optional: add a blank line between sections for readability\n  addParagraph(\"\", null);\n}\n\n// Build requests\nconst requests = [];\n\n// 1) Insert all text at end of doc\nrequests.push({\n  insertText: {\n    endOfSegmentLocation: {},\n    text: buffer,\n  },\n});\n\n// 2) Style headings (HEADING_2)\nfor (const h of headingRanges) {\n  requests.push({\n    updateParagraphStyle: {\n      range: { startIndex: h.start, endIndex: h.end },\n      paragraphStyle: { namedStyleType: \"HEADING_2\" },\n      fields: \"namedStyleType\",\n    },\n  });\n}\n\nreturn [{ json: { requests } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        336,
+        -112
+      ],
+      "id": "b939bb9c-c462-4efb-acbb-cebae5f7a807",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "connections": {
+    "Topic to JSON": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plan Research Topic": {
+      "main": [
+        [
+          {
+            "node": "Topic to JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Plan Research Topic",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Plan Research Topic": [
+      {
+        "json": {
+          "output": "```json\n{\n  \"focused_topic\": {\n    \"title\": \"Optimizing Solar Panel Systems with Home Battery Storage for Residential Energy Independence\",\n    \"keywords\": [\"solar panel integration\", \"home battery storage\", \"residential energy independence\", \"solar energy optimization\", \"battery capacity for home use\"],\n    \"key_questions\": [\n      \"How do home battery systems improve the efficiency and reliability of solar panel installations?\",\n      \"What are the best practices for sizing and integrating a home battery with solar panels to maximize energy savings?\",\n      \"What are the economic and environmental benefits of combining solar panels with home battery storage?\"\n    ]\n  },\n  \"seo_recommendations\": {\n    \"primary_keyword\": \"home battery storage for solar panels\",\n    \"secondary_keywords\": [\"solar energy optimization\", \"residential solar battery\", \"solar panel battery system\"],\n    \"suggested_title_formats\": [\n      \"How to Optimize Solar Panels with Home Battery Storage for Maximum Energy Independence\",\n      \"Top Strategies for Integrating Home Battery Systems with Solar Panels\"\n    ]\n  }\n}\n```"
+        }
+      }
+    ]
+  },
+  "versionId": "1de219df-36e4-426f-ba9d-7e221dca8e25",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-08T15:58:52.096Z",
+      "createdAt": "2025-11-08T15:58:52.096Z",
+      "role": "workflow:owner",
+      "workflowId": "06PAtaANytmwRK9D",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
