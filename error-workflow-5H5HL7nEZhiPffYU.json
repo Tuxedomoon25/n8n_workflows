@@ -1,0 +1,80 @@
+{
+  "updatedAt": "2025-07-13T14:28:46.000Z",
+  "createdAt": "2025-07-13T14:24:33.275Z",
+  "id": "5H5HL7nEZhiPffYU",
+  "name": "Error Workflow",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "41a285d9-9b8c-47ae-a5e3-2489eaafed80",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "sendTo": "tdgcontent@gmail.com",
+        "subject": "=Error: {{ $json.execution.error.message }}",
+        "emailType": "text",
+        "message": "=Hi Timo, we received an error in {{ $json.workflow.name }}. We are working to resolve the issue!\n\nThanks,\n\nTimo",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        220,
+        0
+      ],
+      "id": "a67ef891-0e02-4770-85fd-c2749dc6776a",
+      "name": "Send a message",
+      "webhookId": "07c21fc9-07a4-45b5-a0b1-eda543d34b78",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "q4RfiDZI4AoLH5Nh",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "5H5HL7nEZhiPffYU"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "289e8d27-a1a6-490b-9c8b-c84ed3d470d9",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-07-13T14:24:33.280Z",
+      "createdAt": "2025-07-13T14:24:33.280Z",
+      "role": "workflow:owner",
+      "workflowId": "5H5HL7nEZhiPffYU",
+      "projectId": "sOkLWMWXpC3Wjh6d"
+    }
+  ],
+  "tags": []
+}
