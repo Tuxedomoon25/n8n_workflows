@@ -1,0 +1,1048 @@
+{
+  "updatedAt": "2025-10-06T06:24:24.000Z",
+  "createdAt": "2025-10-06T06:09:22.026Z",
+  "id": "2M1G9sVEIVcdjzMi",
+  "name": "Content Agent Module Research Output Parsers",
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Research & Outline Generation\n🧠 Topic Info\nMain Topic: {{ $('On form submission').item.json['Search Topic'] }}\n\nTarget Expertise Level: {{ $('On form submission').item.json['Target Expertise Level'] }}\n\n🗂️ Generated Subtopics\n{{ $('Plan Topics').item.json.output }}\n\n📝 Proposed Title\n{{ $('Topic to JSON').item.json.topic_title }}\n\n🔬 Deep Research Content\n{{ $json.choices[0].message.content }}\n\n📖 Sources & Citations\n{{ $json.citations }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Outline Builder AI Assistant (Light Version)\n\nYou are a professional outline planner for layman-friendly articles. Your role is to analyze provided research and generate a clear, structured outline that will guide the writing of a practical, engaging, and SEO-optimized article — aiming for a total length of 1,800–2,000 words.\n\n✅ TASK OBJECTIVES\n1. Create a Focused Article Outline\n\nHighlight only the 3 most important sections of the topic\n\nUse relatable examples, practical tips, and digestible facts\n\nEnsure the article flows clearly from introduction → body → conclusion\n\n2. Streamline Structural Guidelines\n\nUse proper heading hierarchy (H1 > H2 > H3)\n\nLimit to 3 main H2 sections, each with 1–2 H3 subsections max\n\nRecommend word count targets to keep the article within the goal range\n\n3. Apply SEO Best Practices\n\nIdentify a primary keyword and 1–2 strong secondary terms\n\nTarget featured snippet opportunities with clear questions\n\nInclude related keywords naturally in content suggestions\n\n4. Suggest Value-Added Elements\n\nIndicate where the writer should include:\n\n1 infographic or visual\n\n1 short comparison table or list\n\n1 quote or stat from a trusted source\n\n🧾 OUTPUT FORMAT\n\nReturn your output as structured JSON like this:\n\n{\n  \"article_structure\": {\n    \"h1_title\": \"Main Article Title with Primary Keyword\",\n    \"meta_description\": \"150–160 character SEO meta description with primary keyword\",\n    \"introduction\": {\n      \"hook\": \"Engaging first line\",\n      \"problem_statement\": \"What problem does the reader face?\",\n      \"article_promise\": \"What will they learn?\",\n      \"word_count\": 150,\n      \"keywords\": [\"primary keyword\", \"secondary keyword\"]\n    },\n    \"sections\": [\n      {\n        \"h2_heading\": \"Section Title\",\n        \"purpose\": \"Goal of this section\",\n        \"word_count\": 400,\n        \"key_points\": [\"Key point 1\", \"Key point 2\"],\n        \"content_suggestions\": \"Specific facts or angles to include\",\n        \"seo_terms\": [\"keyword 1\", \"keyword 2\"],\n        \"subsections\": [\n          {\n            \"h3_heading\": \"Subsection Title\",\n            \"key_points\": [\"Point 1\", \"Point 2\"],\n            \"word_count\": 150\n          }\n        ]\n      }\n    ],\n    \"conclusion\": {\n      \"summary_points\": [\"Takeaway 1\", \"Takeaway 2\"],\n      \"call_to_action\": \"What the reader should do next\",\n      \"word_count\": 150\n    }\n  },\n  \"seo_strategy\": {\n    \"primary_keyword\": \"main keyword\",\n    \"keyword_placement\": {\n      \"h1\": true,\n      \"first_paragraph\": true,\n      \"h2_count\": 2,\n      \"total_usage_target\": 5\n    },\n    \"secondary_keywords\": [\n      {\n        \"term\": \"secondary keyword 1\",\n        \"usage_target\": 2,\n        \"placement\": [\"introduction\", \"section 2\"]\n      }\n    ],\n    \"semantic_keywords\": [\"related term 1\", \"related term 2\"],\n    \"featured_snippet_target\": \"What is [primary keyword]?\"\n  },\n  \"content_elements\": {\n    \"diagrams\": 1,\n    \"tables\": 1,\n    \"lists\": 1,\n    \"expert_quotes\": 1,\n    \"statistics\": 2\n  },\n  \"audience_targeting\": {\n    \"expertise_level\": \"beginner to intermediate\",\n    \"pain_points_addressed\": [\"pain point 1\", \"pain point 2\"],\n    \"questions_answered\": [\"question 1?\", \"question 2?\"]\n  },\n  \"sources\": [\n    {\n      \"citation\": \"Source or study\",\n      \"used_for\": \"Which fact or point\"\n    }\n  ]\n}\n\n🎙️ BRAND VOICE\n\nEnsure the tone and structure reflect the intended brand:\n\nProfessional, trustworthy, and conversational\n\nEvidence-informed, yet accessible\n\nPractical, with clear takeaways\n\n🎯 EXPERTISE LEVEL ADAPTATION\n\nAdjust tone, content depth, and structure depending on the target reader:\n\nBeginner: Explain all terms clearly, keep language simple, and use more visuals\n\nIntermediate: Provide background + depth; assume general knowledge\n\nAdvanced: Go deeper into nuance; assume strong base understanding\n\nFinal Goal\n\nGenerate a clear, detailed, SEO-friendly article outline that a professional writer can follow to develop a high-quality article in any industry."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1200,
+        416
+      ],
+      "id": "13e1e777-6ff7-4943-853a-272c4b9e8c3b",
+      "name": "Outline Builder Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1184,
+        640
+      ],
+      "id": "f6d262f5-ef36-44a9-9ef2-4ea2be058b82",
+      "name": "OpenRouter Chat Model8",
+      "credentials": {
+        "openRouterApi": {
+          "id": "TqCIN0wwnjZeEbNJ",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Article Content\n{{ $json.output }}\n\n🔍 SEO Target Information\nPrimary Keyword: {{ $('Topic to JSON').item.json.seo_primary_keyword }}\n\nSecondary Keywords: {{ $('Topic to JSON').item.json.seo_secondary_keywords }}\n\nTarget Audience Level: {{ $('On form submission').item.json['Target Expertise Level'] }}",
+        "options": {
+          "systemMessage": "=SEO ANALYSIS TASKS\n\nEvaluate the HTML content using the following criteria:\n\nSEO Elements\n\nDetect presence and frequency of the primary keyword in:\n\nTitle tag\n\nHeadings (H1, H2, etc.)\n\nFirst paragraph\n\nOverall body text (report keyword density as a percentage)\n\nCheck for appropriate secondary keyword usage\n\nDetect presence and quality of the meta description\n\nEvaluate heading structure for hierarchy and clarity (H1–H3)\n\nAssess readability:\n\nAverage sentence length\n\nAverage paragraph length\n\nEstimated reading level\n\nIdentify internal linking opportunities\n\nCheck for image alt text (if any)\n\nConfirm mobile-friendly structure (short paragraphs, scannable layout)\n\nContent Quality\n\nIs the content appropriate for the intended audience (Beginner / Intermediate / Advanced)?\n\nDoes it match the brand’s tone (Professional, conversational, practical)?\n\nDoes it include supporting evidence or citations?\n\nDoes it provide actionable takeaways?\n\nIs the content engaging and structured clearly?\n\n📦 OUTPUT FORMAT\n\nReturn the result as a valid JSON object in this structure:\n\n{\n  \"seo_score\": 0,\n  \"content_score\": 0,\n  \"overall_rating\": \"Poor | Fair | Good | Excellent\",\n  \"primary_keyword_analysis\": {\n    \"found_in_title\": false,\n    \"found_in_headings\": [],\n    \"found_in_first_paragraph\": false,\n    \"total_occurrences\": 0,\n    \"density_percentage\": 0.0,\n    \"recommendation\": \"\"\n  },\n  \"secondary_keywords_analysis\": [\n    {\n      \"keyword\": \"example keyword\",\n      \"occurrences\": 0,\n      \"recommendation\": \"\"\n    }\n  ],\n  \"heading_structure_analysis\": {\n    \"has_h1\": false,\n    \"proper_hierarchy\": false,\n    \"heading_count\": {\n      \"h1\": 0,\n      \"h2\": 0,\n      \"h3\": 0\n    },\n    \"recommendation\": \"\"\n  },\n  \"readability_analysis\": {\n    \"average_sentence_length\": 0,\n    \"average_paragraph_length\": 0,\n    \"estimated_reading_level\": \"\",\n    \"matches_target_expertise\": false,\n    \"recommendation\": \"\"\n  },\n  \"content_quality_analysis\": {\n    \"expertise_level_match\": 0,\n    \"brand_voice_consistency\": 0,\n    \"evidence_quality\": 0,\n    \"actionable_advice\": 0,\n    \"recommendation\": \"\"\n  },\n  \"optimization_suggestions\": [\n    {\n      \"issue\": \"\",\n      \"recommendation\": \"\",\n      \"priority\": \"Low | Medium | High\"\n    }\n  ],\n  \"recommended_edits\": [\n    {\n      \"original\": \"\",\n      \"suggested\": \"\",\n      \"reason\": \"\"\n    }\n  ],\n  \"suggested_meta\": {\n    \"title_tag\": \"\",\n    \"meta_description\": \"\"\n  }\n}\n\n✅ OPTIMIZATION GUIDELINES\n\nWrite naturally; never compromise readability for keyword stuffing.\n\nMatch the intended brand voice:\n\nProfessional, trustworthy, but conversational\n\nEvidence-informed, yet accessible\n\nPractical, with clear takeaways\n\nKeep primary keyword density between 1%–2.5%.\n\nFocus on helping the reader first, SEO second.\n\nAlign content with the correct expertise level.\n\nFINAL INSTRUCTION\n\nDo not summarize or repeat the content. Instead, analyze it precisely, follow the structure, and return your JSON output only."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        464,
+        992
+      ],
+      "id": "8c82a0ec-0791-4087-a186-e7f85441770b",
+      "name": "SEO Optimizer"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "251604f1-d95a-4207-9af0-ccbea2b843bf",
+              "name": "BusinessName",
+              "value": "KBC Bank en Verzekeringen",
+              "type": "string"
+            },
+            {
+              "id": "5e5835b6-09b5-4d60-8e21-a0b35d6b8015",
+              "name": "Industry",
+              "value": "financiële producten en diensten",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        352,
+        96
+      ],
+      "id": "89e71eaf-b252-4457-bf8b-4364cf9315de",
+      "name": "About the Business"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-3.7-sonnet:thinking",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        80,
+        656
+      ],
+      "id": "757731fd-117b-4aa5-a11a-4c19328b8d33",
+      "name": "OpenRouter Chat Model4",
+      "credentials": {
+        "openRouterApi": {
+          "id": "TqCIN0wwnjZeEbNJ",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-3.7-sonnet:thinking",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        432,
+        624
+      ],
+      "id": "db64659f-4542-4250-85b8-586f51c8cad5",
+      "name": "OpenRouter Chat Model5",
+      "credentials": {
+        "openRouterApi": {
+          "id": "TqCIN0wwnjZeEbNJ",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Set Topic and Get Branding",
+        "height": 320,
+        "width": 1480,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d8c58f82-ada3-474b-b33e-ae019336e71e",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-3.7-sonnet",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        32,
+        1200
+      ],
+      "id": "8597d67e-30fb-4367-b203-88c10390222c",
+      "name": "OpenRouter Chat Model6",
+      "credentials": {
+        "openRouterApi": {
+          "id": "TqCIN0wwnjZeEbNJ",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').first().json.Email }}",
+        "subject": "={{ $('On form submission').first().json['Search Topic'] }} - Article DRAFT",
+        "message": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false
+        },
+        "path": "058a495f-d564-4070-816a-2ff79ce36bed"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2352,
+        960
+      ],
+      "id": "6e80a228-b855-4ec5-a48f-b5397d18e7e8",
+      "name": "Gmail1",
+      "webhookId": "058a495f-d564-4070-816a-2ff79ce36bed",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        464,
+        1200
+      ],
+      "id": "cbfb03e1-8c9e-4962-b144-d5ad7963231e",
+      "name": "OpenRouter Chat Model7",
+      "credentials": {
+        "openRouterApi": {
+          "id": "TqCIN0wwnjZeEbNJ",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Search Topic: {{ $('On form submission').item.json['Search Topic'] }}\nExpertise Level: {{ $('On form submission').item.json['Target Expertise Level'] }}\nBrand Identity: {{ $('Extract Brand Data to File').item.json.data }}\n\nTopics: \n1) {{ $('Plan Topics').item.json.output }}\n",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=# Overview  \nYou are a report title and introduction generator AI. Your task is to create a compelling title, a concise introduction, and two clearly defined chapter headings for a research report based on **one main topic**.\n\n## Instructions:\n1) **Title**: Generate a clear and engaging title that reflects the core focus of the report.  \n2) **Introduction**: Write a short, two-paragraph introduction with a header called **\"Introduction\"**. This section should:\n   - Provide context  \n   - Explain why the topic is important  \n   - Preview what the two chapters will cover  \n3) **Table of Contents**: Include **two** chapter titles only (not five). Each chapter must be formatted using `<h2>` tags.\n\n## Styling:\n- **Title**: Use `<h1>`, centered, styled with professional dark blue (`#00366D`)  \n- **Introduction**: Wrap in a `<div>` with light gray background (`#f4f4f4`), padding, font size 16px, line height 1.6, and text color `#333`  \n- **Separate** the two paragraphs with a `<hr>`  \n- **Chapter Titles**: Use `<h2>`, centered, colored `#00366D`, and make them clear and informative  \n\n\n## Example Output:\n\n{\n  \"title\": \"<h1 style='text-align: center; color: #00366D;'>Vision and Vegetables: A Comprehensive Analysis of Carrots' Impact on Eye Health</h1>\",\n  \"introduction\": \"<div style='background-color: #f4f4f4; padding: 20px; font-size: 16px; line-height: 1.6; color: #333;'><h2>Introduction</h2><p>The relationship between carrots and vision has been a topic of both scientific interest and cultural folklore for generations. While the common parental advice 'eat your carrots, they're good for your eyes' has become deeply embedded in popular consciousness, the scientific reality behind this widely-held belief merits thorough investigation. This comprehensive report examines the multifaceted connection between carrot consumption and ocular health, exploring both the scientific evidence and historical perspectives that have shaped our understanding of this remarkable root vegetable's role in vision care.</p><hr><p>Through this analysis, we will explore the biochemical properties of carrots, the role of beta-carotene in eye health, and the scientific consensus on their effectiveness. Additionally, we will discuss historical influences and modern dietary recommendations. By the end of this report, readers will have a well-rounded understanding of the true impact of carrots on visual function.</p></div>\",\n  \"chapter_1\": \"<h2 style='text-align: center; color: #00366D;'>Topic 1: The Biochemical Properties of Carrots</h2>\",\n  \"chapter_2\": \"<h2 style='text-align: center; color: #00366D;'>Topic 2: The Role of Beta-Carotene in Eye Health</h2>\",\n}\n\n## Final Notes\nEnsure the title is professional, the introduction is engaging, and that each chapter title is formatted as an <h2> header for clarity and emphasis.\n\n## Output Format (JSON):\n\n{\n  \"title\": {\n    \"html\": \"<h1 style='text-align: center; color: #00366D;'>Generated Report Title</h1>\",\n    \"text\": \"Generated Report Title\"\n  },\n  \"introduction\": {\n    \"html\": \"<div style='background-color: #f4f4f4; padding: 20px;'>...</div>\",\n    \"text\": \"Plain text introduction here...\"\n  },\n  \"chapter_1\": {\n    \"html\": \"<h2 style='text-align: center; color: #00366D;'>Topic 1: Title</h2>\",\n    \"text\": \"Topic 1: Title\"\n  },\n  \"chapter_2\": {\n    \"html\": \"<h2 style='text-align: center; color: #00366D;'>Topic 2: Title</h2>\",\n    \"text\": \"Topic 2: Title\"\n  }\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        480,
+        416
+      ],
+      "id": "43fea3f5-f000-4214-a874-c631f3958356",
+      "name": "Intro",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Search Topic: {{ $('On form submission').item.json['Search Topic'] }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=# Overview  \nYou are a research assistant AI designed to generate one highly relevant and in-depth search topic based on the provided input.\n\n## Instructions:\n1) Analyze the main topic for:  \n   - Trending elements  \n   - Controversial aspects  \n   - Technical depth  \n   - Practical applications  \n\n2) Develop **one focused subtopic** that explores this angle in detail.\n\n3) Identify:  \n   - Specific keywords  \n   - Key questions the content must answer  \n\n4) Match the depth and tone to the expertise level requested: `{{ $('On form submission').item.json['Target Expertise Level'] }}`.\n\n5) Ensure full alignment with the brand identity and tone of voice:  \n   `{{ $('Extract Brand Data to File').item.json.data }}`  \n   and target audience defined in  \n   `{{ $('On form submission').item.json['Target Expertise Level'] }}`.\n\n## Output Format (JSON):\n```json\n{\n  \"focused_topic\": {\n    \"title\": \"<Single in-depth search topic>\",\n    \"keywords\": [\"keyword1\", \"keyword2\", \"keyword3\"],\n    \"key_questions\": [\"question1\", \"question2\", \"question3\"]\n  },\n  \"seo_recommendations\": {\n    \"primary_keyword\": \"<main keyword>\",\n    \"secondary_keywords\": [\"keyword1\", \"keyword2\", \"keyword3\"],\n    \"suggested_title_formats\": [\"format1\", \"format2\"]\n  }\n}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        16,
+        416
+      ],
+      "id": "ad9f9f85-cfd8-4a10-b738-3b26e9afb771",
+      "name": "Plan Topics",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Title: {{ $('Topic to JSON').item.json.topic_title }}\n\nResearch: \n{{ $('Deep Research Agent').item.json.choices[0].message.content }}\n\nSource:\n{{ $('Deep Research Agent').item.json.citations }}\n",
+        "options": {
+          "systemMessage": "=Article Writer – General Audience (Action-Oriented)\n\nYou are a professional content writer creating friendly, easy-to-read articles for people who are considering taking the next step with a product, service, or expert consultation. Your job is to turn specialized information into a helpful, engaging article that encourages readers to act.\n\n🎯 CORE GOALS\n\nWrite for the general public, especially those looking for solutions, guidance, or improvement in an area of their life\n\nFocus on real-world tips, relatable language, and simple explanations\n\nUse the article to motivate the reader to follow through and take action (sign up, book a visit, download, request a quote, etc.)\n\nAvoid a scientific, academic, or overly technical tone\n\nTarget word count: 1500–1800 words (strict)\n\nAudience reading level: Grade 7–8\n\nBrand voice: Empathetic, credible, practical, supportive\n\n🏗️ ARTICLE STRUCTURE\n\nCreate a complete HTML document with NO CSS. Follow this layout:\n\n<h1>ARTICLE TITLE</h1>\n\n<!-- INTRODUCTION: ONE PARAGRAPH ONLY (MAX 150 words) -->\n<p>Short intro that hooks the reader and frames the article</p>\n\n<!-- SECTION 1 -->\n<h2>First Section Title</h2>\n<p>Friendly, easy-to-read content goes here, break down key concepts in simple terms...</p>\n\n<!-- SECTION 2 -->\n<h2>Second Section Title</h2>\n<p>More helpful content, include relatable examples, tips, or success stories...</p>\n\n<!-- OPTIONAL TABLE -->\n<table>\n  <thead>\n    <tr><th>Option</th><th>What It Helps With</th><th>Example</th></tr>\n  </thead>\n  <tbody>\n    <tr><td>Option A</td><td>Solves Problem X</td><td>Example Action or Tool</td></tr>\n    <!-- more rows -->\n  </tbody>\n</table>\n\n<!-- SECTION 3 -->\n<h2>Third Section Title</h2>\n<p>Continue the narrative, keep it simple and motivating, explain how to get started...</p>\n\n<!-- CONCLUSION -->\n<h2>Conclusion</h2>\n<p>Wrap up key ideas and include a clear, warm call to action: \n<strong>Take the next step today—your future self will thank you!</strong></p>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        32,
+        992
+      ],
+      "id": "115886aa-94c8-4a90-a2b3-13e1f39bf5ed",
+      "name": "Writer"
+    },
+    {
+      "parameters": {
+        "formTitle": "The Deepest Research",
+        "formDescription": "Enter a search topic then sit back and relax.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Search Topic",
+              "placeholder": "Search Topic",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "Target Expertise Level",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Beginner"
+                  },
+                  {
+                    "option": "Intermediate"
+                  },
+                  {
+                    "option": "Advanced"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {},
+        "path": "4396f6e0-eeab-41e7-a16a-c1d285439d7d"
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -208,
+        48
+      ],
+      "id": "26f0ee82-8b2c-4d64-bc1f-978a37930182",
+      "name": "On form submission",
+      "webhookId": "4396f6e0-eeab-41e7-a16a-c1d285439d7d"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Article Content:\\n{{ $('Writer').item.json.output }}\nScientific Claims & Citations\nSources: {{ $('Deep Research Agent').item.json.citations }}\nSubject Area: Nutrition & Health\nTarget Audience Level: {{ $('On form submission').item.json['Target Expertise Level'] }}",
+        "options": {
+          "systemMessage": "=Evidence & Claims Fact Checker (Domain-Agnostic)\nYou are a scientific/technical fact checker who specializes in validating content across any industry. Your job is to thoroughly review the provided article for factual accuracy, identify potentially misleading statements, and ensure that all claims are supported by reputable evidence.\n\nFACT-CHECKING PROCESS\n\nIdentify all factual claims, especially those related to:\n\nRecommendations or best practices\n\nOutcomes or results\n\nStatistical claims\n\nCausal relationships\n\nReferences to studies, reports, or research\n\nFor each claim, evaluate:\n\nWhether there is broad expert consensus (i.e., widely accepted within the field)\n\nThe quality of cited sources (reputable organizations, peer-reviewed venues, standards bodies)\n\nWhether information is current and up to date\n\nPotential for reader misinterpretation\n\nAppropriateness for the intended audience’s expertise level\n\nFor problematic claims:\n\nFlag the exact text\n\nExplain the issue\n\nSuggest a correction with accurate information\n\nRate severity (Low, Medium, High)\n\nProvide supporting sources or citations\n\nEvaluate overall integrity:\n\nIs the content balanced and unbiased?\n\nAre limitations and caveats included?\n\nIs absolutist language avoided (esp. for emerging research)?\n\nAre studies/data appropriately contextualized?\n\nOUTPUT FORMAT\nReturn your analysis as a JSON object with the following fields:\n\naccuracy_score (0–100)\n\noverall_assessment (brief summary)\n\nflagged_claims (array of objects):\n\nclaim_text\n\nlocation (e.g., selector, line, or heading)\n\nissue\n\nsuggested_correction\n\nseverity (Low | Medium | High)\n\nsupporting_sources (array of citation strings/URLs)\n\ncitation_analysis:\n\nmissing_citations (array with claim, location, suggested sources)\n\nquality_assessment (overall source quality)\n\ncontent_recommendations:\n\nscientific_improvements (with rationale)\n\nterminology_suggestions (with reasons)\n\noverall_quality:\n\nstrengths\n\nweaknesses\n\nfinal_verdict\n\nmodified_content (include only if major corrections are needed; provide corrected HTML)\n\nFACT-CHECKING GUIDELINES\n\nPrioritize evidence from (adapt to the domain):\n\nPeer-reviewed meta-analyses and systematic reviews\n\nAuthoritative standards, guidelines, or handbooks from recognized bodies (e.g., standards organizations, regulatory agencies, professional associations)\n\nConsensus statements or position papers from reputable institutions\n\nLarge, recent datasets or studies with transparent methods\n\nFlag language issues such as:\n\nOverstatements (“cures,” “guarantees,” “always,” “never”)\n\nConfusing correlation with causation\n\nMisrepresented study limitations or populations\n\nOmitting contradictory evidence\n\nSensationalist or misleading phrasing\n\nAdapt content to the audience:\n\nBeginners: clear, plain-language explanations without sacrificing accuracy\n\nIntermediate: add context on uncertainties and evolving knowledge\n\nAdvanced: include nuance, conflicting evidence, and methodological notes\n\nEnsure alignment with evidence-based standards and any provided client/brand style or editorial guide.\n\nFINAL INSTRUCTIONS\nIf the article passes fact-checking with minimal issues (accuracy_score ≥ 90), include \"proceed\": true in the JSON response.\nIf major corrections are required, include \"proceed\": false and provide the full corrected content under modified_content.\n\nBe thorough and fair. Maintain educational value while ensuring factual accuracy."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        768,
+        992
+      ],
+      "id": "092786ea-16cd-46f3-9093-426969908506",
+      "name": "Fact Checker"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-3.7-sonnet:thinking",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        768,
+        1200
+      ],
+      "id": "f831223b-1b8d-4fb9-ad0f-330edab28ecf",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "TqCIN0wwnjZeEbNJ",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Original Article: {{ $('Writer').item.json.output }}\nFact Checker Report: {{ $('Fact Checker').item.json.output }}\nSubject Area: Nutrition & Health\nTarget Expertise Level: {{ $('On form submission').item.json['Target Expertise Level'] }}",
+        "options": {
+          "systemMessage": "=Content Accuracy & Integrity Reviewer – Notes Format\nYou are an accuracy and evidence reviewer. Your role is to review articles after fact-checking and leave editorial notes for the final publisher. Your job is not to rewrite the entire article, but to flag what could or should be changed — and why — based on factual accuracy and clarity.\n\nThis feedback appears as subtext or editorial notes, helping the publisher decide what changes to make before final publishing.\n\n✅ What You Should Do\n\nFlag inaccurate or misleading claims\nPoint out exactly which claims need correcting\nSuggest what the correct claim might be, based on evidence\n\nPoint out missing or weak citations\nHighlight where a citation is missing\nRecommend stronger or more current sources if needed\n\nSuggest terminology improvements\nFlag words or phrases that are not accurate, neutral, or appropriate\nRecommend clearer or more suitable terms for the article’s audience\n\nComment on structure and clarity\nIf any sections are weak, confusing, or overly complex, suggest improvements\nKeep the article’s tone and style consistent\n\n🧾 How to Format Your Feedback\n\nReturn your review as a JSON object like this:\n\n{\n  \"correction_notes\": {\n    \"claims_to_fix\": [\n      \"In Section 2, the article says 'X completely solves Y.' This should be reworded to clarify that X may help with Y but does not guarantee it.\"\n    ],\n    \"citations_needed\": [\n      \"The claim in Section 3 about success rates lacks a citation. Recommend linking to a reputable organization or peer-reviewed study.\"\n    ],\n    \"term_suggestions\": [\n      \"The term 'miracle solution' is vague. Consider replacing it with a more specific and neutral description.\"\n    ],\n    \"clarity_warnings\": [\n      \"The explanation of process A vs. process B in Section 1 is overly technical. Consider breaking it into two simple examples.\"\n    ]\n  }\n}\n\n🔒 Key Guidelines\n\nDo not rewrite the article\n\nMaintain all original HTML formatting and structure\n\nKeep visual elements (tables, diagrams, etc.) untouched\n\nMatch the article’s tone and audience level (Beginner / Intermediate / Advanced)\n\nUse plain, non-academic language in your notes\n\n🧪 Evidence & Integrity Notes\n\nAlways favor reputable sources: standards bodies, government agencies, professional associations, peer-reviewed journals\n\nAvoid overstatements like “cures,” “guarantees,” “100% proven”\n\nUse phrases like “may help,” “linked to,” or “supports” when summarizing evidence\n\nQualify early research or observational claims appropriately\n\n📝 Final Goal\n\nYour goal is to help the publisher make informed edits by clearly identifying potential issues and giving them the context to fix them — while preserving the original article’s value, format, and readability for the intended audience."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        1088,
+        992
+      ],
+      "id": "596f3217-d30a-48e2-8fef-0ace27c246ee",
+      "name": "Correction Workflow"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-3.7-sonnet:thinking",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1088,
+        1152
+      ],
+      "id": "a83258b2-668d-40af-bfb0-7e4c6796e010",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "TqCIN0wwnjZeEbNJ",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        96
+      ],
+      "id": "0bf71824-1d4f-4741-88b1-2a97b30c2b92",
+      "name": "Extract Brand Data to File"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "16m3nHy2Im6F90Gl5sDYn0OtqcXh8N_rC",
+          "mode": "list",
+          "cachedResultName": "KBC-Brand-Identity.txt",
+          "cachedResultUrl": "https://drive.google.com/file/d/16m3nHy2Im6F90Gl5sDYn0OtqcXh8N_rC/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        752,
+        96
+      ],
+      "id": "f03f2ed9-4d98-4ad7-bb35-086dd21e89bb",
+      "name": "Download Brand Data",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "OOgkw5hSy8ONsrbB",
+          "name": "Google Drive account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// N8N Function Node - Ultra-Robust Topics Parser with JSON Safety\n// This version guarantees all text is free of newlines and JSON-safe\n// Get the raw output from previous node\nconst rawOutput = $input.item.json?.output || $input.item.json || '';\n// Step 1: First try to extract from code blocks\nlet jsonText;\nconst codeBlockMatch = rawOutput.toString().match(/```(?:json)?\\s*([\\s\\S]*?)\\s*```/);\nif (codeBlockMatch && codeBlockMatch[1]) {\n  jsonText = codeBlockMatch[1];\n} else {\n  // If no code block, use the raw output\n  jsonText = rawOutput.toString();\n}\n// Step 2: Replace escaped newlines and clean whitespace\njsonText = jsonText.replace(/\\\\n/g, ' ').replace(/\\s+/g, ' ').trim();\n// Function to make any text JSON-safe\nfunction makeJsonSafe(text) {\n  if (text === undefined || text === null) return '';\n  \n  return text.toString()\n    .replace(/\\n/g, ' ')           // Replace newlines with spaces\n    .replace(/\\r/g, ' ')           // Replace carriage returns\n    .replace(/\\t/g, ' ')           // Replace tabs\n    .replace(/\\s+/g, ' ')          // Replace multiple spaces with single space\n    .replace(/[\\u0000-\\u001F]/g, ' ') // Replace control characters\n    .trim();                       // Trim leading/trailing whitespace\n}\n// Function to handle arrays safely\nfunction makeArraySafe(arr, joinChar) {\n  if (!Array.isArray(arr)) return '';\n  return arr.map(item => makeJsonSafe(item)).join(joinChar);\n}\n// Step 3: Try to parse the JSON with extra error handling\ntry {\n  const parsedData = JSON.parse(jsonText);\n  \n  // Step 4: Extract data with nested try/catch blocks for maximum safety\n  let formatted = { success: false };\n  \n  try {\n    // Process focused topic if it exists\n    if (parsedData.focused_topic) {\n      formatted.topic_title = makeJsonSafe(parsedData.focused_topic.title || '');\n      formatted.topic_keywords = makeArraySafe(parsedData.focused_topic.keywords || [], ', ');\n      formatted.topic_key_questions = makeArraySafe(parsedData.focused_topic.key_questions || [], '; ');\n    }\n    \n    // Process SEO recommendations if they exist\n    if (parsedData.seo_recommendations) {\n      formatted.seo_primary_keyword = makeJsonSafe(parsedData.seo_recommendations.primary_keyword || '');\n      formatted.seo_secondary_keywords = makeArraySafe(parsedData.seo_recommendations.secondary_keywords || [], ', ');\n      formatted.seo_suggested_titles = makeArraySafe(parsedData.seo_recommendations.suggested_title_formats || [], '; ');\n    }\n    \n    // Create a simple flat content string with NO newlines\n    formatted.formatted_content = \n      'Topic: ' + formatted.topic_title + ' | ' +\n      'Keywords: ' + formatted.topic_keywords + ' | ' +\n      'Key Questions: ' + formatted.topic_key_questions + ' | ' +\n      'SEO Primary Keyword: ' + formatted.seo_primary_keyword + ' | ' +\n      'Secondary Keywords: ' + formatted.seo_secondary_keywords + ' | ' +\n      'Suggested Titles: ' + formatted.seo_suggested_titles;\n    \n    // Mark as successful\n    formatted.success = true;\n    \n  } catch (dataError) {\n    // If data extraction failed, return a safe error object\n    return {\n      json: {\n        success: false,\n        error: 'Data extraction error: ' + makeJsonSafe(dataError.message),\n        data_error: true\n      }\n    };\n  }\n  \n  // Return the formatted data\n  return { json: formatted };\n  \n} catch (jsonError) {\n  // If JSON parsing failed completely, return error info\n  return {\n    json: {\n      success: false,\n      error: 'JSON parsing error: ' + makeJsonSafe(jsonError.message),\n      json_error: true,\n      cleaned_text: makeJsonSafe(jsonText).substring(0, 200) + '...'\n    }\n  };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        416
+      ],
+      "id": "b275cf02-af14-4d76-8351-861a672a6d81",
+      "name": "Topic to JSON"
+    },
+    {
+      "parameters": {
+        "jsCode": "// SUPER SIMPLE PARSER - No Bullshit Version\n// Just paste this into your Function node and it will work\n// Get the input\nconst input = $input.item.json;\n// Extract the JSON content from the array structure\nfunction extractData() {\n  try {\n    // Find the JSON part - look for the content between code blocks\n    let jsonContent = '';\n    \n    if (Array.isArray(input) && input[0] && input[0].output) {\n      const match = input[0].output.match(/```json\\n([\\s\\S]*?)\\n```/);\n      if (match && match[1]) {\n        jsonContent = match[1];\n      }\n    } else if (input && input.output) {\n      const match = input.output.match(/```json\\n([\\s\\S]*?)\\n```/);\n      if (match && match[1]) {\n        jsonContent = match[1];\n      }\n    }\n    \n    // Parse the JSON\n    const parsed = JSON.parse(jsonContent);\n    \n    // Extract just what we need - clean and simple\n    return {\n      title_text: parsed.title.text.replace(/\\n/g, ' ').trim(),\n      introduction_text: parsed.introduction.text.replace(/\\n/g, ' ').trim(),\n      chapter_1_text: parsed.chapter_1.text.replace(/\\n/g, ' ').trim(),\n      chapter_2_text: parsed.chapter_2.text.replace(/\\n/g, ' ').trim()\n    };\n  } catch (error) {\n    // Simple error handling\n    return {\n      error: 'Couldn\\'t parse the input: ' + error.message\n    };\n  }\n}\n// Get the clean data and return it\nreturn {\n  json: extractData()\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        416
+      ],
+      "id": "1fb97f39-b5e8-45f3-b5ac-db6ca35dcea1",
+      "name": "Intro to JSON"
+    },
+    {
+      "parameters": {
+        "jsCode": "// IMPROVED HTML JOINER - Combines all HTML sections and formats for email\n// Get each formatted HTML section\nconst writerHTML = $('Writer').first().json.output || '';\nconst factCheckerHTML = $('Fact Checker Json to HTML').first().json.output || '';\nconst correctionsHTML = $('Corrections JSON to HTML').first().json.output || '';\nconst citationsHTML = $('Citations - JSON to HTML').first().json.output || '';\n\n// Build an array of all available sections\nconst sections = [];\n\n// Add the main article first (always include this)\nsections.push(`\n  <div style=\"background-color: #f0f8ff; padding: 20px; border-left: 6px solid #1e90ff;\">\n    <h2 style=\"font-size: 26px; color: #1e90ff; margin-top: 0;\">Main Article</h2>\n    ${writerHTML}\n  </div>\n`);\n\n// Add other sections if they exist\nif (factCheckerHTML) sections.push(factCheckerHTML);\nif (correctionsHTML) sections.push(correctionsHTML);\nif (citationsHTML) sections.push(citationsHTML);\n\n// Create final HTML with proper styling and responsive layout\nconst finalHTML = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Voorstel artikel</title>\n</head>\n<body style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 1200px; margin: 0 auto; padding: 20px;\">\n\n  ${sections.join('<hr style=\"border: 0; height: 1px; background: #ddd; margin: 30px 0;\">')}\n  \n  <div style=\"margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; font-size: 14px; color: #666;\">\n    <p>© ${new Date().getFullYear()} Timo de Groot. All rights reserved.</p>\n  </div>\n</body>\n</html>\n`;\n\n// Return both the full HTML and the individual sections\nreturn [{\n  json: {\n    html: finalHTML,\n    htmlSections: sections\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2176,
+        960
+      ],
+      "id": "edb4000d-122b-4dac-815e-89735396f5d4",
+      "name": "Join all HTML"
+    },
+    {
+      "parameters": {
+        "jsCode": "// CITATIONS NODE - Converts raw citations to HTML\n// This node takes input from Deep Research Agent and outputs formatted HTML\n\n// Get citations data from Deep Research Agent\nconst citationsRaw = $('Deep Research Agent').first().json.citations || [];\n\n// Format citations into HTML list items\nconst citationsList = Array.isArray(citationsRaw) \n  ? citationsRaw.map(c => `<li style=\"margin-bottom: 6px;\">${c}</li>`).join('')\n  : `<li>No citations available</li>`;\n\n// Create the complete HTML section with styling\nconst htmlCitations = `\n  <div style=\"background-color: #fffaf0; padding: 20px; border-left: 6px solid #ffa500;\">\n    <h2 style=\"font-size: 24px; color: #ff8c00; margin-top: 0;\">Citations</h2>\n    <ul style=\"padding-left: 20px; margin: 0;\">${citationsList}</ul>\n  </div>\n`;\n\n// Return the formatted HTML using the same structure as the other nodes\nreturn [{\n  json: {\n    output: htmlCitations\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1632,
+        1216
+      ],
+      "id": "6c292f6e-20ce-4b52-921a-b5214768474c",
+      "name": "Citations - JSON to HTML"
+    },
+    {
+      "parameters": {
+        "jsCode": "// CORRECTION WORKFLOW NODE - Converts raw correction data to HTML\n// This node takes input from Correction Workflow and outputs formatted HTML\n\n// Get the raw correction data\nconst correctionRaw = $('Correction Workflow').first().json || '';\nlet correctionData = {};\n\n// Try to parse the correction data from different possible locations\ntry {\n  // If the data is in the output property as a string containing JSON code block\n  if (correctionRaw.output && typeof correctionRaw.output === 'string') {\n    // Check for ```json format with escaped newlines\n    if (correctionRaw.output.includes('```json\\\\n')) {\n      const match = correctionRaw.output.match(/```json\\\\n([\\s\\S]*?)\\\\n```/);\n      if (match && match[1]) {\n        const cleanedJson = match[1]\n          .replace(/\\\\n/g, '\\n')  // Replace escaped newlines\n          .replace(/\\\\\\\\/g, '\\\\') // Replace double backslashes\n          .replace(/\\\\\"/g, '\"');  // Replace escaped quotes\n        \n        try {\n          const parsed = JSON.parse(cleanedJson);\n          correctionData = parsed.correction_notes || {};\n        } catch (e) {\n          console.log('Error parsing cleaned JSON:', e.message);\n        }\n      }\n    }\n    // Check for standard ```json format without escaping\n    else if (correctionRaw.output.includes('```json')) {\n      const match = correctionRaw.output.match(/```json\\s*([\\s\\S]*?)\\s*```/);\n      if (match && match[1]) {\n        try {\n          const parsed = JSON.parse(match[1]);\n          correctionData = parsed.correction_notes || {};\n        } catch (e) {\n          console.log('Error parsing JSON from code block:', e.message);\n        }\n      }\n    }\n    // Direct parsing if it looks like JSON\n    else if (correctionRaw.output.trim().startsWith('{') && correctionRaw.output.trim().endsWith('}')) {\n      try {\n        const parsed = JSON.parse(correctionRaw.output);\n        correctionData = parsed.correction_notes || {};\n      } catch (e) {\n        console.log('Error parsing output as JSON:', e.message);\n      }\n    }\n  } \n  // If correctionRaw itself is the correction notes\n  else if (correctionRaw.correction_notes) {\n    correctionData = correctionRaw.correction_notes;\n  }\n  \n  console.log('Parsed correction data with keys:', Object.keys(correctionData));\n} catch (e) {\n  console.log('Failed to parse correction data:', e.message);\n}\n\n// Helper function to render lists with emojis\nfunction renderList(title, items, emoji = '') {\n  if (!items || items.length === 0) return '';\n  const list = items.map(item => `<li style=\"margin-bottom: 6px;\">${item}</li>`).join('');\n  return `\n    <div style=\"margin-bottom: 24px;\">\n      <h3 style=\"font-size: 20px; font-weight: bold; color: #444;\">${emoji} ${title}</h3>\n      <ul style=\"padding-left: 20px; margin-top: 8px;\">${list}</ul>\n    </div>\n  `;\n}\n\n// Format the corrections - either use structured data or fall back to raw\nlet formattedCorrections = '';\nif (correctionData.claims_to_fix || correctionData.citations_needed || \n    correctionData.term_suggestions || correctionData.clarity_warnings) {\n  // We have structured data, format it nicely\n  formattedCorrections = `\n    ${renderList('Claims to Fix', correctionData.claims_to_fix, '🛠️')}\n    ${renderList('Citations Needed', correctionData.citations_needed, '📚')}\n    ${renderList('Terminology Suggestions', correctionData.term_suggestions, '💬')}\n    ${renderList('Clarity Warnings', correctionData.clarity_warnings, '⚠️')}\n  `;\n} else {\n  // Direct approach to extract and format the correction notes\n  try {\n    // This is a more direct approach for the specific format you showed\n    const raw = correctionRaw.output || '';\n    const jsonStartIndex = raw.indexOf('{');\n    const jsonEndIndex = raw.lastIndexOf('}') + 1;\n    \n    if (jsonStartIndex >= 0 && jsonEndIndex > jsonStartIndex) {\n      const jsonStr = raw.substring(jsonStartIndex, jsonEndIndex);\n      const parsed = JSON.parse(jsonStr);\n      \n      if (parsed.correction_notes) {\n        const notes = parsed.correction_notes;\n        formattedCorrections = `\n          ${renderList('Claims to Fix', notes.claims_to_fix, '🛠️')}\n          ${renderList('Citations Needed', notes.citations_needed, '📚')}\n          ${renderList('Terminology Suggestions', notes.term_suggestions, '💬')}\n          ${renderList('Clarity Warnings', notes.clarity_warnings, '⚠️')}\n        `;\n      }\n    }\n  } catch (e) {\n    console.log('Direct extraction failed:', e.message);\n    \n    // If all parsing attempts fail, display the raw content\n    formattedCorrections = `<pre style=\"white-space: pre-wrap; font-size: 14px;\">${\n      typeof correctionRaw === 'string' ? \n      correctionRaw : \n      JSON.stringify(correctionRaw, null, 2)\n    }</pre>`;\n  }\n}\n\n// Create the final HTML with container styling\nconst htmlCorrections = `\n  <div style=\"background-color: #fff0f5; padding: 20px; border-left: 6px solid #ff69b4;\">\n    <h2 style=\"font-size: 24px; color: #c71585; margin-top: 0;\">Corrections</h2>\n    ${formattedCorrections}\n  </div>\n`;\n\n// Return just the formatted HTML\nreturn [{\n  json: {\n    output: htmlCorrections\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1632,
+        1072
+      ],
+      "id": "240eed09-3bb6-4984-bbdc-a2c4e8874f23",
+      "name": "Corrections JSON to HTML"
+    },
+    {
+      "parameters": {
+        "jsCode": "// FACT CHECKER NODE - Converts raw fact checker data to HTML\n// This node takes input from Fact Checker and outputs formatted HTML\n\n// Get the raw fact checker data\nconst factCheckerRaw = $('Fact Checker').first().json || {};\n\n// Log what we're getting for debugging\nconsole.log('Fact Checker raw type:', typeof factCheckerRaw);\nconsole.log('Fact Checker raw keys:', Object.keys(factCheckerRaw));\n\n// Extract JSON data from nested structure if needed\nlet factCheckerJSON = {};\ntry {\n  // Handle the case where data is nested inside an output property\n  if (factCheckerRaw && factCheckerRaw.output && typeof factCheckerRaw.output === 'string') {\n    // If the output property contains a JSON code block\n    if (factCheckerRaw.output.includes('```json')) {\n      const match = factCheckerRaw.output.match(/```json\\\\n([\\s\\S]*?)\\\\n```/);\n      if (match && match[1]) {\n        // Clean up the escaped characters\n        const cleanedJson = match[1]\n          .replace(/\\\\n/g, '\\n')  // Replace escaped newlines\n          .replace(/\\\\\\\\/g, '\\\\') // Replace double backslashes\n          .replace(/\\\\\"/g, '\"');  // Replace escaped quotes\n        \n        factCheckerJSON = JSON.parse(cleanedJson);\n        console.log('Successfully parsed JSON from factCheckerRaw.output');\n      } else {\n        // Try alternative regex if the first one failed\n        const altMatch = factCheckerRaw.output.match(/```json\\s*([\\s\\S]*?)\\s*```/);\n        if (altMatch && altMatch[1]) {\n          factCheckerJSON = JSON.parse(altMatch[1]);\n          console.log('Parsed JSON with alternative regex');\n        }\n      }\n    } \n    // Try direct JSON parsing if the output looks like a JSON object\n    else if (factCheckerRaw.output.trim().startsWith('{') && factCheckerRaw.output.trim().endsWith('}')) {\n      factCheckerJSON = JSON.parse(factCheckerRaw.output);\n      console.log('Parsed output directly as JSON');\n    }\n  } \n  // If the factCheckerRaw is already the structured data (not nested)\n  else if (factCheckerRaw && typeof factCheckerRaw === 'object') {\n    // Check if it has expected properties\n    if (factCheckerRaw.accuracy_score !== undefined || \n        factCheckerRaw.flagged_claims || \n        factCheckerRaw.overall_assessment) {\n      factCheckerJSON = factCheckerRaw;\n      console.log('Using factCheckerRaw directly as JSON data');\n    }\n  }\n  \n  console.log('Parsed fact checker with keys:', Object.keys(factCheckerJSON));\n} catch (e) {\n  console.log('Error processing fact checker data:', e.message);\n}\n\n// Helper functions for rendering different sections\nfunction renderFlaggedClaims(claims) {\n  if (!claims || !Array.isArray(claims) || claims.length === 0) return '';\n  \n  return claims.map(claim => `\n    <div style=\"margin-bottom: 20px; border: 1px solid #ddd; padding: 12px;\">\n      <p><strong>Claim:</strong> ${claim.claim_text || claim.claim || ''}</p>\n      <p><strong>Location:</strong> ${claim.location || ''}</p>\n      <p><strong>Issue:</strong> ${claim.issue || ''}</p>\n      <p><strong>Suggested Correction:</strong> ${claim.suggested_correction || claim.correction || ''}</p>\n      <p><strong>Severity:</strong> ${claim.severity || ''}</p>\n      <p><strong>Source:</strong> ${claim.supporting_sources || claim.sources || ''}</p>\n    </div>\n  `).join('');\n}\n\nfunction renderSimpleList(title, items) {\n  if (!items || !Array.isArray(items) || items.length === 0) return '';\n  \n  const list = items.map(item => `<li style=\"margin-bottom: 6px;\">${item}</li>`).join('');\n  return `\n    <div style=\"margin-bottom: 16px;\">\n      <h3 style=\"font-size: 20px; color: #444;\">${title}</h3>\n      <ul style=\"padding-left: 20px;\">${list}</ul>\n    </div>\n  `;\n}\n\nfunction renderMissingCitations(citations) {\n  if (!citations || !Array.isArray(citations) || citations.length === 0) return '';\n  \n  const citationItems = citations.map(c => \n    `<li style=\"margin-bottom: 6px;\"><strong>${c.claim || ''}</strong> — ${c.suggested_source || ''} <em>(${c.location || ''})</em></li>`\n  ).join('');\n  \n  if (!citationItems) return '';\n  \n  return `\n    <div style=\"margin-bottom: 16px;\">\n      <h3 style=\"font-size: 20px; color: #444;\">Missing Citations</h3>\n      <ul style=\"padding-left: 20px;\">${citationItems}</ul>\n    </div>\n  `;\n}\n\nfunction renderImprovements(improvements) {\n  if (!improvements || !Array.isArray(improvements) || improvements.length === 0) return '';\n  \n  const items = improvements.map(s => \n    `<li style=\"margin-bottom: 6px;\"><strong>${s.recommendation || s.suggestion || ''}</strong>: ${s.rationale || ''}</li>`\n  ).join('');\n  \n  if (!items) return '';\n  \n  return `\n    <div style=\"margin-bottom: 16px;\">\n      <h3 style=\"font-size: 20px; color: #444;\">Scientific Improvements</h3>\n      <ul style=\"padding-left: 20px;\">${items}</ul>\n    </div>\n  `;\n}\n\nfunction renderTerminologySuggestions(terms) {\n  if (!terms || !Array.isArray(terms) || terms.length === 0) return '';\n  \n  const items = terms.map(t => \n    `<li style=\"margin-bottom: 6px;\"><strong>${t.current_term || t.original || ''}</strong>: ${t.suggested_term || t.suggested || ''} ${t.reason ? `(${t.reason})` : ''}</li>`\n  ).join('');\n  \n  if (!items) return '';\n  \n  return `\n    <div style=\"margin-bottom: 16px;\">\n      <h3 style=\"font-size: 20px; color: #444;\">Terminology Suggestions</h3>\n      <ul style=\"padding-left: 20px;\">${items}</ul>\n    </div>\n  `;\n}\n\n// Build the fact checker HTML - with solid null checking\nlet htmlFactChecker = '';\nif (Object.keys(factCheckerJSON).length > 0) {\n  htmlFactChecker = `\n    <div style=\"background-color: #f5fffa; padding: 20px; border-left: 6px solid #32cd32;\">\n      <h2 style=\"font-size: 24px; color: #228b22; margin-top: 0;\">Fact Checker</h2>\n      <p><strong>Accuracy Score:</strong> ${factCheckerJSON.accuracy_score || 'N/A'}</p>\n      <p>${factCheckerJSON.overall_assessment || ''}</p>\n      \n      ${factCheckerJSON.flagged_claims && factCheckerJSON.flagged_claims.length > 0 ? \n        `<h3 style=\"font-size: 20px; color: #444;\">Flagged Claims</h3>\n         ${renderFlaggedClaims(factCheckerJSON.flagged_claims)}` : ''}\n      \n      ${factCheckerJSON.citation_analysis?.missing_citations ? \n        renderMissingCitations(factCheckerJSON.citation_analysis.missing_citations) : ''}\n      \n      ${factCheckerJSON.content_recommendations?.scientific_improvements ? \n        renderImprovements(factCheckerJSON.content_recommendations.scientific_improvements) : ''}\n      \n      ${factCheckerJSON.content_recommendations?.terminology_suggestions ? \n        renderTerminologySuggestions(factCheckerJSON.content_recommendations.terminology_suggestions) : ''}\n      \n      ${factCheckerJSON.overall_quality?.strengths ? \n        renderSimpleList('Strengths', factCheckerJSON.overall_quality.strengths) : ''}\n      \n      ${factCheckerJSON.overall_quality?.weaknesses ? \n        renderSimpleList('Weaknesses', factCheckerJSON.overall_quality.weaknesses) : ''}\n      \n      ${factCheckerJSON.overall_quality?.final_verdict ? \n        `<p><strong>Final Verdict:</strong> ${factCheckerJSON.overall_quality.final_verdict}</p>` : ''}\n    </div>\n  `;\n} else {\n  // If we couldn't parse the data, show raw data for debugging\n  htmlFactChecker = `\n    <div style=\"background-color: #f5fffa; padding: 20px; border-left: 6px solid #32cd32;\">\n      <h2 style=\"font-size: 24px; color: #228b22; margin-top: 0;\">Fact Checker</h2>\n      <p>Unable to parse fact checker data. Raw content below:</p>\n      <pre style=\"white-space: pre-wrap; font-size: 14px; max-height: 200px; overflow: auto;\">${\n        typeof factCheckerRaw === 'string' ? \n        factCheckerRaw : \n        JSON.stringify(factCheckerRaw, null, 2)\n      }</pre>\n    </div>\n  `;\n}\n\n// Return just the formatted HTML\nreturn [{\n  json: {\n    output: htmlFactChecker,\n    debug: {\n      factCheckerRawType: typeof factCheckerRaw,\n      factCheckerRawKeys: Object.keys(factCheckerRaw),\n      factCheckerJSONKeys: Object.keys(factCheckerJSON)\n    }\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1632,
+        912
+      ],
+      "id": "35282d87-fa42-4595-b16a-cc68f21c8984",
+      "name": "Fact Checker Json to HTML"
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        2000,
+        944
+      ],
+      "id": "8b27544e-b9cf-4df5-a8ff-166ede89f1d5",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Enhanced Writer HTML Node - Applies proper styling to article elements\n// Get the original writer HTML\nconst originalHTML = $('Writer').first().json.output || '';\n\n// Apply enhanced styling to the content\nconst enhancedHTML = originalHTML\n  // Fix table styling\n  .replace(/<table>/g, '<table style=\"width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 16px;\">')\n  .replace(/<thead>/g, '<thead style=\"background-color: #f0f7fb;\">')\n  .replace(/<th>/g, '<th style=\"padding: 12px 15px; border: 1px solid #ddd; text-align: left; font-weight: bold;\">')\n  .replace(/<td>/g, '<td style=\"padding: 12px 15px; border: 1px solid #ddd;\">')\n  .replace(/<tbody>/g, '<tbody style=\"border-top: 2px solid #ddd;\">')\n  \n  // Improve SVG container styling\n  .replace(/<div class=\"diagram-container\">/g, '<div class=\"diagram-container\" style=\"margin: 30px 0; background-color: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);\">')\n  .replace(/<p class=\"diagram-caption\">/g, '<p class=\"diagram-caption\" style=\"font-style: italic; text-align: center; margin-top: 15px; font-size: 14px; color: #666;\">')\n  \n  // Style headings\n  .replace(/<h1>/g, '<h1 style=\"color: #00366D; font-size: 32px; margin-top: 0; margin-bottom: 20px; font-weight: 700;\">')\n  .replace(/<h2>/g, '<h2 style=\"color: #00366D; font-size: 24px; margin-top: 30px; margin-bottom: 15px; font-weight: 600;\">')\n  .replace(/<h3>/g, '<h3 style=\"color: #00366D; font-size: 20px; margin-top: 25px; margin-bottom: 10px; font-weight: 600;\">')\n  \n  // Style paragraphs and lists\n  .replace(/<p>/g, '<p style=\"margin-bottom: 16px; line-height: 1.6; font-size: 18px;\">')\n  .replace(/<ul>/g, '<ul style=\"margin-bottom: 20px; padding-left: 20px;\">')\n  .replace(/<ol>/g, '<ol style=\"margin-bottom: 20px; padding-left: 20px;\">')\n  .replace(/<li>/g, '<li style=\"margin-bottom: 8px; line-height: 1.5;\">')\n  \n  // Style quotes\n  .replace(/\"([^\"]+)\"/g, function(match, p1) {\n    // Only replace quotes around text that looks like a quote (has closing punctuation)\n    if (p1.match(/[.!?]\"$/)) {\n      return `<span style=\"color: #555; font-style: italic;\">\"${p1}</span>`;\n    }\n    return match;\n  });\n\n// Return the enhanced HTML\nreturn [{\n  json: {\n    output: enhancedHTML\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1632,
+        784
+      ],
+      "id": "21711f88-413f-4548-a596-17e9c9ccb24d",
+      "name": "Writer HTML Cleanup"
+    },
+    {
+      "parameters": {
+        "content": "# Plan and Build Outline",
+        "height": 520,
+        "width": 1480,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        320
+      ],
+      "id": "ef8c1c1b-a538-4aea-a028-d6cac35bfa17",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# Write Article, SEO, Fact Check and Correct Errors",
+        "height": 520,
+        "width": 1480,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        832
+      ],
+      "id": "cbbbf2ea-829c-43b8-b853-d82c15163003",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Merge Data, Post to Wordpress as a Draft, and send article, fact checking, corrections and Citations via Email",
+        "height": 620,
+        "width": 1480,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1472,
+        736
+      ],
+      "id": "fa177c1e-aace-42ec-b5f2-34484a48c6c8",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Documentation\n\n## 1. Overview\nThis workflow automates the creation of high-quality, SEO-optimized articles. It leverages AI language models, fact-checking processes, and multiple validation steps to produce professionally written content that is both scientifically accurate and engaging for readers.\n\n## 2. Workflow Purpose\nThe workflow solves several key business challenges:\n- Automates the creation of expert-level nutrition content\n- Ensures scientific accuracy through systematic fact-checking\n- Maintains brand consistency in content creation\n- Streamlines the content publishing process\n- Reduces the time and resources needed for content creation\n- Ensures SEO optimization for better online visibility\n\n## 3. Components\n\n### Input & Initialization\n- **Form Trigger**: Collects initial input including search topic, target expertise level, and email\n- **About the Business**: Stores core business information and brand identity\n- **Download Brand Data & Extract**: Retrieves and processes brand guidelines\n\n### Content Planning\n- **Plan Topics**: Analyzes the main topic and generates relevant subtopics\n- **Intro**: Creates article title and introduction\n- **Topic to JSON**: Structures topic data for processing\n- **Deep Research Agent**: Performs in-depth research using Perplexity AI\n\n\n",
+        "height": 740,
+        "width": 1480
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1472,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "341373d0-b900-4051-8077-6a4efaa3a585",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "### Content Creation\n- **Writer**: Generates the main article content\n- **SEO Optimizer**: Optimizes content for search engines\n- **Fact Checker**: Validates scientific claims and accuracy\n- **Correction Workflow**: Implements necessary corrections\n\n### Output Processing\n- **Various JSON to HTML Converters**: Transform content into properly formatted HTML\n- **Join all HTML**: Combines all components into final format\n- **Gmail**: Sends the article draft to specified email\n- **WordPress**: Posts content as a draft to WordPress\n\n## 4. Data Flow\n1. User submits topic through form\n2. Workflow retrieves brand guidelines and business context\n3. AI generates topic outline and research\n4. Main content is written and optimized for SEO\n5. Content undergoes fact-checking and corrections\n6. Final content is formatted and distributed via:\n   - Email to specified address\n   - WordPress draft post\n   - HTML formatted document",
+        "height": 520,
+        "width": 780
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2144,
+        192
+      ],
+      "typeVersion": 1,
+      "id": "3490b288-0fcf-441d-9812-ae789b729919",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "title": "={{ $('Topic to JSON').first().json.topic_title }}",
+        "additionalFields": {
+          "content": "={{ $('Writer').first().json.output }}",
+          "status": "draft"
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        2608,
+        960
+      ],
+      "id": "8a47a839-0917-4c34-9d33-1c86d896f9c0",
+      "name": "Wordpress"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-deep-research\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Write an easy-to-understand, practical explanation for everyday readers. Keep it friendly and clear, without scientific jargon. Focus on real-world examples and plain language. Do not include pretext or system messages — only return the final output.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Title: {{$('Topic to JSON').item.json.topic_title}}\\n\\nIntroduction: {{$json.introduction_text}}\\n\\nTopics: {{$('Topic to JSON').item.json.topic_key_questions}}\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        992,
+        416
+      ],
+      "id": "f2e92175-3d4f-4090-b31f-60ced23d34b1",
+      "name": "Deep Research Agent",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "Mpl4fbUqzUMf9UYu",
+          "name": "Bearer Auth account Perplexity"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "perplexity/sonar-deep-research",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        880,
+        624
+      ],
+      "id": "92c5e37c-36cb-4975-a343-db4bbd4d692f",
+      "name": "OpenRouter Chat Model2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "TqCIN0wwnjZeEbNJ",
+          "name": "OpenRouter account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Outline Builder Agent": {
+      "main": [
+        [
+          {
+            "node": "Writer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model8": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Outline Builder Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SEO Optimizer": {
+      "main": [
+        [
+          {
+            "node": "Fact Checker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "About the Business": {
+      "main": [
+        [
+          {
+            "node": "Download Brand Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Plan Topics",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Intro",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Writer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "SEO Optimizer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Intro": {
+      "main": [
+        [
+          {
+            "node": "Intro to JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plan Topics": {
+      "main": [
+        [
+          {
+            "node": "Topic to JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Writer": {
+      "main": [
+        [
+          {
+            "node": "SEO Optimizer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "About the Business",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fact Checker": {
+      "main": [
+        [
+          {
+            "node": "Correction Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Fact Checker",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Correction Workflow": {
+      "main": [
+        [
+          {
+            "node": "Citations - JSON to HTML",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Corrections JSON to HTML",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fact Checker Json to HTML",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Writer HTML Cleanup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Correction Workflow",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Brand Data to File": {
+      "main": [
+        [
+          {
+            "node": "Plan Topics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Brand Data": {
+      "main": [
+        [
+          {
+            "node": "Extract Brand Data to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Topic to JSON": {
+      "main": [
+        [
+          {
+            "node": "Intro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Intro to JSON": {
+      "main": [
+        [
+          {
+            "node": "Deep Research Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Join all HTML": {
+      "main": [
+        [
+          {
+            "node": "Gmail1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Citations - JSON to HTML": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Corrections JSON to HTML": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Fact Checker Json to HTML": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Join all HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Writer HTML Cleanup": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deep Research Agent": {
+      "main": [
+        [
+          {
+            "node": "Outline Builder Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model2": {
+      "ai_languageModel": [
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "8288eb8d-a1d3-4b13-ba41-f263b432c672",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-10-06T06:09:22.030Z",
+      "createdAt": "2025-10-06T06:09:22.030Z",
+      "role": "workflow:owner",
+      "workflowId": "2M1G9sVEIVcdjzMi",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2025-10-04T07:36:17.041Z",
+      "createdAt": "2025-10-04T07:36:17.041Z",
+      "id": "6MyF4emRc0S6SoxX",
+      "name": "timo"
+    },
+    {
+      "updatedAt": "2025-10-04T07:36:17.062Z",
+      "createdAt": "2025-10-04T07:36:17.062Z",
+      "id": "I1NxMsoq5t3k4qBL",
+      "name": "SEO"
+    },
+    {
+      "updatedAt": "2025-10-04T07:36:16.978Z",
+      "createdAt": "2025-10-04T07:36:16.978Z",
+      "id": "IqWrFYYLFOvVeh1n",
+      "name": "article"
+    },
+    {
+      "updatedAt": "2025-10-04T07:36:17.011Z",
+      "createdAt": "2025-10-04T07:36:17.011Z",
+      "id": "uZr6g5qic4WDRsiT",
+      "name": "writer"
+    }
+  ]
+}
