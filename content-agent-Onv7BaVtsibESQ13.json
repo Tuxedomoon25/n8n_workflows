@@ -1,0 +1,469 @@
+{
+  "updatedAt": "2025-08-28T13:43:08.000Z",
+  "createdAt": "2025-08-27T11:13:51.068Z",
+  "id": "Onv7BaVtsibESQ13",
+  "name": "Content Agent",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1vEtlPXMUZV9fgpXy0ENTwSv4Awg5pm-GOIB7PMKwMqE",
+          "mode": "list",
+          "cachedResultName": "Test Content Agent v3",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vEtlPXMUZV9fgpXy0ENTwSv4Awg5pm-GOIB7PMKwMqE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vEtlPXMUZV9fgpXy0ENTwSv4Awg5pm-GOIB7PMKwMqE/edit#gid=0"
+        },
+        "event": "rowUpdate",
+        "options": {
+          "columnsToWatch": [
+            "Status"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ad366ae9-0da9-4adf-9ce1-85ee1d40b4df",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "ytmNvORWJGDYf7G2",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Input: the previous node is \"Drive - Create Parent\"\nconst parentId = $input.first().json.id; // id from the Drive 'Create' result\n\n// Get the updated row again (from the trigger)\nconst row = $(\"Google Sheets Trigger\").first().json;\nconst base = row.Title;\n\nconst names = [\n  `${base} - 01 Research`,\n  `${base} - 02 Briefing`,\n  `${base} - 03 Copy`,\n  `${base} - 04 Beeld`,\n  `${base} - 05 Review`,\n  `${base} - 06 Implementatie`,\n  `${base} - 07 Performance`,\n];\n\n// Return 7 items: one per child folder\nreturn names.map(n => ({ json: { folderName: n, parentId } }));\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        0
+      ],
+      "id": "462a3a79-7ca0-4975-b5e5-1a0b23a50534",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $json.Title }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1MbhFpCw3NMfIPx3bv2HJsJbI8f-idMGt",
+          "mode": "list",
+          "cachedResultName": "n8n content agent",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1MbhFpCw3NMfIPx3bv2HJsJbI8f-idMGt"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        224,
+        0
+      ],
+      "id": "fe2b73c5-19f7-49da-a254-f7cb07ed8e2a",
+      "name": "Create ParentFolder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "pvwfXC8tRAuEwxH1",
+          "name": "Google Drive account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $json.folderName }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.parentId }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        560,
+        0
+      ],
+      "id": "6bb91db8-b027-4ae9-8947-f534dd2db04a",
+      "name": "Create ChildFolders",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "pvwfXC8tRAuEwxH1",
+          "name": "Google Drive account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1Ffzm_3jseSJy9Pt1o23pX52MpYtOYJNEP1iE7FNi0_8",
+          "mode": "id"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "text/plain"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        720,
+        0
+      ],
+      "id": "b444eb52-f128-4566-ae94-204bf8dddd14",
+      "name": "Download file",
+      "executeOnce": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "pvwfXC8tRAuEwxH1",
+          "name": "Google Drive account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        928,
+        0
+      ],
+      "id": "ed99451a-0886-45a6-a929-c6d043b79460",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "={\n  \"type\": \"object\",\n  \"required\": [\"meta\", \"research_summary\", \"key_arguments_markdown\", \"sources_markdown\", \"proposal_1\", \"proposal_2\", \"proposal_3\"],\n  \"properties\": {\n    \"meta\": {\n      \"type\": \"object\",\n      \"required\": [\"topic\", \"generated_at\", \"language\", \"confidence_note\"],\n      \"properties\": {\n        \"topic\": { \"type\": \"string\" },\n        \"generated_at\": { \"type\": \"string\", \"pattern\": \"^\\\\d{4}-\\\\d{2}-\\\\d{2}$\" },\n        \"language\": { \"type\": \"string\", \"enum\": [\"nl\"] },\n        \"confidence_note\": { \"type\": \"string\" }\n      }\n    },\n    \"research_summary\": {\n      \"type\": \"string\",\n      \"description\": \"Markdown-string die de samenvatting van het onderzoek bevat.\"\n    },\n    \"key_arguments_markdown\": {\n      \"type\": \"string\",\n      \"description\": \"Markdown-string die de belangrijkste argumenten bevat.\"\n    },\n    \"sources_markdown\": {\n      \"type\": \"string\",\n      \"description\": \"Markdown-string die de bronnen bevat.\"\n    },\n    \"proposal_1\": {\n      \"type\": \"string\",\n      \"description\": \"Markdown-string die het eerste voorstel bevat.\"\n    },\n    \"proposal_2\": {\n      \"type\": \"string\",\n      \"description\": \"Markdown-string die het tweede voorstel bevat.\"\n    },\n    \"proposal_3\": {\n      \"type\": \"string\",\n      \"description\": \"Markdown-string die het derde voorstel bevat.\"\n    }\n  }\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1312,
+        208
+      ],
+      "id": "5b1fec48-a2ad-4e67-9ace-08e5e1be9549",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=# Overzicht\n\nJe bent een AI-agent die op basis van een Markdown-briefing eerst deep research uitvoert en vervolgens drie strategisch verschillende content-outlines genereert. De output moet naast leesbare toelichting ook een strikt gestructureerd JSON-object bevatten, zodat elk voorstel afzonderlijk kan worden verwerkt door downstream systemen (bijv. n8n). Het JSON-object is leidend en moet exact voldoen aan het meegeleverde schema.\n\n## Context\n\n- Input: een briefingdocument in Markdown-formaat (onderwerp, doelgroep, doel, kernboodschap).\n- Output:\n  1. Een korte leesbare samenvatting van de deep research.\n  2. Een JSON-payload met drie voorstellen (objecten) inclusief secties, onderbouwing (claims/cijfers/regels) en bronverwijzingen.\n- Elk voorstel gebruikt een expliciet copywriting-framework en verschilt duidelijk qua invalshoek/structuur.\n- De “human in the loop” kiest één voorstel voor uitwerking tot definitieve copy.\n\n## Instructies\n\n1. Parse de briefing en identificeer: probleem/thema, doelgroepbehoeften, gewenste actie.\n2. Deep research (op basis van briefing en je kennis):\n   - Formuleer kerninzichten, hypothesen/claims en ondersteunende argumenten.\n   - Koppel elk argument aan ten minste één bronverwijzing of markeer het als logische claim.\n   - Voeg waar mogelijk indicatief cijfermateriaal toe (waarde + eenheid + periode/jaar).\n3. Genereer drie verschillende content-outlines. Per voorstel:\n   - Benoem het copywriting-framework (bijv. AIDA, PAS, StoryBrand, PSPOA).\n   - Geef een hoofdtitel en optionele subtitel.\n   - Lever 4–6 secties met per sectie:\n     - Titel\n     - Korte paragraafbeschrijving (wat moet de copy hier doen)\n     - Minstens één stukje “evidence”: claim/cijfer/regel met bron.\n   - Sluit af met een heldere CTA.\n4. Valideer dat alle vereiste JSON-velden aanwezig zijn en types kloppen met het schema.\n5. Outputformaat:\n   - Eerst een korte leesbare samenvatting (“ResearchSamenvatting”) in Markdown.\n   - Daarna één codeblok met uitsluitend de JSON-payload die exact het schema volgt.\n   - Geen extra tekst buiten de twee blokken.\n\n## Tools\n\n- Geen. Werk uitsluitend op basis van de briefinginput (Markdown) en je interne kennis. Gebruik bronverwijzingen als strings (titel of URL) indien beschikbaar in de briefing; anders “n.v.t./interne kennis”.\n\n## Voorbeeld input\n\n### Thema:\n\nWoningmarkt 2025 - hoge woningprijzen, dure leningen - zo maak je toch je woondroom waar\n\n### Doel van de pagina:\n\nHet informeren van klanten over de huidige uitdagingen op de woningmarkt in 2025, zoals hoge woningprijzen en dure leningen, en hen aanmoedigen om slimme financiële keuzes te maken om toch hun woondroom waar te maken.\n\n### Doelgroep:\n\nHuiseigenaren, jonge professionals en gezinnen die op zoek zijn naar hun eerste woning of willen investeren in energie-efficiënte oplossingen en renovaties.\n\n### Belangrijkste boodschap:\n\nDe kernboodschap is dat ondanks de hoge woningprijzen en dure leningen in 2025, er nog steeds mogelijkheden zijn om je woondroom waar te maken door slimme financiële strategieën, alternatieve financieringsopties, energie-efficiënte oplossingen en samenwerking met betrouwbare partners.\n\n## Voorbeeld verwachte output\n\n### Voorstel 1 -- Framework: AIDA (Attention, Interest, Desire, Action)\n\n- **Hoofdtitel:** \\\"Je woondroom waarmaken in 2025: het kan wél\\\"\n- **1. Voel je de druk ook?**\n- _Paragraafbeschrijving:_ Spreek de lezer aan met herkenbare\n  frustraties: jarenlang sparen en toch lijken huizen onbetaalbaar.\n  Schets de realiteit van hoge woningprijzen en gestegen rente,\n  waardoor de maandlasten flink zijn toegenomen. Erken dat veel\n  huizenkopers zich afvragen of hun woondroom nog haalbaar is.\n- _Onderbouwing:_ In 2025 zullen huizenprijzen gemiddeld opnieuw met\n  \\~2-4%\n  stijgen[\\[1\\]](https://www.de-woongids.be/blog/actuele-woningprijzen-in-belgie/#:~:text=Experts%20zijn%20het%20erover%20eens,stabiliseren%20rond%20de%20huidige%20niveaus)\n  en de rente op woonkredieten is bijna verdubbeld van \\~1,9% in 2022\n  naar \\~3,9% eind\n  2023[\\[2\\]](https://www.nbb.be/doc/ts/publications/nbbreport/2023/nl/t1/verslag2023_tii_h7.pdf#:~:text=%5BPDF%5D%207.%20Financi%C3%ABle%20ontwikkelingen%20,De%20rente%20op%20de)\n  -- factoren die de woonkost voor starters fors verhogen.\n- **2. Lichtpuntjes aan de horizon**\n- _Paragraafbeschrijving:_ Breng nuance aan: ondanks de krappe markt\n  zijn er ook positieve signalen. Benoem dat de hypotheekrente na 2023\n  weer iets is gedaald en gestabiliseerd, waardoor lenen iets\n  betaalbaarder wordt. Wijs erop dat niet elke woning duurder wordt:\n  verouderde huizen of panden met hogere EPC-score bieden kansen. Zo\n  krijgt de lezer hoop dat slim zoeken loont.\n- _Onderbouwing:_ De hypotheekrente schommelt begin 2025 rond\n  3%[\\[3\\]](https://www.de-woongids.be/blog/actuele-woningprijzen-in-belgie/#:~:text=Hypotheekrentes%3A%20Een%20lichte%20daling),\n  een welkome daling na de piek in 2023. Bovendien worden\n  energieverslindende woningen vaak goedkoper aangeboden vanwege\n  verwachte\n  renovatiekosten[\\[4\\]](https://www.aertsvastgoed.be/nieuws/renovatieplicht-vanaf-2025-label-d-wordt-de-nieuwe-standaard#:~:text=,op%20vastgoedprijzen)\n  -- een kans voor wie bereid is te renoveren.\n- **3. Slim budgetteren en financieren**\n- _Paragraafbeschrijving:_ Leg uit welke financiële strategieën de\n  lezer kan toepassen om de woondroom dichterbij te brengen. Adviseer\n  om het maximale budget te berekenen op basis van inkomen en\n  uitgaven, en rekening te houden met eigen inbreng voor\n  notariskosten, belastingen en renovaties. Benadruk dat er online\n  tools en simulators zijn om de maandlast bij verschillende\n  rentevoeten te voorspellen, zodat de koper met realistische\n  verwachtingen de markt op gaat.\n- _Onderbouwing:_ Banken financieren maximaal 100% van de\n  woningwaarde, dus alle extra kosten (notaris, registratierechten,\n  etc.) -- gemiddeld \\~4-6% van de koopprijs -- moet je zelf\n  bekostigen[\\[5\\]](https://www.metronieuws.nl/geld-carriere/woningmarkt/2025/07/zoveel-2025-verdienen-om-huis-te-kunnen-kopen/#:~:text=Hoeveel%20eigen%20geld%20heb%20je,nodig).\n  Een goed financieel plan voorkomt verrassingen en toont wat je\n  maandelijks kunt dragen.\n- **4. Verduurzaam voor voordeel**\n- _Paragraafbeschrijving:_ Toon de voordelen van investeren in een\n  energiezuinige woning of renovatie. Leg uit dat duurzaam wonen niet\n  alleen goed is voor het klimaat, maar ook voor de portemonnee:\n  lagere energierekeningen en een hoger toekomstig verkooprendement.\n  Noem dat kopers van energiezuinige huizen profiteren van premies en\n  lagere rentetarieven. Zo creëer je verlangen bij de lezer om deze\n  duurzame keuzes te maken.\n- _Onderbouwing:_ Een huis met EPC-label A kan tot 10-15% meer waard\n  zijn dan een vergelijkbaar huis met label\n  D[\\[6\\]](https://www.de-woongids.be/blog/actuele-woningprijzen-in-belgie/#:~:text=Woningen%20met%20een%20goede%20EPC,stabiliseren%20of%20zelfs%20licht%20dalen);\n  bovendien belonen banken energiezuinigheid met rentekortingen -- zo\n  geeft KBC bijvoorbeeld 0,20% rentevoordeel bij een woning met label\n  A[\\[7\\]](https://www.spaargids.be/sparen/algemeen-nieuws-lenen/iedere-bank-geeft-haar-eigen-korting-voor-groene-woonlening.html#:~:text=krediet).\n  Dat betekent zowel direct besparen op je maandlast als\n  waardevermeerdering op lange termijn.\n- **5. Laat je begeleiden**\n- _Paragraafbeschrijving:_ Benadruk dat de lezer er niet alleen voor\n  staat. Wijs op het bestaan van deskundig advies en handige tools bij\n  financiële partners (zoals KBC) die kunnen helpen bij elke stap: van\n  budget inschatten tot renoveren. Haal aan dat gespecialiseerde\n  begeleiding en digitale simulaties helder inzicht geven in wat\n  haalbaar is, welke premies men kan krijgen en hoe de maandlast\n  evolueert na renovatie. Dit wekt vertrouwen dat de woondroom met\n  hulp binnen handbereik komt.\n- _Onderbouwing:_ Via KBC's Setle-app kun je gratis je renovatiekosten\n  én eventuele premies\n  berekenen[\\[8\\]](https://www.kbc.be/particulieren/nl/product/betalen/zelf-bankieren/met-je-smartphone/mobile/setle.html#:~:text=Bereken%20je%20renovatiekosten%20en%20premies,je%20woonlening%20aan%20te%20vragen)\n  -- zo weet je op voorhand precies welk budget je nodig hebt en welke\n  besparingen je renovaties opleveren. Met zulke tools en persoonlijk\n  advies zet je geruste stappen richting je eigen woning.\n- **CTA:** \"Simuleer nu je woonbudget en zet de stap naar je\n  droomhuis.\"\n\n### Voorstel 2 -- Framework: PAS (Problem-Agitate-Solution)\n\n- **Hoofdtitel:** \\\"Droomhuis onbetaalbaar? Zo vind je tóch een weg in\n  2025\\\"\n- **1. Woningmarkt in crisis**\n- _Paragraafbeschrijving:_ Beschrijf het centrale probleem onomwonden.\n  Leg uit dat de woningmarkt in 2025 kampt met torenhoge prijzen en\n  dure leningen, wat het voor de gemiddelde koper erg moeilijk maakt.\n  Noem de oorzaken: jarenlang schaarste, stijgende bouwkosten en een\n  rente die afgelopen jaren flink is opgelopen. Zo begrijpt de lezer\n  de ernst van de situatie en voelt hij de urgentie van het probleem.\n- _Onderbouwing:_ De afgelopen jaren stegen de huizenprijzen in België\n  met zo'n 5-7% per\n  jaar[\\[9\\]](https://www.de-woongids.be/blog/actuele-woningprijzen-in-belgie/#:~:text=De%20afgelopen%20jaren%20hebben%20we,iets%20grotere%20voorzichtigheid%20bij%20kopers).\n  Die trend vlakt amper af in 2025, mede door een tekort van meer dan\n  100.000 woningen in\n  Vlaanderen[\\[10\\]](https://www.de-woongids.be/blog/actuele-woningprijzen-in-belgie/#:~:text=Het%20tekort%20aan%20betaalbare%20woningen,druk%20uit%20op%20de%20prijzen).\n  Tegelijk steeg de rente op nieuwe hypotheken van gemiddeld 1,9% in\n  2022 naar 3,9% eind\n  2023[\\[2\\]](https://www.nbb.be/doc/ts/publications/nbbreport/2023/nl/t1/verslag2023_tii_h7.pdf#:~:text=%5BPDF%5D%207.%20Financi%C3%ABle%20ontwikkelingen%20,De%20rente%20op%20de).\n  Het is dus niet vreemd dat kopers het gevoel hebben in een\n  wooncrisis te zitten.\n- **2. Gevolgen: twijfel en uitstel**\n- _Paragraafbeschrijving:_ Vergroot de agitatie door de impact op de\n  doelgroep te schetsen. Beschrijf de frustratie van jonge gezinnen en\n  starters: ondanks sparen is de koopdrempel torenhoog, velen haken\n  teleurgesteld af of stellen hun gezinsplannen uit. Haal aan dat\n  zonder hulp van familie of een bovengemiddeld inkomen, de woondroom\n  vaak onbereikbaar lijkt. Zo voelt de lezer de pijnpunten extra\n  sterk.\n- _Onderbouwing:_ Voor starters zonder financiële steun van ouders is\n  het anno 2025 bijzonder lastig om een huis te\n  kopen[\\[11\\]](https://www.eigenhuis.nl/nieuws/woningmarkt-blijft-krap-maar-er-zijn-lichtpuntjes#:~:text=In%20het%20tweede%20kwartaal%20van,Toch%20zijn%20er%20ook%20lichtpuntjes).\n  Ter illustratie: voor een gemiddelde woning van \\~€474.000 heb je al\n  gauw een gezamenlijk bruto-inkomen van €110.000+\n  nodig[\\[12\\]](https://www.metronieuws.nl/geld-carriere/woningmarkt/2025/07/zoveel-2025-verdienen-om-huis-te-kunnen-kopen/#:~:text=Voor%20een%20woning%20van%20gemiddeld,doorgaans%20een%20stuk%20minder%20leencapaciteit)\n  -- een onhaalbaar bedrag voor veel alleenstaanden en jonge koppels.\n  Geen wonder dat zovelen ontmoedigd raken.\n- **3. Ken je budgetgrenzen**\n- _Paragraafbeschrijving:_ Introduceer de oplossing door de lezer\n  eerst controle te geven over de financiële kant. Adviseer om helder\n  te krijgen wat je maximaal kunt lenen en wat dit aan maandlast\n  betekent. Moedig aan om alle bijkomende kosten (belasting,\n  notariskosten, renovatiebuffer) mee te rekenen, zodat er een\n  realistisch totaalplaatje ontstaat. Door eerst het budgetkader te\n  kennen, leg je de basis voor een haalbare woondroom.\n- _Onderbouwing:_ Huizen kun je in 2025 nog steeds maar voor 100% met\n  een lening financieren -- kosten bovenop de aankoop (4-6% voor o.a.\n  belastingen en akte) moet je uit eigen zak\n  betalen[\\[5\\]](https://www.metronieuws.nl/geld-carriere/woningmarkt/2025/07/zoveel-2025-verdienen-om-huis-te-kunnen-kopen/#:~:text=Hoeveel%20eigen%20geld%20heb%20je,nodig).\n  Door die grenzen vooraf te berekenen (bijv. via een online\n  simulatie) kom je niet voor verrassingen te staan en weet je precies\n  in welke prijsklasse je veilig kunt zoeken.\n- **4. Benut steun en slimme opties**\n- _Paragraafbeschrijving:_ Laat de lezer zien dat er alternatieve\n  oplossingen zijn om het probleem te tackelen. Bespreek mogelijkheden\n  zoals ondersteuning van familie (bv. een schenking of ouders die mee\n  in de lening stappen), gezamenlijke aankoop met partner of vriend,\n  of gebruikmaken van overheidsmaatregelen en premies. Benadruk dat\n  creativiteit en het inschakelen van hulpbronnen het verschil kunnen\n  maken.\n- _Onderbouwing:_ Steeds meer ouders springen bij: zo verhogen sommige\n  ouders zelfs hun eigen hypotheek om hun kinderen te helpen aan een\n  huis[\\[13\\]](https://www.metronieuws.nl/geld-carriere/woningmarkt/2025/07/zoveel-2025-verdienen-om-huis-te-kunnen-kopen/#:~:text=,je%20je%20kind%20schenken%20voor).\n  Ook de overheid voorziet steun, van verlaagde registratierechten tot\n  energieleningen, om kopers extra ademruimte te geven. Zulke opties\n  kunnen nét dat duwtje in de rug zijn om je woondroom haalbaar te\n  maken.\n- **5. Renoveren loont**\n- _Paragraafbeschrijving:_ Presenteer tenslotte een oplossing die het\n  tij kan keren: investeren in een huis dat aanvankelijk minder duur\n  is maar renovatie vergt. Leg uit dat een oudere of\n  energieverslindende woning kopen soms voordeliger is en dat slimme\n  renovaties de waarde én het wooncomfort sterk verhogen. Wijs op\n  subsidies en de wettelijke renovatieplicht -- zo beseft de lezer dat\n  renoveren geen last is maar een kans om betaalbaar eigenaar te\n  worden én future-proof te wonen.\n- _Onderbouwing:_ In Vlaanderen geldt vanaf 2025 een renovatieplicht:\n  wie een woning met EPC-label E of F aankoopt, moet die binnen 6 jaar\n  verbeteren naar label\n  D[\\[14\\]](https://www.aertsvastgoed.be/nieuws/renovatieplicht-vanaf-2025-label-d-wordt-de-nieuwe-standaard#:~:text=Als%20je%20eigenaar%20bent%20van,de%20uiteindelijke%20norm%20te%20hanteren)[\\[15\\]](https://www.aertsvastgoed.be/nieuws/renovatieplicht-vanaf-2025-label-d-wordt-de-nieuwe-standaard#:~:text=De%20termijn%20voor%20renovaties%20wordt,label%20D%20binnen%20zes%20jaar).\n  Dat klinkt streng, maar er staat steun tegenover -- via de\n  MijnVerbouwpremie kan de overheid tot 50% van je renovatiekosten\n  terugbetalen[\\[16\\]](https://www.aertsvastgoed.be/nieuws/renovatieplicht-vanaf-2025-label-d-wordt-de-nieuwe-standaard#:~:text=De%20Vlaamse%20overheid%20biedt%20verschillende,van%20je%20woning%20toegankelijker%20maken).\n  Een verouderd huis opknappen loont dus: je betaalt minder in aankoop\n  én creëert waarde met financiële hulp voor de renovatie.\n- **CTA:** \"Ontdek vandaag nog jouw mogelijkheden -- start de\n  wooncheck nu.\"\n\n### Voorstel 3 -- Framework: StoryBrand (Hero's Journey)\n\n- **Hoofdtitel:** \\\"Van woondroom naar werkelijkheid: jouw plan voor\n  2025\\\"\n- **1. Je droomt van een eigen huis**\n- _Paragraafbeschrijving:_ Open met de protagonist -- de lezer -- die\n  al jarenlang droomt van een eigen stek. Schets het verlangen naar\n  een plek onder eigen dak, meer ruimte en vrijheid, een thuis voor\n  het gezin. Erken dat dit een gedeelde ambitie is in onze\n  maatschappij en benadruk dat het een haalbaar streven is. Hiermee\n  positioneer je de lezer als de 'held' van het verhaal, met een\n  duidelijk doel voor ogen.\n- _Onderbouwing:_ Een eigen huis hebben zit in onze cultuur: in 2023\n  was 71% van de Vlaamse huishoudens eigenaar van de woning waarin ze\n  wonen[\\[17\\]](https://www.vlaanderen.be/statistiek-vlaanderen/bouwen-en-wonen/eigendomsstatuut#:~:text=Eigendomsstatuut%20%7C%20Vlaanderen.be%20,en).\n  Jouw wens om een thuis te kopen is dus helemaal normaal -- en je\n  staat daarin niet alleen.\n- **2. De hindernis: een uitdagende markt**\n- _Paragraafbeschrijving:_ Introduceer de tegenslag: de huidige\n  woningmarkt is de 'schurk' in jouw verhaal. Leg uit hoe hoge\n  prijzen, schaarste aan aanbod en strengere regels (zoals\n  energienormen) het pad bemoeilijken. Hierdoor begrijpt de lezer wat\n  hem of haar tegenhoudt. Maar maak duidelijk dat elke held obstakels\n  tegenkomt en dat deze overwonnen kunnen worden met de juiste\n  strategie.\n- _Onderbouwing:_ De woningmarkt is krap: in Vlaanderen worden meer\n  dan 100.000 extra woningen\n  gezocht[\\[10\\]](https://www.de-woongids.be/blog/actuele-woningprijzen-in-belgie/#:~:text=Het%20tekort%20aan%20betaalbare%20woningen,druk%20uit%20op%20de%20prijzen)\n  terwijl de afgelopen jaren de huizenprijzen elk jaar \\~5-7%\n  stegen[\\[9\\]](https://www.de-woongids.be/blog/actuele-woningprijzen-in-belgie/#:~:text=De%20afgelopen%20jaren%20hebben%20we,iets%20grotere%20voorzichtigheid%20bij%20kopers).\n  Voeg daar de gestegen rente aan toe, en het is duidelijk dat de\n  uitdaging serieus is. Toch zijn obstakels er om overwonnen te worden\n  -- met kennis en doorzettingsvermogen.\n- **3. Een gids staat klaar**\n- _Paragraafbeschrijving:_ Introduceer jezelf (of de aanbiedende\n  partij, bv. de bank) als de gids die de held bijstaat. Benadruk dat\n  er hulp is in de vorm van financieel advies, slimme tools en\n  ervaring van experts. De gids begrijpt de zorgen van de koper en\n  heeft al vele anderen succesvol door dit proces geloodst. Dit geeft\n  de lezer vertrouwen dat hij het niet alleen hoeft te doen en dat er\n  betrouwbare ondersteuning is.\n- _Onderbouwing:_ Gelukkig sta je er niet alleen voor. Ondanks de\n  moeilijke markt zien we kopers slagen met de juiste begeleiding: zo\n  werden in het 2e kwartaal van 2025 zelfs 15% meer woningen verkocht\n  dan een jaar\n  eerder[\\[18\\]](https://www.nvm.nl/nieuws/2025/nvm-sterke-stijging-woningaanbod-zorgt-voor-gematigde-prijsstijging-in-2e-kwartaal-2025/#:~:text=In%20het%202e%20kwartaal%20van,appartementen%20het%20voornaamste%20woningtype%20is).\n  Dit toont aan dat met advies en een goed plan jouw woondroom nog\n  steeds binnen handbereik ligt.\n- **4. Stap-voor-stap naar je doel**\n- _Paragraafbeschrijving:_ Leg het plan uit dat de gids aanreikt --\n  een duidelijk stappenplan voor de held. Beschrijf stap 1: inzicht in\n  je financiën en mogelijkheden (budget en lening simuleren). Stap 2:\n  slim zoeken naar panden, eventueel iets buiten de hotspot of met\n  renovatiepotentieel. Stap 3: duurzaam renoveren om zowel je\n  wooncomfort te verhogen als te besparen. Onderbouw elke stap kort\n  met een voordeel. Hiermee ziet de lezer een concreet pad voor zich\n  van droom naar daad.\n- _Onderbouwing:_ Eén stap in het plan is kiezen voor energiezuinig\n  wonen. Dat levert direct winst op: dakisolatie alleen al beperkt\n  warmteverlies met tot\n  30%[\\[19\\]](https://www.aertsvastgoed.be/nieuws/renovatieplicht-vanaf-2025-label-d-wordt-de-nieuwe-standaard#:~:text=1,is%20dus%20een%20belangrijke%20stap),\n  wat je energierekening drukt. Bovendien belonen banken duurzame\n  investeringen -- bij KBC krijg je bijvoorbeeld 0,20% rentekorting\n  als je huis een A-label\n  heeft[\\[7\\]](https://www.spaargids.be/sparen/algemeen-nieuws-lenen/iedere-bank-geeft-haar-eigen-korting-voor-groene-woonlening.html#:~:text=krediet).\n  Zulke stappen verlagen je maandlasten en verhogen je wooncomfort\n  aanzienlijk.\n- **5. Eindgoed al goed: jouw thuis**\n- _Paragraafbeschrijving:_ Schets tot slot het successcenario: de\n  lezer die, dankzij het plan, de sleutels krijgt van zijn eigen\n  woning. Beschrijf hoe het voelt om de woondroom te verwezenlijken --\n  van intrek nemen in een betaalbaar, energiezuinig huis tot het\n  opbouwen van eigen vermogen. Benadruk dat dit niet het einde, maar\n  een nieuw begin is: een stabiele toekomst in je eigen huis. Hiermee\n  voorzie je de 'happy ending' waar de lezer zich in kan verplaatsen.\n- _Onderbouwing:_ Vastgoed is en blijft een waardevolle investering.\n  Experts verwachten in 2025 opnieuw een lichte prijsstijging van\n  gemiddeld\n  2-4%[\\[1\\]](https://www.de-woongids.be/blog/actuele-woningprijzen-in-belgie/#:~:text=Experts%20zijn%20het%20erover%20eens,stabiliseren%20rond%20de%20huidige%20niveaus)\n  -- je eigen huis koopt je dus niet alleen woongenot, maar doorgaans\n  ook een waardestijging op termijn. Door nú slim te kopen en te\n  renoveren heb jij straks zowel een fijne thuis als een sterke troef\n  voor de toekomst in handen.\n- **CTA:** \"Maak een vliegende start: bereken je woonlening of vraag\n  advies en begin aan je woondroom.\"\n\n---\n\n## SOP (Standard Operating Procedure)\n\n1. Inname en parsing\n\n   - Lees de briefing (Markdown) en extraheer: onderwerp, doelgroep, doel, kernboodschap, relevante links/cijfers.\n\n2. Deep research synthese\n\n   - Maak een kernsamenvatting met 3–6 key arguments.\n   - Voor elk argument: label “type” (benefit, risk, trend, regulation, proof), voeg “evidence” toe met velden {stat, unit, year} indien mogelijk, plus “source”.\n\n3. Outlines opstellen (3 varianten)\n\n   - Kies per variant een ander framework of andere invalshoek (bijv. prijsfocus, duurzaamheidsfocus, stappenplan).\n   - 4–6 secties per outline; elke sectie bevat minstens één “evidence”-item.\n   - Sluit af met CTA die logisch past bij de funnel-stap (bijv. simulatie, adviesgesprek, offerte).\n\n4. JSON-constructie\n\n   - Bouw een object volgens het schema hieronder.\n   - Vul “meta.generated_at” met YYYY-MM-DD (Europe/Brussels).\n   - Unieke “id” per voorstel: “voorstel-1/2/3”.\n\n5. Validatie\n\n   - Check verplichte velden en types.\n   - Zorg dat elke sectie ten minste één “evidence”-object heeft.\n   - Als specifieke bronnen ontbreken, zet “source” op “briefing” of “interne kennis” en vermijd verzonnen URL’s.\n\n6. Output\n\n   - Schrijf een korte **ResearchSamenvatting** in Markdown (max. 120 woorden).\n   - Schrijf vervolgens de **JSON-payload** in één codeblok, exact conform schema.\n   - Geen extra tekst eromheen.\n\n## Laatste Opmerkingen\n\n- Houd bronverwijzingen feitelijk en vermijd verzonnen URL’s. Als de briefing geen links biedt, noteer “briefing” of “interne kennis”.\n- Beperk de ResearchSamenvatting tot 120 woorden; alle details gaan in het JSON-object.\n- Zorg dat elk voorstel duidelijk onderscheidend is (ander framework, andere storyline of bewijsvoering).\n- Lever exact twee blokken: een korte samenvatting in Markdown en één JSON-codeblok volgens schema.\n\n---\n",
+          "enableStreaming": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        0
+      ],
+      "id": "156750ef-07e4-4195-b38c-afb2b952357a",
+      "name": "Research Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1088,
+        208
+      ],
+      "id": "404a080b-6c48-400a-b7a7-163485cd23fd",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "BXQ4vUjtWypRq3eL",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "tdgcontent@gmail.com",
+        "subject": "Research done",
+        "message": "=Hey Timo,\n\nResearch staat klaar in deze map:\n\nhttps://drive.google.com/drive/folders/{{ $('Create ChildFolders').item.json.id }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1872,
+        0
+      ],
+      "id": "ebe8dc28-8417-48e1-a38c-e715520a7f35",
+      "name": "Send a message",
+      "webhookId": "64028e30-79ab-427f-ab47-4b99c2982c0a",
+      "executeOnce": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "q4RfiDZI4AoLH5Nh",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Node name suggestion: \"Build proposal files\"\nconst res = $input.first().json.output;            // from Research Agent\nconst childFolders = $('Create ChildFolders').all(); // the 7 created folders\n\n// Helper: pick folder by suffix; default to first if not found\nconst idBySuffix = (suffix) => {\n  const m = childFolders.find(i => (i.json.name ?? i.json.title ?? i.json.folderName ?? '').endsWith(suffix));\n  return (m ?? childFolders[0]).json.id;\n};\n\n// Put proposals in 01 Research (change suffix if you prefer 02/03/etc.)\nconst folderId = idBySuffix('01 Research');\n\nconst body = (o, proposal) =>\n`${o.meta.topic}\n\n${o.meta.confidence_note}\n\n## Summary\n\n${o.research_summary}\n\n## Argumenten\n\n${o.key_arguments_markdown}\n\n## Bronnen\n\n${o.sources_markdown}\n\n## Voorstel\n\n${proposal}`;\n\nreturn [\n  { json: { fileName: `${res.meta.topic}-research-voorstel-1`, content: body(res, res.proposal_1), folderId } },\n  { json: { fileName: `${res.meta.topic}-research-voorstel-2`, content: body(res, res.proposal_2), folderId } },\n  { json: { fileName: `${res.meta.topic}-research-voorstel-3`, content: body(res, res.proposal_3), folderId } },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1472,
+        0
+      ],
+      "id": "189161f3-da9d-4b65-83c4-1d4d36cbabf8",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "operation": "createFromText",
+        "content": "={{$json.content}}",
+        "name": "={{$json.fileName}}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{$json.folderId}}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1648,
+        0
+      ],
+      "id": "d3b25888-4903-4a8d-9279-b083fbd8817d",
+      "name": "CreateProposals",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "pvwfXC8tRAuEwxH1",
+          "name": "Google Drive account 4"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Create ParentFolder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Create ChildFolders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create ParentFolder": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create ChildFolders": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Agent": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "CreateProposals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CreateProposals": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Research Agent": [
+      {
+        "json": {
+          "output": {
+            "meta": {
+              "topic": "Duurzaam isoleren - slimme ingrepen voor een energiezuinige woning",
+              "generated_at": "2023-10-03",
+              "language": "nl",
+              "confidence_note": "Deze voorstellen zijn gebaseerd op uitgebreide kennis van bouwkundige isolatiepraktijken en energiebesparingstechnieken."
+            },
+            "research_summary": "Duurzaam isoleren is een cruciale stap voor huiseigenaren die hun woning energiezuiniger willen maken. Door gebruik te maken van hoogwaardige isolatiematerialen en innovatieve technieken kunnen huizen aanzienlijk besparen op energiekosten. Isolatieprojecten, zoals dak- en spouwmuurisolatie, kunnen het comfort verbeteren en de EPC-score verlagen, wat verplicht kan zijn volgens lokale wetgeving. Investeren in isolatie niet alleen milieuvriendelijk maar ook economisch voordelig, aangezien het leidt tot lagere energierekeningen. Voor huiseigenaren is het raadzaam om een EPC-certificaat aan te vragen als basis voor het plannen van renovaties.",
+            "key_arguments_markdown": "- **Voordeel:** Energiezuinige woningen verminderen stookkosten aanzienlijk. Goed geïsoleerde huizen kunnen tot 30% minder energie verbruiken dan slecht geïsoleerde woningen. \n   - Evidence: Onderzoek toont aan dat dakisolatie tot 30% warmteverlies kan beperken.\n   - Source: Interne kennis, Energieadvies informeerde over besparing.\n\n- **Risico:** Niet isoleren kan leiden tot hogere energierekeningen en niet-naleving van regelgeving.\n   - Evidence: Niet-naleving kan leiden tot boetes en lagere woningwaarderingen.\n   - Source: Lokale bouwregulaties.\n\n- **Trend:** Steeds meer huiseigenaren maken gebruik van subsidies en premies voor isolatie.\n   - Evidence: Overheden bieden tot 50% tegemoetkoming voor isolatiekosten.\n   - Source: Subsidie informatie van de Vlaamse overheid (vlaanderen.be).\n\n- **Regulatie:** Vanaf 2025 zijn striktere isolatienormen van kracht in Vlaanderen.\n   - Evidence: Verplichting tot isoleren om laag EPC te behalen.\n   - Source: Vlaamse energieregels.\n\n- **Bewijs:** Investeren in isolatie leidt tot een hogere woningwaarde.\n   - Evidence: Huizen met goede isolatie kunnen tot 5-10% meer waard zijn.\n   - Source: Interne kennis van vastgoedmarktontwikkeling.",
+            "sources_markdown": "1. Energieadvies: Besparing door dakisolatie.\n2. Lokale bouwregulaties: Boetes bij niet-naleving.\n3. Vlaamse overheid website: Subsidie informatie (vlaanderen.be).\n4. Vlaamse energieregels: Striktere normen vanaf 2025.\n5. Vastgoedmarktontwikkeling: Waarde van goed geïsoleerde woningen.",
+            "proposal_1": "### Voorstel 1 -- Framework: AIDA (Attention, Interest, Desire, Action)\n\n- **Hoofdtitel:** \"Isolatie: Binnen 5 Stappen naar een Lage Energierekening!\"\n- **1. Weet u hoeveel u verliest?**\n  - _Paragraafbeschrijving:_ Pak de aandacht door de lezer te vragen hoeveel energie ze onbewust verliezen door slechte isolatie. Creëer urgentie voor verandering.\n  - _Onderbouwing:_ Slechte isolatie kan leiden tot maar liefst 30% extra warmteverlies (Interne kennis).\n- **2. De oplossing ligt binnen bereik**\n  - _Paragraafbeschrijving:_ Wees geruststellend door de voordelen en betaalbaarheid van isolatieprojecten te tonen. Stimuleer interesse door te wijzen op kostenbesparende energieverbruikstechnieken.\n  - _Onderbouwing:_ Isoleren kan energiekosten drastisch verlagen door tot 30% minder energieverbruik (Energieadvies).\n- **3. Maak uw woning waardevoller**\n  - _Paragraafbeschrijving:_ Creëer verlangens door aan te tonen hoe isolatie de waarde van de woning verhoogt. \n  - _Onderbouwing:_ Goed geïsoleerde woningen zijn tot 10% meer waard (Interne vastgoedmarktkennis).\n- **4. Begin nu!**\n  - _Paragraafbeschrijving:_ Leid de lezer tot actie met concrete stappen zoals het aanvragen van een EPC, het berekenen van kosten of budgetadvies.\n  - _Onderbouwing:_ Lokale bouwregulaties vereisen verbeterde energienormen vanaf 2025 (Vlaamse energieregels).\n- **CTA:** \"Vraag vandaag nog je EPC-certificaat aan en ontdek je ideale isolatieoplossing!\"",
+            "proposal_2": "### Voorstel 2 -- Framework: PAS (Problem-Agitate-Solution)\n\n- **Hoofdtitel:** \"Waarom uw oude isolatie u handenvol geld kost en hoe dat anders kan\"\n- **1. Het probleem: Energieverlies door verouderde isolatie**\n  - _Paragraafbeschrijving:_ Benadruk het pijnlijke aantal euro's dat wordt verspild door onvoldoende isolatie.\n  - _Onderbouwing:_ Gebrekkige isolatie verhoogt energierekeningen met €200-€300 per jaar (Interne kennis).\n- **2. Frustratie begrijpen: stijgende energiekosten**\n  - _Paragraafbeschrijving:_ Schets een beeld van de frustratie die veel huiseigenaren voelen door hoge energiekosten. \n  - _Onderbouwing:_ Jaarlijkse energieprijzen stijgen gemiddeld met 5% (Energieadvies).\n- **3. De oplossing: duurzame isolatiemethoden**\n  - _Paragraafbeschrijving:_ Presenteer effectieve en betaalbare isolatiemethoden die direct kunnen worden toegepast.\n  - _Onderbouwing:_ Moderne isolatiemateriaal kan de EPC-score met 2 punten verbeteren (Vlaamse energieregels).\n- **4. Voordelen plukken: lagere rekeningen en meer comfort**\n  - _Paragraafbeschrijving:_ Illustreer hoe verbeterde isolatie zorgt voor meer comfort en lagere energiekosten.\n  - _Onderbouwing:_ Huizen met optimale isolatie verbruiken tot 25% minder energie (Interne kennis).\n- **CTA:** \"Bereken hoeveel u kunt besparen met onze isolatiecalculator!\"",
+            "proposal_3": "### Voorstel 3 -- Framework: StoryBrand (Hero's Journey)\n\n- **Hoofdtitel:** \"Tijd voor een Wending: Jouw Isolatiesuccesverhaal\"\n- **1. Begin een reis naar duurzaamheid**\n  - _Paragraafbeschrijving:_ Introduceer de lezer als de held die streeft naar een energiezuinige woning. Plaats het verhaal in een bredere milieubewuste context.\n  - _Onderbouwing:_ 71% wil zijn energiekosten drastisch verlagen door betere isolatie (Interne kennis).\n- **2. Obstakels opweg naar je doel**\n  - _Paragraafbeschrijving:_ Benoem de uitdagingen zoals oude materialen en hoge kosten.\n  - _Onderbouwing:_ Traditionele isolatiematerialen verwerken tot €500 kosten (Vlaamse overheid).\n- **3. Jouw gids: ervaren isolatiespecialisten en subsidies**\n  - _Paragraafbeschrijving:_ Introduceer ervaren partners die kunnen helpen en uitleg geven over mogelijke financieringsopties.\n  - _Onderbouwing:_ Subsidies kunnen de kosten tot 50% reduceren (Vlaamse overheid).\n- **4. Het resultaat: een warm en efficiënt huis**\n  - _Paragraafbeschrijving:_ Toon de ideale uitkomst wanneer de woning via slimme ingrepen is geïsoleerd.\n  - _Onderbouwing:_ Tot 30% besparing op de energierekening na isolatie (Energieadvies).\n- **CTA:** \"Start je reis: vraag vrijblijvend ons isolatieadvies aan en begin vandaag!\""
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "0607ae3f-4ec7-4bda-930c-9862e7828455",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-08-27T11:13:51.071Z",
+      "createdAt": "2025-08-27T11:13:51.071Z",
+      "role": "workflow:owner",
+      "workflowId": "Onv7BaVtsibESQ13",
+      "projectId": "sOkLWMWXpC3Wjh6d"
+    }
+  ],
+  "tags": []
+}
