@@ -1,0 +1,409 @@
+{
+  "updatedAt": "2025-07-25T11:58:52.000Z",
+  "createdAt": "2025-07-18T17:24:26.627Z",
+  "id": "0Hz6WpFYh1W5hN3U",
+  "name": "Working SharePoint API",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://graph.microsoft.com/v1.0/sites/tdgcontent.sharepoint.com,3615f124-0635-4859-a158-8d2957e41528,453cdb11-a21c-4bff-b808-4854e3dfa47a",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "options": {}
+      },
+      "id": "c6a9f009-0415-445c-a66d-7b6b7c4a9c9b",
+      "name": "Get Site Info",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        0,
+        0
+      ],
+      "credentials": {
+        "oAuth2Api": {
+          "id": "7usf7UwiRLZ3gk6z",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://graph.microsoft.com/v1.0/sites/tdgcontent.sharepoint.com,3615f124-0635-4859-a158-8d2957e41528,453cdb11-a21c-4bff-b808-4854e3dfa47a/lists?$top=50",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "options": {}
+      },
+      "id": "ac703559-b61f-42f6-bb3f-dc9a47c00bf9",
+      "name": "Get List Metadata",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        208,
+        0
+      ],
+      "credentials": {
+        "oAuth2Api": {
+          "id": "7usf7UwiRLZ3gk6z",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://graph.microsoft.com/v1.0/sites/tdgcontent.sharepoint.com,3615f124-0635-4859-a158-8d2957e41528,453cdb11-a21c-4bff-b808-4854e3dfa47a/lists/de0554e7-9ab0-4a19-9f9d-7bf42213b62c/items?expand=fields&$top=50",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "options": {}
+      },
+      "id": "41b48c3e-e05f-4c75-a906-af98db0f9adc",
+      "name": "Get List Items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        400,
+        0
+      ],
+      "credentials": {
+        "oAuth2Api": {
+          "id": "7usf7UwiRLZ3gk6z",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        0
+      ],
+      "id": "f349486d-d3f5-4fc5-b153-0333dd4f2241",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://graph.microsoft.com/v1.0/drives/b!JPEVNjUGWUihWI0pV-QVKBHbPEUcov9LuAhIVOPfpHofLm-4Ej8LQobp_VC6hT38/root/children",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        608,
+        0
+      ],
+      "id": "cc17b83d-9d99-4cb6-9d16-afd25595d296",
+      "name": "Get Folders from Document Library",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "7usf7UwiRLZ3gk6z",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://graph.microsoft.com/v1.0/drives/b!JPEVNjUGWUihWI0pV-QVKBHbPEUcov9LuAhIVOPfpHofLm-4Ej8LQobp_VC6hT38/items/017VTHHRIZBWYVXXNDIBH32FQVLQFDGKMV/content",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1024,
+        0
+      ],
+      "id": "a7755cb1-8b59-4e28-b1bb-35e95964d5a4",
+      "name": "Get File",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "7usf7UwiRLZ3gk6z",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Summarize my text: {{ $json.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1488,
+        0
+      ],
+      "id": "bae1c103-ffbb-4fc9-a245-9e676e8ceea2",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "2SEnYMIY90aMM4SC",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "tdgcontent@gmail.com",
+        "subject": "Test",
+        "emailType": "text",
+        "message": "={{ $('Message a model').item.json.message.content }}",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2064,
+        0
+      ],
+      "id": "0692b468-f073-4665-a215-b482c4cb7c77",
+      "name": "Send a message",
+      "webhookId": "09d82c19-446f-478b-ae75-363efaf996ab",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://graph.microsoft.com/v1.0/drives/b!JPEVNjUGWUihWI0pV-QVKBHbPEUcov9LuAhIVOPfpHofLm-4Ej8LQobp_VC6hT38/items/017VTHHRJI63X75WTU2VELKDUIVHA5V223/children",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        816,
+        0
+      ],
+      "id": "dd86e402-0fd9-4f84-a8e2-b5d2ab88ec5b",
+      "name": "Get Files in Folder",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "7usf7UwiRLZ3gk6z",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  json: $('Get File').item.json,\n  binary: $('Get File').item.binary,\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1840,
+        0
+      ],
+      "id": "9813444d-a90a-46d8-8f82-aa1180afec69",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1232,
+        0
+      ],
+      "id": "8dd34b6e-d513-4aab-a7bc-eed1628ae83c",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "content": "Voeg een PDF.co Convert to PDF node toe als je met .docx werkt in binary om bestand eerst te converteren naar pdf en dan met de tekst te werken, of converteer je .docx naar Markdown in de bron"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        704,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "c34e0b60-ce91-4548-a51c-ca3e373fb310",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Get Site Info": {
+      "main": [
+        [
+          {
+            "node": "Get List Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get List Metadata": {
+      "main": [
+        [
+          {
+            "node": "Get List Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get Site Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get List Items": {
+      "main": [
+        [
+          {
+            "node": "Get Folders from Document Library",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Folders from Document Library": {
+      "main": [
+        [
+          {
+            "node": "Get Files in Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get File": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Files in Folder": {
+      "main": [
+        [
+          {
+            "node": "Get File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Message a model": [
+      {
+        "json": {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "Here’s a concise summary of the \"n8n Masterclass: From Beginner to AI Agent Builder\":\n\nOverview:\nn8n is a powerful low-code automation tool that lets you create automated workflows using “nodes.” It empowers non-developers to build integrations and AI agents without deep coding knowledge, featuring over 300 built-in integrations and support for APIs.\n\nBenefits of Automation with n8n:\n\n- Increases efficiency and scalability\n- Reduces time and cost\n- Helps manage data better\n- Improves user/customer experience\n\nGetting Started:\n\n- Choose between Cloud (easy, managed) or Self-Hosted (custom, controlled)\n- Learn the interface: Workflows (recipes), Nodes (steps), Executions (runs)\n- Access community templates and resources\n\nCore Concepts:\n\n- Nodes:\n  - Trigger: Start workflows\n  - Action: Perform tasks (e.g., send email, track calendar events)\n  - Data Transformation: Modify and combine data\n  - Logic: Add conditional branching\n- Build your first workflow (example: summarizing customer orders)\n\nRAG & Vector Databases:\n\n- RAG (Retrieval-Augmented Generation):\n  - Combines information retrieval and AI-generated responses\n  - Avoids hallucinations by using external data\n\n- Vector Databases:\n  - Store text as numeric vectors for fast, meaningful retrieval\n  - Requires embedding and text chunking for efficient access\n\nAI Agent Example:\n- Create an agent to chat about real-time company data (e.g., Nike earnings)\n\nExpanding Agents:\n\n- Create reusable, scalable tools as workflows\n- Combine tools for more advanced agents\n\nAPIs & HTTP Requests:\n- Learn how API endpoints and calls work via HTTP (GET, POST)\n- Use n8n to connect with external services through custom API calls\n\nFinal Part:\n\n- Best Practices:\n  - Organize workflows\n  - Reuse with sub-workflows\n  - Handle errors effectively\n  - Plan for growth\n- Next Steps:\n  - Start building and experimenting\n  - Explore templates and share creations\n\nConclusion:\nThis masterclass prepares you to work confidently with n8n, from basic workflow automation to building powerful AI agents.",
+            "refusal": null,
+            "annotations": []
+          },
+          "logprobs": null,
+          "finish_reason": "stop"
+        }
+      }
+    ]
+  },
+  "versionId": "749fd034-9b0b-44f6-a2ed-7907490b6c40",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-07-18T17:24:26.636Z",
+      "createdAt": "2025-07-18T17:24:26.636Z",
+      "role": "workflow:owner",
+      "workflowId": "0Hz6WpFYh1W5hN3U",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
