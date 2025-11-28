@@ -1,0 +1,3250 @@
+{
+  "updatedAt": "2025-11-25T12:40:49.000Z",
+  "createdAt": "2025-11-25T11:46:28.956Z",
+  "id": "1Cr1E2KSrRkZxcnR",
+  "name": "Momentum Digital - Starter Template - Timo de Groot - With Google Drive + Duplicate Checker Simplified",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 18
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1456,
+        192
+      ],
+      "id": "28ba6807-d123-4f05-9a2d-0891023e4fdb",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "374c4d05-9a3c-4afc-b170-1a7aa5a06f70",
+              "leftValue": "={{ $('Extract Text from PDF').item.json.text.trim() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        32,
+        848
+      ],
+      "id": "875eece6-6bab-42df-a414-eee2597427b7",
+      "name": "If: Text is Empty"
+    },
+    {
+      "parameters": {
+        "content": "## Get Messages With Attachments",
+        "height": 304,
+        "width": 464,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1520,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "d20fd3da-1643-406f-b043-ed5507f8ac96",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Split Attachments",
+        "height": 304,
+        "width": 400,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1024,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "58d4bb0f-0401-4c62-a63b-c01004922ebe",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "simple": false,
+        "filters": {
+          "q": "from:(privalikhinanadia@outlook.com OR n8nbuilderscohort@gmail.com) (subject:(proposal OR proposals OR angebot) OR proposal OR proposals OR angebot) AND filename:pdf",
+          "receivedAfter": "={{ $json.timestamp.toDateTime().minus(3,'day') }}"
+        },
+        "options": {
+          "dataPropertyAttachmentsPrefixName": "attachment_",
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -1248,
+        192
+      ],
+      "id": "564042ec-cdb3-43dc-8eae-21c4c9855714",
+      "name": "Get Messages for Today",
+      "webhookId": "b1a9960d-9896-4eb5-bc6c-25a0a40be0d1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "$binary",
+        "include": "selectedOtherFields",
+        "fieldsToInclude": "id",
+        "options": {
+          "destinationFieldName": "att",
+          "includeBinary": true
+        }
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -960,
+        192
+      ],
+      "id": "1072c3c4-c75d-4f36-9ce4-9db9e452b892",
+      "name": "Split Out Attachments"
+    },
+    {
+      "parameters": {
+        "content": "## Extract Data from Text",
+        "height": 1488,
+        "width": 736,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1216,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "1fe47a68-321e-4d41-b14a-4b264f0181ee",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1h8R9KT4dvvfA3mLOCK1fs3EASx7CVnhxt9cmEPowHqk",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h8R9KT4dvvfA3mLOCK1fs3EASx7CVnhxt9cmEPowHqk/edit#gid=0"
+        },
+        "limitRows": true
+      },
+      "type": "n8n-nodes-base.evaluationTrigger",
+      "typeVersion": 4.6,
+      "position": [
+        -2112,
+        672
+      ],
+      "id": "1b34c265-3737-4323-87f3-955536127b32",
+      "name": "Eval Set",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "nxUtUSoHkodZnHLw",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Eval Input: Do NOT modify blocks in this area\n\n#### TODO: Attach the dataset from the resources \nin the “Eval Set” block.\n",
+        "height": 512,
+        "width": 1584,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2208,
+        448
+      ],
+      "typeVersion": 1,
+      "id": "9ea4556c-f56e-4d15-933c-576c9749c47d",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "operation": "checkIfEvaluating"
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.7,
+      "position": [
+        3296,
+        240
+      ],
+      "id": "d97c4a5d-15c0-41cb-97f6-dc4316bf9404",
+      "name": "Only if we are evaluating"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1h8R9KT4dvvfA3mLOCK1fs3EASx7CVnhxt9cmEPowHqk",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oO9O35hKJokQkW8XoXVmLKp-AaGhMOgpM-I73zb7a-E/edit#gid=0"
+        },
+        "outputs": {
+          "values": [
+            {
+              "outputName": "Correctness",
+              "outputValue": "={{ ($json[\"String similarity\"] * 100).floor() + ' %' }}"
+            },
+            {
+              "outputName": "Actual Extracted Data",
+              "outputValue": "={{ $('Concatenate Multiple Extractions').item.json.concatenated_serialized }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.7,
+      "position": [
+        5808,
+        224
+      ],
+      "id": "a6d214d0-af01-4dc7-a8c9-5a7e008b53d3",
+      "name": "Save Eval",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "nxUtUSoHkodZnHLw",
+          "name": "Google Sheets account 3"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "setMetrics",
+        "metric": "stringSimilarity",
+        "expectedAnswer": "={{ $('Eval Set').first().json[\"Expected Extracted Data\"] || \"{}\"}}",
+        "actualAnswer": "={{ $json.concatenated_serialized }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.8,
+      "position": [
+        5584,
+        224
+      ],
+      "id": "7d6d5c5a-da75-4060-b7f1-46bdf373ff08",
+      "name": "Evaluation",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "setInputs",
+        "inputs": {
+          "values": [
+            {
+              "inputName": "expected_extracted_data",
+              "inputValue": "={{ $json[\"Expected Extracted Data\"] }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.8,
+      "position": [
+        -1776,
+        512
+      ],
+      "id": "f5de9e92-4d33-48f8-ac32-759330d9519f",
+      "name": "Evaluation2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "abd540ef-faaa-496e-8493-6148ca0e6454",
+              "name": "fileid_1",
+              "value": "={{ $json['Attachment 1']?.match(/\\/d\\/([^\\/]+)\\//)?.last() || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "0ff919b2-02fa-4f17-a1db-baa4ac2be12c",
+              "name": "fileid_2",
+              "value": "={{ $json['Attachment 2']?.match(/\\/d\\/([^\\/]+)\\//)?.last() || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "08326cfb-98e2-4a87-8a1a-291ea057b8b1",
+              "name": "fileid_3",
+              "value": "={{ $json['Attachment 3']?.match(/\\/d\\/([^\\/]+)\\//)?.last() || '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1760,
+        656
+      ],
+      "id": "d39acfaf-4052-4e4d-828e-4f2dcf3b762c",
+      "name": "Extract File IDs"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "64331735-454a-4a1f-b7eb-259be21f1035",
+              "leftValue": "={{ $json.fileid_1 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1520,
+        496
+      ],
+      "id": "71500e5e-f2e0-43af-a12c-f115213db4aa",
+      "name": "If:1st attachment"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "64331735-454a-4a1f-b7eb-259be21f1035",
+              "leftValue": "={{ $json.fileid_2 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1520,
+        640
+      ],
+      "id": "209cdead-fda8-4e00-8aed-d76b2b3cb150",
+      "name": "If:2nd attachment"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "64331735-454a-4a1f-b7eb-259be21f1035",
+              "leftValue": "={{ $json.fileid_3 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1520,
+        816
+      ],
+      "id": "eda37507-f5be-45b8-9e5c-3227e1fd6425",
+      "name": "If:3rd attachment"
+    },
+    {
+      "parameters": {
+        "url": "=https://drive.google.com/uc?export=download&id={{ $('Extract File IDs').item.json.fileid_2 }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1328,
+        640
+      ],
+      "id": "dca0d430-541a-4483-b9aa-252f5738048a",
+      "name": "Get 2nd File"
+    },
+    {
+      "parameters": {
+        "url": "=https://drive.google.com/uc?export=download&id={{ $('Extract File IDs').item.json.fileid_1 }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1328,
+        496
+      ],
+      "id": "dd36f587-1d7d-49df-8c56-ff0ff6a4987a",
+      "name": "Get 1st File"
+    },
+    {
+      "parameters": {
+        "url": "=https://drive.google.com/uc?export=download&id={{ $('Extract File IDs').item.json.fileid_3 }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1328,
+        816
+      ],
+      "id": "814d2525-5c2f-43dc-8aa8-67041bcb5354",
+      "name": "Get 3rd File"
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1056,
+        608
+      ],
+      "id": "9c041467-617c-419e-b655-4e4c4750d58b",
+      "name": "Combine Files"
+    },
+    {
+      "parameters": {
+        "content": "## Prep for Evaluation\n\n**Fill in the values here.** Don’t change the parameter names, they’ll be used in the evaluations. You can use them when saving data to the CRM.",
+        "height": 400,
+        "width": 960,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2944,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "8f8dd7cd-fb07-48a2-ad06-fac5e9ff59e4",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\n\n  const item = $input.item\n  \n  // Check if binary data exists\n  if (!item.binary) {\n    return item;\n  }\n  \n  // Get all binary property names (usually 'data', but could be different)\n  const binaryPropertyNames = Object.keys(item.binary);\n  \n  // Process each binary property\n  for (const binaryPropertyName of binaryPropertyNames) {\n    const binaryData = item.binary[binaryPropertyName];\n    \n    // Get the file extension from fileName\n    let fileExtension = '';\n    if (binaryData.fileName) {\n      const fileNameParts = binaryData.fileName.split('.');\n      if (fileNameParts.length > 1) {\n        fileExtension = fileNameParts[fileNameParts.length - 1].toLowerCase();\n      }\n    }\n    \n    // Check if it's a PDF and update MIME type\n    if (fileExtension === 'pdf') {\n      binaryData.mimeType = 'application/pdf';\n      binaryData.fileExtension = 'pdf';\n      console.log(`Updated MIME type for ${binaryData.fileName} to application/pdf`);\n    }\n    // Optional: Add other file types as needed\n    else if (fileExtension === 'jpg' || fileExtension === 'jpeg') {\n      binaryData.mimeType = 'image/jpeg';\n    }\n    else if (fileExtension === 'png') {\n      binaryData.mimeType = 'image/png';\n    }\n    else if (fileExtension === 'txt') {\n      binaryData.mimeType = 'text/plain';\n    }\n  }\n\nreturn item;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -896,
+        624
+      ],
+      "id": "db433761-fd32-4392-b9b2-b50eba8beb58",
+      "name": "Fix mime type"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "=data",
+        "options": {
+          "keepSource": "binary"
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        1056
+      ],
+      "id": "9b158441-f343-4ddf-99f4-603e9bf5e84c",
+      "name": "Extract Text from PDF"
+    },
+    {
+      "parameters": {
+        "content": "## Save data to Google Drive \n",
+        "height": 1504,
+        "width": 2976,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2016,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "ce230db8-91f1-4aab-925f-1215e42cb1fb",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## Eval for Correctness",
+        "height": 432,
+        "width": 1104,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5008,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "336f0e6f-e948-4e12-a798-fad56ee25922",
+      "name": "Sticky Note9",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "011e8030-134c-4288-951b-71b440dd92a0",
+              "name": "serialized",
+              "value": "={{$json.removeField('company_id_from_CRM').toJsonString()}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5120,
+        224
+      ],
+      "id": "c5fe74ec-f6b7-468d-9053-75294410b828",
+      "name": "Serialize Extracted Values",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "aggregation": "concatenate",
+              "field": "serialized"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.summarize",
+      "typeVersion": 1.1,
+      "position": [
+        5344,
+        224
+      ],
+      "id": "fb63e89c-d41e-4362-889c-449ca4fc74ae",
+      "name": "Concatenate Multiple Extractions",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cloud.eu.llamaindex.ai/api/v1/parsing/upload",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        0,
+        208
+      ],
+      "id": "7d94fa8d-e5eb-4a20-8c29-444410ae62ec",
+      "name": "LlamaIndex: Upload a file",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "6PgzVNC1Ts2ObkwP",
+          "name": "Bearer Auth LlamaCloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.cloud.eu.llamaindex.ai/api/v1/parsing/job/{{ $json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        480,
+        208
+      ],
+      "id": "3807c995-6ef3-4ba8-b1ea-f4b24c1cdad5",
+      "name": "Llama Index: Check Status",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "6PgzVNC1Ts2ObkwP",
+          "name": "Bearer Auth LlamaCloud"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        256,
+        208
+      ],
+      "id": "795fa118-c2fd-4c74-ba44-0d7d1dd0a971",
+      "name": "Wait",
+      "webhookId": "e153a87c-7f8d-47c0-a2f2-4dc3aa5e93c3"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.cloud.eu.llamaindex.ai/api/v1/parsing/job/{{ $('LlamaIndex: Upload a file').item.json.id }}/result/markdown",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        944,
+        192
+      ],
+      "id": "d3c63a61-870d-4839-9e07-19597d641202",
+      "name": "Llama Index: Get Results",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "6PgzVNC1Ts2ObkwP",
+          "name": "Bearer Auth LlamaCloud"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dfe985e2-1c1c-4b6c-96b5-08960c38bf79",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "SUCCESS",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        704,
+        208
+      ],
+      "id": "37b91981-1006-4f28-af03-59fcacd99152",
+      "name": "If: Status Success"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ee443f18-bff5-4386-a961-7c7be78c2224",
+              "leftValue": "={{ $node[\"Llama Index: Check Status\"].runIndex < 3 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        432,
+        544
+      ],
+      "id": "6d7ebf21-4507-49c0-a39a-f452bac466aa",
+      "name": "If: RunIndex < 3"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        816,
+        560
+      ],
+      "id": "bf777071-0b7d-450d-a2c1-0b3f330ecce3",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "content": "## Extract Text With OCR",
+        "height": 656,
+        "width": 1232
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -80,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "c49109a7-06f3-45f6-be9a-aa43f6f84a6f",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7f3f6805-2674-433b-8874-514e61c775e5",
+              "name": "text",
+              "value": "={{ $json.markdown }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1328,
+        208
+      ],
+      "id": "4a037627-785b-44bd-8ad6-b66ba3e5bd6b",
+      "name": "Set Text Field"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appxml2493nJqF5OE",
+          "mode": "list",
+          "cachedResultName": "Momentum Digital (Cohort Starter)",
+          "cachedResultUrl": "https://airtable.com/appxml2493nJqF5OE"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl4U8lBl2FmXInhr",
+          "mode": "list",
+          "cachedResultName": "Offers",
+          "cachedResultUrl": "https://airtable.com/appxml2493nJqF5OE/tbl4U8lBl2FmXInhr"
+        },
+        "filterByFormula": "={{ $json.formula }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        6704,
+        752
+      ],
+      "id": "9ed6db31-2a50-4bbe-bf1b-3a81fad89f3d",
+      "name": "Search Offers on X Days",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xUnrdaqhZW0pnp9K",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "date"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        6256,
+        752
+      ],
+      "id": "02ca1928-358d-42d2-8c22-4274c1132745",
+      "name": "Aggregate",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "Date",
+              "field2": "date"
+            },
+            {
+              "field1": "['Name (from Client)'][0]",
+              "field2": "company_name"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.compareDatasets",
+      "typeVersion": 2.3,
+      "position": [
+        6368,
+        1248
+      ],
+      "id": "88147afd-690d-4042-b63a-4089dadc181f",
+      "name": "Compare Datasets",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appxml2493nJqF5OE",
+          "mode": "list",
+          "cachedResultName": "Momentum Digital (Cohort Starter)",
+          "cachedResultUrl": "https://airtable.com/appxml2493nJqF5OE"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl4U8lBl2FmXInhr",
+          "mode": "list",
+          "cachedResultName": "Offers",
+          "cachedResultUrl": "https://airtable.com/appxml2493nJqF5OE/tbl4U8lBl2FmXInhr"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Total": "={{ $json.price }}",
+            "Status": "Sent",
+            "Client": "={{ [$('Clients: Create or update a record').item.json.id] }}",
+            "Date": "={{ DateTime\n    .fromFormat($json.date, 'yyyy-MM-dd', { zone: 'UTC' })\n    .startOf('day')\n    .toISO() }}",
+            "Due Date": "={{ DateTime\n    .fromFormat($json.due_date, 'yyyy-MM-dd', { zone: 'UTC' })\n    .startOf('day')\n    .toISO() }}",
+            "Name": "={{ $json.project_name }}",
+            "Link": "=https://drive.google.com/file/d/{{ $('Prepare Merge Offers Input 2').item.json.offer_file_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Id",
+              "displayName": "Id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Name (from Client)",
+              "displayName": "Name (from Client)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Total",
+              "displayName": "Total",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Sent",
+                  "value": "Sent"
+                },
+                {
+                  "name": "Signed",
+                  "value": "Signed"
+                },
+                {
+                  "name": "Rejected",
+                  "value": "Rejected"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Due Date",
+              "displayName": "Due Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Client",
+              "displayName": "Client",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Contact Person (from Client)",
+              "displayName": "Contact Person (from Client)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        6752,
+        1328
+      ],
+      "id": "496127a8-6f32-462e-a8e7-0f8fa44a6e9e",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xUnrdaqhZW0pnp9K",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e6b080c2-af3c-41d9-8bae-b1509592a395",
+              "leftValue": "={{ $binary }}",
+              "rightValue": "pdf",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -768,
+        192
+      ],
+      "id": "74048c5a-3ef9-44be-9a38-efa1ccec5a18",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "content": "## Get Messages With Attachments Missing",
+        "height": 304,
+        "width": 896,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1520,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "2d9586bb-0580-4b79-959e-9e589e24b33e",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 18
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1456,
+        -160
+      ],
+      "id": "ad61dcee-a5e6-40e4-b88e-3762b11866dd",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "filters": {
+          "q": "from:(privalikhinanadia@outlook.com OR n8nbuilderscohort@gmail.com) (subject:(proposal OR proposals OR angebot) OR proposal OR proposals OR angebot) AND -filename:pdf",
+          "receivedAfter": "={{ $json.timestamp.toDateTime().minus(3,'day') }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -1248,
+        -160
+      ],
+      "id": "f6497caa-0e06-4285-a73c-9a774066a8e7",
+      "name": "Get Messages",
+      "webhookId": "ba4e91fd-ca05-4f3e-9407-337b339ca80d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $json.id }}",
+        "message": "=Hi {{\n(() => {\n  const from = $json.From || '';\n\n  // Remove the <email> part and surrounding quotes, e.g.  'John Doe <a@b>' -> 'John Doe'\n  let display = from.replace(/<[^>]*>/g, '').trim().replace(/^\"(.*)\"$/, '$1');\n\n  // If it's like 'Last, First [Middle]', keep the part after the comma\n  if (/,/.test(display)) {\n    const afterComma = display.split(',')[1];\n    if (afterComma) display = afterComma.trim();\n  }\n\n  // If still empty, fall back to the email local-part (before @), converting separators to spaces\n  if (!display) {\n    const email = (from.match(/<([^>]+)>/) || [,''])[1] || from;\n    const local = (email.split('@')[0] || '').replace(/[._-]+/g, ' ').trim();\n    display = local;\n  }\n\n  // Take the first “word” as the first name\n  const first = (display.match(/\\S+/) || [''])[0];\n\n  // Title-case the first name\n  return first ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase() : '';\n})()\n}},\n\nI noticed that your email is missing an attachment with the proposal :-) Can you please add that and send the email again?\n\nAll the best,\n\nYour n8n Assistant\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -1040,
+        -160
+      ],
+      "id": "03fab00e-fb6c-420f-82bc-c1b6b402891f",
+      "name": "Reply to a message",
+      "webhookId": "0948db8b-30a6-45bd-848a-4e8c2786ec9a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -848,
+        -160
+      ],
+      "id": "6f0c4747-999e-4169-8efe-36a4f9321f3e",
+      "name": "No Operation, do nothing1"
+    },
+    {
+      "parameters": {
+        "jsCode": "let results = [];\n\nfor (const item of $input.all()) {\n  const bin = item.binary || {};\n  for (const key of Object.keys(bin)) {\n    const b = bin[key];\n    results.push({\n      json: {\n        ...item.json,\n        fileName: b?.fileName,\n        sourceKey: key,\n      },\n      binary: {\n        data: b, //\n      },\n    });\n  }\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -480,
+        192
+      ],
+      "id": "d131d397-9acd-4934-b6bd-dd73f68843c3",
+      "name": "Change binary keys"
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code node — adds discount + conditions_discount (EN/DE)\n// Source of items: the node named \"Change binary keys\"\n\nconst MONTHS = {\n  january: 1, february: 2, march: 3, april: 4, may: 5, june: 6,\n  july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,\n  januar: 1, februar: 2, märz: 3, maerz: 3, april: 4, mai: 5, juni: 6,\n  juli: 7, august: 8, september: 9, oktober: 10, november: 11, dezember: 12,\n};\n\nfunction cleanText(t) {\n  if (!t) return '';\n  let s = String(t);\n  s = s.replace(/^\\s*Momentum\\s*\\n\\s*DIGITAL\\s*\\n/i, '');\n  s = s.replace(/\\r/g, '').replace(/[ \\t]+\\n/g, '\\n').replace(/\\n{3,}/g, '\\n\\n');\n  return s.trim();\n}\n\nconst COMPANY_SUFFIX = /\\b(AG|GmbH|UG|BV|NV|SA|SAS|S\\.?L\\.?|S\\.?R\\.?L\\.?|AB|Oy|s\\.?r\\.?o\\.?|sp\\.?\\s?z\\.?\\s?o\\.?o\\.?|Ltd\\.?|LLC|Inc\\.?)\\b/i;\nconst POSTAL_CITY = /\\b\\d{4,5}\\s+[A-Za-zÀ-ÖØ-öø-ÿ.'\\- ]+\\b/;\nconst STREET_LINE = /\\b\\d+[A-Za-z]?\\b|strasse|straße|strae|str\\./i;\n\nfunction replaceWordCase(word, replacement) {\n  if (word === word.toUpperCase()) return replacement.toUpperCase();\n  if (word[0] === word[0].toUpperCase()) return replacement[0].toUpperCase() + replacement.slice(1);\n  return replacement;\n}\nfunction normalizeGermanEszettAddress(s) {\n  if (!s) return s;\n  s = s.replace(/strasse\\b/gi, (w) => replaceWordCase(w, 'straße'));\n  s = s.replace(/strae\\b/gi,   (w) => replaceWordCase(w, 'straße'));\n  return s;\n}\n\nfunction pickCompany(lines) {\n  const maxScan = Math.min(lines.length, 30);\n  for (let i = 0; i < maxScan; i++) {\n    const L = lines[i].trim();\n    if (!L) continue;\n    if (COMPANY_SUFFIX.test(L) && !/^(dear|attn:|#|\\*|\\-|context|objectives)/i.test(L)) return L;\n  }\n  return '';\n}\n\nfunction pickAddress(lines, startIdx) {\n  if (startIdx < 0) return '';\n  const out = [];\n  for (let i = startIdx + 1; i < Math.min(lines.length, startIdx + 6); i++) {\n    const L = lines[i].trim();\n    if (!L) break;\n    if (/^attn?:/i.test(L)) continue;\n    if (looksLikeDate(L) || /^#|^-{3,}/.test(L)) break;\n    if (STREET_LINE.test(L) || POSTAL_CITY.test(L)) {\n      out.push(L);\n      if (POSTAL_CITY.test(L)) break;\n    }\n  }\n  return normalizeGermanEszettAddress(out.join(', '));\n}\n\nfunction pad2(n){return n<10?'0'+n:''+n}\nfunction toISO(y,m,d){return `${y}-${pad2(m)}-${pad2(d)}`}\n\nfunction looksLikeDate(line){\n  const l=line.trim();\n  if (l.match(/(^|,\\s*)(\\d{1,2})[.\\s]*([A-Za-zÄÖÜäöüß\\.]+)\\s+(\\d{4})\\b/)) return true;\n  if (l.match(/(^|,\\s*)([A-Za-zÄÖÜäöüß\\.]+)\\s+(\\d{1,2})(,)?\\s+(\\d{4})\\b/)) return true;\n  if (l.match(/\\b(\\d{1,2})[.\\-/](\\d{1,2})[.\\-/](\\d{4})\\b/)) return true;\n  if (l.match(/\\b(\\d{4})-(\\d{2})-(\\d{2})\\b/)) return true;\n  return false;\n}\n\nfunction extractDate(text){\n  const lines=text.split('\\n');\n  const scan=[...lines.slice(0,Math.min(40,lines.length)),...lines];\n  for (const s0 of scan){\n    let s=s0.trim(); if(!s) continue;\n    let m=s.match(/(^|,\\s*)(\\d{1,2})[.\\s]*([A-Za-zÄÖÜäöüß\\.]+)\\s+(\\d{4})\\b/);\n    if(m){const d=+m[2]; const mn=m[3].replace(/\\.$/,'').toLowerCase().replace('ä','ae').replace('ö','oe').replace('ü','ue');\n      const mon=MONTHS[mn]; const y=+m[4]; if(mon&&d>=1&&d<=31) return toISO(y,mon,d);}\n    m=s.match(/(^|,\\s*)([A-Za-zÄÖÜäöüß\\.]+)\\s+(\\d{1,2})(,)?\\s+(\\d{4})\\b/);\n    if(m){const mn=m[2].replace(/\\.$/,'').toLowerCase().replace('ä','ae').replace('ö','oe').replace('ü','ue');\n      const mon=MONTHS[mn]; const d=+m[3]; const y=+m[5]; if(mon&&d>=1&&d<=31) return toISO(y,mon,d);}\n    m=s.match(/\\b(\\d{1,2})[.\\-/](\\d{1,2})[.\\-/](\\d{4})\\b/);\n    if(m){const d=+m[1], mon=+m[2], y=+m[3]; if(mon>=1&&mon<=12&&d>=1&&d<=31) return toISO(y,mon,d);}\n    m=s.match(/\\b(\\d{4})-(\\d{2})-(\\d{2})\\b/); if(m) return `${m[1]}-${m[2]}-${m[3]}`;\n  }\n  return '';\n}\n\nfunction normalizeAmountString(s){\n  let t=(s||'').replace(/[^\\d.,]/g,''); if(!t) return null;\n  const lc=t.lastIndexOf(','), ld=t.lastIndexOf('.'), lastSep=Math.max(lc,ld);\n  if(lc!==-1 && ld!==-1){ const dec=t.slice(lastSep+1); const int=t.slice(0,lastSep).replace(/[.,]/g,''); return parseFloat(int+'.'+dec); }\n  if(t.includes(',')){ const parts=t.split(','); if(parts.length===2 && parts[1].length===2) return parseFloat(parts[0].replace(/[.,]/g,'')+'.'+parts[1]); return parseFloat(t.replace(/,/g,'')); }\n  if(t.includes('.')){ const parts=t.split('.'); if(parts.length===2 && parts[1].length===2) return parseFloat(parts[0].replace(/[.,]/g,'')+'.'+parts[1]); return parseFloat(t.replace(/\\./g,'')); }\n  return parseFloat(t);\n}\nfunction extractAmount(text){\n  const lines=text.split('\\n');\n  const idx=lines.findIndex(l=>/total\\b/i.test(l)&&/\\bEUR\\b/i.test(l)&&/\\bnet\\b/i.test(l));\n  let line = idx!==-1 ? lines[idx] : (()=>{\n    const i2=lines.findIndex(l=>/total\\b/i.test(l));\n    return i2!==-1 ? (lines[i2] + ' ' + (lines[i2+1]||'')) : text;\n  })();\n  const numRegex=/(?:€|\\bEUR\\b)?\\s*([0-9]{1,3}(?:[.,\\s][0-9]{3})*(?:[.,][0-9]{2})?|[0-9]+)/g;\n  let m, last=null; while((m=numRegex.exec(line))!==null) last=m[1];\n  return last ? normalizeAmountString(last) : null;\n}\n\nfunction extractValidityDays(text){\n  const headingMatch = text.match(/(?:^|\\n)(Validity|Gültigkeit)\\s*\\n([\\s\\S]{0,200})/i);\n  if (headingMatch) {\n    const body = headingMatch[2];\n    const m = body.match(/\\b(\\d{1,4})\\s*(?:days?|day|tage|tag|tagen)\\b/i);\n    if (m) return parseInt(m[1], 10);\n  }\n  const patterns = [\n    /\\bvalid[^.\\n]*?\\b(\\d{1,4})\\s*(?:days?|day|tage|tag|tagen)\\b/i,\n    /\\b(\\d{1,4})\\s*(?:days?|day|tage|tag|tagen)\\b[^.\\n]*?\\bvalid\\b/i,\n    /\\bgültig[^.\\n]*?\\b(\\d{1,4})\\s*(?:tage|tag|tagen)\\b/i,\n    /\\b(\\d{1,4})\\s*(?:tage|tag|tagen)\\b[^.\\n]*?\\bgültig\\b/i,\n  ];\n  for (const rx of patterns) {\n    const m = text.match(rx);\n    if (m) return parseInt(m[1], 10);\n  }\n  return null;\n}\n\nfunction addDaysISO(isoDate, days){\n  if (!isoDate || days == null) return '';\n  const d = new Date(isoDate + 'T00:00:00Z');\n  if (isNaN(d)) return '';\n  d.setUTCDate(d.getUTCDate() + days);\n  return d.toISOString().slice(0,10);\n}\n\nfunction extractProjectName(text){\n  const lines=text.split('\\n');\n  let dateIdx=-1;\n  for (let i=0;i<Math.min(60,lines.length);i++){ if (looksLikeDate(lines[i])) { dateIdx=i; break; } }\n  const start = dateIdx>=0 ? dateIdx+1 : 0;\n  const stopAfterTitle = /^(dear\\b|sehr geehr|guten tag|hallo|hello|#\\s|commercial terms|zahlung|zahlungsbedingungen)/i;\n  const end = Math.min(lines.length, start+20);\n  for (let i=start;i<end;i++){\n    const L=(lines[i]||'').trim(); if(!L) continue;\n    let m=L.match(/^#{1,6}\\s+(.*)$/); if(m) return m[1].trim();\n    if (/^(angebot|proposal|offer|vorschlag|kostenvoranschlag)\\b/i.test(L)) return L;\n    if (stopAfterTitle.test(L)) break;\n    const isAddressy = STREET_LINE.test(L) || POSTAL_CITY.test(L) || /^attn?:/i.test(L);\n    if (!isAddressy && /^[A-ZÄÖÜ].{3,}$/.test(L)) return L;\n  }\n  return '';\n}\n\nconst DISCOUNT_PATTERNS = [\n  /\\b(?:discount|rabatt|nachlass|preisnachlass|skonto)\\s*(?:of|von)\\s*(\\d{1,2}(?:[.,]\\d{1,2})?)\\s*%/i,\n  /(\\d{1,2}(?:[.,]\\d{1,2})?)\\s*%\\s*(?:discount|rabatt|nachlass|preisnachlass|skonto)\\b/i,\n];\n\nfunction findDiscountInParagraph(p) {\n  for (const rx of DISCOUNT_PATTERNS) {\n    const m = p.match(rx);\n    if (m) {\n      const pct = parseFloat(String(m[1]).replace(',', '.'));\n      return Number.isFinite(pct) ? pct : null;\n    }\n  }\n  return null;\n}\n\nfunction extractDiscountAndConditions(text){\n  const STOP_HEADINGS = /^(?:Validity|Gültigkeit|Contract Acceptance|Vertragsannahme|Payment Terms|Zahlungsbedingungen)\\b/i;\n  const paragraphs = text.split(/\\n\\s*\\n/);\n\n  const pickSentence = (para, m) => {\n    let end = para.length;\n    const after = para.slice(m.index);\n    const stopRel = after.search(/\\n\\s*(?:Validity|Gültigkeit|Contract Acceptance|Vertragsannahme|Payment Terms|Zahlungsbedingungen)\\b/i);\n    if (stopRel !== -1) end = m.index + stopRel;\n\n    const before = para.slice(0, m.index);\n    let start = Math.max(\n      before.lastIndexOf('.'),\n      before.lastIndexOf('!'),\n      before.lastIndexOf('?'),\n      before.lastIndexOf('\\n')\n    ) + 1;\n\n    const afterPunctRel = after.search(/[.!?]/);\n    if (afterPunctRel !== -1) {\n      const punctAbs = m.index + afterPunctRel + 1;\n      end = Math.min(end, punctAbs);\n    } else {\n      const nlRel = after.indexOf('\\n');\n      if (nlRel !== -1) end = Math.min(end, m.index + nlRel);\n    }\n\n    const tail = para.slice(end);\n    const netLine = tail.match(/^\\n\\(?net\\)?\\s*$/i);\n    if (netLine) end += netLine[0].length;\n\n    return para.slice(start, end).trim();\n  };\n\n  const findPct = (s) => {\n    for (const rx of DISCOUNT_PATTERNS) {\n      const m = s.match(rx);\n      if (m) {\n        const pct = parseFloat(String(m[1]).replace(',', '.'));\n        return { m, pct: Number.isFinite(pct) ? pct : null };\n      }\n    }\n    return null;\n  };\n\n  for (const para of paragraphs) {\n    if (STOP_HEADINGS.test(para)) continue;\n    const hit = findPct(para);\n    if (hit) {\n      const sentence = pickSentence(para, hit.m);\n      return { discount: hit.pct, conditions: sentence.trim() };\n    }\n  }\n\n  const hit = findPct(text);\n  if (hit) {\n    const lines = text.split('\\n');\n    let acc = '';\n    let seen = false;\n    for (const ln of lines) {\n      if (!seen && ln.includes(hit.m[0])) seen = true;\n      if (seen) {\n        if (STOP_HEADINGS.test(ln)) break;\n        acc += (acc ? '\\n' : '') + ln;\n        if (/[.!?]$/.test(ln)) break;\n      }\n    }\n    const sentence = pickSentence(acc, acc.match(hit.m[0]));\n    return { discount: hit.pct, conditions: sentence.trim() };\n  }\n\n  return { discount: null, conditions: '' };\n}\n\nfunction extractContactPerson(lines, companyIdx){\n  if (companyIdx < 0) return '';\n  const MARKER_START_RX =\n    /^(?:attn\\.?\\s*:?\\s*|z\\.?\\s*h\\.?\\s*:?\\s*|zu\\s*h[aä]nden\\s*:?\\s*|fao\\s*:?\\s*)(.+)$/i;\n  const PERSON_LINE_RX =\n    /\\b(Dr\\.|Prof\\.|Herr|Frau|Mr\\.|Ms\\.|Mrs\\.)\\b|^[A-ZÄÖÜ][A-Za-zÄÖÜäöüß\\-']+(?:\\s+[A-ZÄÖÜ][A-Za-zÄÖÜäöüß\\-']+)+$/;\n\n  for (let i = companyIdx + 1; i < Math.min(lines.length, companyIdx + 8); i++) {\n    let L = (lines[i] || '').trim();\n    if (!L) continue;\n    if (looksLikeDate(L) || /^#|^-{3,}/.test(L)) break;\n\n    const m = L.match(MARKER_START_RX);\n    if (m) return m[1].replace(/\\s+/g, ' ').trim();\n\n    const isAddressy = STREET_LINE.test(L) || POSTAL_CITY.test(L);\n    if (isAddressy) continue;\n\n    if (PERSON_LINE_RX.test(L)) {\n      return L.replace(MARKER_START_RX, '$1').replace(/\\s+/g, ' ').trim();\n    }\n  }\n  return '';\n}\n\nfunction parseOne(text){\n  const cleaned=cleanText(text);\n  const lines=cleaned.split('\\n');\n\n  const companyIdx=lines.findIndex(l=>COMPANY_SUFFIX.test(l));\n  const company = companyIdx>=0 ? pickCompany(lines) : '';\n  const address = company ? pickAddress(lines, companyIdx) : '';\n  const dateISO = extractDate(cleaned);\n  const amount = extractAmount(cleaned);\n  const validityDays = extractValidityDays(cleaned);\n  const dueDate = (dateISO && validityDays != null) ? addDaysISO(dateISO, validityDays) : '';\n  const project_name = extractProjectName(cleaned);\n  const { discount, conditions } = extractDiscountAndConditions(cleaned);\n  const contact_person = company ? extractContactPerson(lines, companyIdx) : '';\n\n  return {\n    project_name: project_name || '',\n    price: amount ?? null,\n    date: dateISO || '',\n    due_date: dueDate || '',\n    company_name: company || '',\n    company_address: address || '',\n    contact_person: contact_person || '',\n    discount_percentage: discount ?? null,\n    conditions_discount: (conditions || '').trim(),\n    content: cleaned,\n  };\n}\n\n// … keep all your helper functions as-is …\n\n// Defaults so the fields are ALWAYS present\nconst PARSED_DEFAULTS = {\n  project_name: '',\n  price: null,\n  date: '',\n  due_date: '',\n  company_name: '',\n  company_address: '',\n  contact_person: '',\n  discount_percentage: null,\n  conditions_discount: '',\n  content: '',\n};\n\n// --- Keep everything above (helpers + parseOne + PARSED_DEFAULTS) ---\n\n// 1) Take TEXT from the *current* input (Information Extractor's upstream branch)\nconst textItems = $input.all();\n\n// 2) Fetch BINARIES from the \"Change binary keys\" node\nconst binItems = $('Change binary keys').all(); // documented way to read another node's items\n\nconst out = [];\n\nfor (let i = 0; i < textItems.length; i++) {\n  const it = textItems[i];\n\n  // Prefer explicit text field; fall back to a couple of common names\n  const txt =\n    it.json?.text ??\n    it.json?.content ??\n    it.json?.body ??\n    '';\n\n  const parsed = parseOne(txt);\n  const jsonOut = { ...(it.json || {}), ...PARSED_DEFAULTS, ...parsed };\n\n  // Try to re-attach the matching binary:\n  // 1) by index (fast path)\n  // 2) if not available, try to match by fileName/sourceKey (safer after reorders/merges)\n  let binary = binItems[i]?.binary;\n  if (!binary) {\n    const wantName = jsonOut.fileName || it.json?.fileName;\n    const wantKey  = jsonOut.sourceKey || it.json?.sourceKey;\n    const match = binItems.find(b =>\n      (wantName && b.json?.fileName === wantName) ||\n      (wantKey  && b.json?.sourceKey === wantKey)\n    );\n    binary = match?.binary;\n  }\n\n  out.push({\n    json: jsonOut,\n    ...(binary ? { binary } : {}),\n    // keep item linking from *this* node forward\n    pairedItem: { item: i },\n  });\n}\n\nreturn out;\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        704
+      ],
+      "id": "139b7051-075d-4de8-860c-10d796ff3218",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appxml2493nJqF5OE",
+          "mode": "list",
+          "cachedResultName": "Momentum Digital (Cohort Starter)",
+          "cachedResultUrl": "https://airtable.com/appxml2493nJqF5OE"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblBp4Fcpu8HayWzL",
+          "mode": "list",
+          "cachedResultName": "Clients",
+          "cachedResultUrl": "https://airtable.com/appxml2493nJqF5OE/tblBp4Fcpu8HayWzL"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('Clients: Remove Duplicates').item.json.company_name }}",
+            "Address": "={{ $('Clients: Remove Duplicates').item.json.company_address }}",
+            "Contact Person": "={{ $('Clients: Remove Duplicates').item.json.contact_person }}"
+          },
+          "matchingColumns": [
+            "Name"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Address",
+              "displayName": "Address",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Contact Person",
+              "displayName": "Contact Person",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Offers",
+              "displayName": "Offers",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        5472,
+        640
+      ],
+      "id": "7648e8cc-3e7a-4dcb-8c3c-a2de20c21ecb",
+      "name": "Clients: Create or update a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xUnrdaqhZW0pnp9K",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "company_name",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        5200,
+        640
+      ],
+      "id": "60a4e92d-e3cb-4436-a9ae-63126e2fd4cf",
+      "name": "Clients: Remove Duplicates",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "fields.Name",
+              "field2": "company_name"
+            }
+          ]
+        },
+        "joinMode": "enrichInput2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        5808,
+        848
+      ],
+      "id": "aedaa7b1-37bc-42d3-b008-f9412a176657",
+      "name": "Merge from CRM: Clients and Offers",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Read items from the \"Aggregate\" node (first run, first output)\nconst aggItems = $items(\"Aggregate\", 0, 0);\n\n// Collect and flatten all date values from Aggregate\nlet dates = [];\nfor (const it of (aggItems || [])) {\n  const v = it?.json?.date;\n  if (Array.isArray(v)) dates.push(...v);\n  else if (typeof v === \"string\") dates.push(v);\n}\n\n// De-duplicate (equivalent to expression .unique())\nconst uniqueDates = [...new Set(dates.filter(d => typeof d === \"string\" && d.trim()))];\n\n// Build single-line Airtable formula string (not executed, just a string)\nconst formula = uniqueDates.length\n  ? `OR( ${uniqueDates.map(d => `IS_SAME({Date}, \"${d}\", 'day')`).join(', ')} )`\n  : 'OR()';\n\n// Return one item with the string\nreturn [{ json: { formula } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6464,
+        752
+      ],
+      "id": "5c31292c-f20d-4e1d-b556-d0c5374391d1",
+      "name": "Return unique dates and create formula",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "=name='{{ $('Set Values1').item.json.offer_company_folder}}' and mimeType='application/vnd.google-apps.folder' and trashed=false",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1Pk-JwPQf45nXzc-xizFqNK_aIfBJbHDz",
+            "mode": "list",
+            "cachedResultName": "Clients",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1Pk-JwPQf45nXzc-xizFqNK_aIfBJbHDz"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2320,
+        1072
+      ],
+      "id": "bde98ce1-2ba9-4013-a284-e09460c22dc8",
+      "name": "Search files and folders",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vjQVB8No5HjtXY8W",
+          "name": "Google Drive account 6"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $('Set Values1').item.json.offer_company_folder }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1Pk-JwPQf45nXzc-xizFqNK_aIfBJbHDz",
+          "mode": "id"
+        },
+        "options": {
+          "simplifyOutput": true
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4096,
+        992
+      ],
+      "id": "dea006de-11c6-485f-818f-f1c501842ad9",
+      "name": "Create folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vjQVB8No5HjtXY8W",
+          "name": "Google Drive account 6"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "Offers",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4256,
+        992
+      ],
+      "id": "5e8c85f8-4256-4bd0-8498-8ce3e517fca4",
+      "name": "Create Offers",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vjQVB8No5HjtXY8W",
+          "name": "Google Drive account 6"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "Signed Deals",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4480,
+        992
+      ],
+      "id": "f356c850-2f12-47a7-a1df-e493a5edbecf",
+      "name": "Create Signed Deals",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vjQVB8No5HjtXY8W",
+          "name": "Google Drive account 6"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Set Values1').item.json.offer_file_id }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4352,
+        1328
+      ],
+      "id": "1fc1fea3-f161-45d6-ad1f-41e4c8868ac7",
+      "name": "Move File To Folder1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vjQVB8No5HjtXY8W",
+          "name": "Google Drive account 6"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Save date to CRM\n",
+        "height": 1024,
+        "width": 2256
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5008,
+        560
+      ],
+      "typeVersion": 1,
+      "id": "1bb7526e-40fb-4fe1-8c05-848437eb64d0",
+      "name": "Sticky Note2",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "=name='{{ $('Set Values1').item.json.offer_company_folder }}' and mimeType='application/vnd.google-apps.folder' and trashed=false",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1Pk-JwPQf45nXzc-xizFqNK_aIfBJbHDz",
+            "mode": "list",
+            "cachedResultName": "Clients",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1Pk-JwPQf45nXzc-xizFqNK_aIfBJbHDz"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        3872,
+        1328
+      ],
+      "id": "4d116946-2dc7-4d09-9b98-0439a156adec",
+      "name": "Search Parent Folder",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vjQVB8No5HjtXY8W",
+          "name": "Google Drive account 6"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "=name = 'Offers'\nand mimeType = 'application/vnd.google-apps.folder'\nand '{{$node[\"Search Parent Folder\"].json[\"id\"]}}' in parents\nand trashed = false\n",
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4128,
+        1328
+      ],
+      "id": "db372217-b771-409e-882f-c0a86934a84b",
+      "name": "Search Offers Folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vjQVB8No5HjtXY8W",
+          "name": "Google Drive account 6"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3792,
+        368
+      ],
+      "id": "a81696b6-eb3c-4d3c-91df-c9db52dc5d3e",
+      "name": "No Operation, do nothing2"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "=name='{{ $('Set Values1').item.json.offer_company_folder }}' and mimeType='application/vnd.google-apps.folder' and trashed=false",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1Pk-JwPQf45nXzc-xizFqNK_aIfBJbHDz",
+            "mode": "list",
+            "cachedResultName": "Clients",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1Pk-JwPQf45nXzc-xizFqNK_aIfBJbHDz"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        3344,
+        592
+      ],
+      "id": "33095556-7d42-4ff1-98b0-d79d9a78cc54",
+      "name": "Search Parent Folder1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vjQVB8No5HjtXY8W",
+          "name": "Google Drive account 6"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "28de40f8-d191-4483-927b-0a2f52c665bc",
+              "name": "project_name",
+              "value": "={{ $('Information Extractor').item.json.project_name }}",
+              "type": "string"
+            },
+            {
+              "id": "71b11545-6de7-47f3-b01a-5dde02909f55",
+              "name": "price",
+              "value": "={{ $('Information Extractor').item.json.price }}",
+              "type": "number"
+            },
+            {
+              "id": "e854682d-5c4a-4fe7-9326-f86433386dde",
+              "name": "date",
+              "value": "={{ $('Information Extractor').item.json.date }}",
+              "type": "string"
+            },
+            {
+              "id": "85eed912-bf1b-48fe-944e-b50f50000a10",
+              "name": "due_date",
+              "value": "={{ $('Information Extractor').item.json.due_date }}",
+              "type": "string"
+            },
+            {
+              "id": "b3a1c407-6a25-4a37-9801-944b2adc04d7",
+              "name": "company_name",
+              "value": "={{ $('Information Extractor').item.json.company_name }}",
+              "type": "string"
+            },
+            {
+              "id": "912f2394-57e7-4d8f-a8c6-752514fbad88",
+              "name": "company_address",
+              "value": "={{ $('Information Extractor').item.json.company_address }}",
+              "type": "string"
+            },
+            {
+              "id": "614ae4ed-944d-4e19-8756-24fe2825e332",
+              "name": "company_id_from_CRM",
+              "value": "=",
+              "type": "string"
+            },
+            {
+              "id": "b0875171-c1ef-4ba7-8559-367f78ccdd69",
+              "name": "discount_percentage",
+              "value": "={{ $('Information Extractor').item.json.discount_percentage }}",
+              "type": "string"
+            },
+            {
+              "id": "82b9ca18-5dfd-4de0-9605-fd58bc6cc830",
+              "name": "conditions_discount",
+              "value": "={{ $('Information Extractor').item.json.conditions_discount }}",
+              "type": "string"
+            },
+            {
+              "id": "c87c21ad-56d4-4cc6-9785-e9fa717d6d57",
+              "name": "contact_person",
+              "value": "={{ $('Information Extractor').item.json.contact_person }}",
+              "type": "string"
+            },
+            {
+              "id": "af8e4b5a-4ca6-4ffc-bb5d-b0e0e69c1f91",
+              "name": "offer_file_id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "cec45667-86b3-45c0-8467-02f2182270af",
+              "name": "offer_file_name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "b9a6783a-408a-4069-8977-58436bdb16cc",
+              "name": "offer_company_folder",
+              "value": "={{ $('Information Extractor').item.json.company_name }} Vault",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3008,
+        240
+      ],
+      "id": "054bc7e8-5447-49a9-a687-a5cae3e1707d",
+      "name": "Set Values1"
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Information Extractor').item.json.company_name }}-{{ $('Information Extractor').item.json.date }}-{{ $('Information Extractor').item.json.price }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1jzAp-k3n_sfyd316QgIWt_F9Lwc017CO",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2816,
+        112
+      ],
+      "id": "69dc7832-5af7-4dcf-b94b-d5571e6e1bfd",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vjQVB8No5HjtXY8W",
+          "name": "Google Drive account 6"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "78a4375b-b8ec-4c74-bf87-699017b2ce67",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "={{ $json.upload_filename }}",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "d0587d5a-e637-49cd-a767-14df5bd7aea0",
+              "leftValue": "={{ $json.file_uploadname }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "1b510309-eca7-47c5-bfcc-2088ac5a8fbd",
+              "leftValue": "={{ $binary }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2528,
+        128
+      ],
+      "id": "9f21fc91-2f9d-4852-a021-33ad41aa4fdc",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "=name='{{ $json.company_name }}-{{ $json.date }}-{{ $json.price }}'",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1jzAp-k3n_sfyd316QgIWt_F9Lwc017CO",
+            "mode": "list",
+            "cachedResultName": "0. OffersToMove",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1jzAp-k3n_sfyd316QgIWt_F9Lwc017CO"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2080,
+        160
+      ],
+      "id": "a59f4901-2ecb-4230-9a05-df77658657d0",
+      "name": "Search files and folders1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vjQVB8No5HjtXY8W",
+          "name": "Google Drive account 6"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1568,
+        704
+      ],
+      "id": "0b12258e-5a53-4cc4-a019-76976658922a",
+      "name": "Merge PDF & OCR"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e93aab01-dcdb-43cd-aaa9-a91d3e35e94c",
+              "name": "text",
+              "value": "={{ $('Extract Text from PDF').item.json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "83a835cc-1f1c-4f02-9498-422a6be3c18f",
+              "name": "email_id",
+              "value": "={{ $('Change binary keys').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "939f9568-212f-4382-a622-703a005dbe2c",
+              "name": "email_filename",
+              "value": "={{ $('Change binary keys').item.json.fileName }}",
+              "type": "string"
+            },
+            {
+              "id": "e35166b2-0cfd-4162-b955-f8d9321e434e",
+              "name": "email_sourceKey",
+              "value": "={{ $('Change binary keys').item.json.sourceKey }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        704,
+        864
+      ],
+      "id": "9241bef5-ab79-4fc2-b810-a87480fa71f2",
+      "name": "Prepare Merge PDF"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c04a0d27-cf79-46ad-a57d-70ac2f9916ff",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "83a835cc-1f1c-4f02-9498-422a6be3c18f",
+              "name": "email_id",
+              "value": "={{ $('Change binary keys').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "939f9568-212f-4382-a622-703a005dbe2c",
+              "name": "email_filename",
+              "value": "={{ $('Change binary keys').item.json.fileName }}",
+              "type": "string"
+            },
+            {
+              "id": "e35166b2-0cfd-4162-b955-f8d9321e434e",
+              "name": "email_sourceKey",
+              "value": "={{ $('Change binary keys').item.json.sourceKey }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1328,
+        480
+      ],
+      "id": "44749f23-fe7d-4ddf-866c-439af3790695",
+      "name": "Prepare Merge OCR"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "name",
+              "field2": "file_uploadname"
+            }
+          ]
+        },
+        "joinMode": "keepEverything",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2352,
+        176
+      ],
+      "id": "37a9fad9-77d0-4772-a00c-1dbffb5c21d3",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "de1e44f5-3c80-43fd-bcc9-39aea099ba08",
+              "name": "file_uploadname",
+              "value": "={{ $json.company_name }}-{{ $json.date }}-{{ $json.price }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2080,
+        416
+      ],
+      "id": "2d63a1e9-0335-4936-8470-bb433942ef43",
+      "name": "Set File UploadName"
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "offer_company_folder",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        3872,
+        992
+      ],
+      "id": "fece7e75-2bb8-4c52-8c13-ac9d38fe8db4",
+      "name": "Remove Duplicates"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        3568,
+        592
+      ],
+      "id": "6b890b76-70eb-4cfe-bc62-2f350413a6f3",
+      "name": "Remove Duplicates1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "af8e4b5a-4ca6-4ffc-bb5d-b0e0e69c1f91",
+              "name": "offer_file_id",
+              "value": "={{ $('Set Values1').item.json.offer_file_id }}",
+              "type": "string"
+            },
+            {
+              "id": "cec45667-86b3-45c0-8467-02f2182270af",
+              "name": "offer_file_name",
+              "value": "={{ $('Set Values1').item.json.offer_file_name }}",
+              "type": "string"
+            },
+            {
+              "id": "b9a6783a-408a-4069-8977-58436bdb16cc",
+              "name": "offer_company_folder",
+              "value": "={{ $('Information Extractor').item.json.company_name }} Vault",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3552,
+        896
+      ],
+      "id": "5e2b485a-9536-4d44-a85f-a480f01c825a",
+      "name": "Prepare Merge Offers Input 2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "af8e4b5a-4ca6-4ffc-bb5d-b0e0e69c1f91",
+              "name": "offer_file_id",
+              "value": "={{ $('Set Values1').item.json.offer_file_id }}",
+              "type": "string"
+            },
+            {
+              "id": "cec45667-86b3-45c0-8467-02f2182270af",
+              "name": "offer_file_name",
+              "value": "={{ $('Set Values1').item.json.offer_file_name }}",
+              "type": "string"
+            },
+            {
+              "id": "b9a6783a-408a-4069-8977-58436bdb16cc",
+              "name": "offer_company_folder",
+              "value": "={{ $('Information Extractor').item.json.company_name }} Vault",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3120,
+        592
+      ],
+      "id": "5da695db-e39a-45ce-b849-d78ddb6cbcb3",
+      "name": "Prepare Merge Offers Input 1"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "name",
+              "field2": "offer_company_folder"
+            }
+          ]
+        },
+        "joinMode": "keepNonMatches",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        3872,
+        608
+      ],
+      "id": "420f4fde-6f36-4775-8af9-0f8551235096",
+      "name": "Keep Non-Matches",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Set Values1').item.json.offer_file_id }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create Offers').item.json.id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4992,
+        976
+      ],
+      "id": "21bdd65e-69c8-42de-9d5c-e5e5687e5c49",
+      "name": "Move File To Folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vjQVB8No5HjtXY8W",
+          "name": "Google Drive account 6"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "offer_file_id",
+              "field2": "id"
+            }
+          ]
+        },
+        "joinMode": "keepNonMatches",
+        "outputDataFrom": "input1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4768,
+        976
+      ],
+      "id": "631afc59-6b3f-4422-aa9b-ebc39f35a88b",
+      "name": "Keep Non Matches"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "78a4375b-b8ec-4c74-bf87-699017b2ce67",
+              "leftValue": "={{ $json.offer_company_folder }}",
+              "rightValue": "={{ $json.name }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2960,
+        1072
+      ],
+      "id": "c003cde5-076e-401a-bff9-23e01a29556b",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "offer_company_folder",
+              "field2": "name"
+            }
+          ]
+        },
+        "joinMode": "keepEverything",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2576,
+        1056
+      ],
+      "id": "e3fbf152-e544-4916-8359-ce63a1418c43",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "compare": "={{ $json.offer_file_name }}",
+        "options": {
+          "removeOtherFields": false
+        }
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        2768,
+        1056
+      ],
+      "id": "274535f9-589c-4287-92b4-ddbfa4c9ae9e",
+      "name": "Remove Duplicates2"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Messages for Today",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If: Text is Empty": {
+      "main": [
+        [
+          {
+            "node": "LlamaIndex: Upload a file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Merge PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Messages for Today": {
+      "main": [
+        [
+          {
+            "node": "Split Out Attachments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out Attachments": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Eval Set": {
+      "main": [
+        [
+          {
+            "node": "Extract File IDs",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Evaluation2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Only if we are evaluating": {
+      "main": [
+        [
+          {
+            "node": "Serialize Extracted Values",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "No Operation, do nothing2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluation": {
+      "main": [
+        [
+          {
+            "node": "Save Eval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract File IDs": {
+      "main": [
+        [
+          {
+            "node": "If:1st attachment",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If:2nd attachment",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If:3rd attachment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If:1st attachment": {
+      "main": [
+        [
+          {
+            "node": "Get 1st File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If:2nd attachment": {
+      "main": [
+        [
+          {
+            "node": "Get 2nd File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If:3rd attachment": {
+      "main": [
+        [
+          {
+            "node": "Get 3rd File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get 2nd File": {
+      "main": [
+        [
+          {
+            "node": "Combine Files",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Get 1st File": {
+      "main": [
+        [
+          {
+            "node": "Combine Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get 3rd File": {
+      "main": [
+        [
+          {
+            "node": "Combine Files",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Combine Files": {
+      "main": [
+        [
+          {
+            "node": "Fix mime type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fix mime type": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Text from PDF": {
+      "main": [
+        [
+          {
+            "node": "If: Text is Empty",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Serialize Extracted Values": {
+      "main": [
+        [
+          {
+            "node": "Concatenate Multiple Extractions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Concatenate Multiple Extractions": {
+      "main": [
+        [
+          {
+            "node": "Evaluation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LlamaIndex: Upload a file": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Llama Index: Check Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Llama Index: Check Status": {
+      "main": [
+        [
+          {
+            "node": "If: Status Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If: Status Success": {
+      "main": [
+        [
+          {
+            "node": "Llama Index: Get Results",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If: RunIndex < 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If: RunIndex < 3": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Llama Index: Get Results": {
+      "main": [
+        [
+          {
+            "node": "Set Text Field",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Text Field": {
+      "main": [
+        [
+          {
+            "node": "Prepare Merge OCR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Return unique dates and create formula",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Offers on X Days": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compare Datasets": {
+      "main": [
+        [],
+        [],
+        [],
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Change binary keys",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Get Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Messages": {
+      "main": [
+        [
+          {
+            "node": "Reply to a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply to a message": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Change binary keys": {
+      "main": [
+        [
+          {
+            "node": "Extract Text from PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Merge from CRM: Clients and Offers",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Search files and folders1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Set File UploadName",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Clients: Create or update a record": {
+      "main": [
+        [
+          {
+            "node": "Merge from CRM: Clients and Offers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clients: Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Clients: Create or update a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge from CRM: Clients and Offers": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return unique dates and create formula": {
+      "main": [
+        [
+          {
+            "node": "Search Offers on X Days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Create folder": {
+      "main": [
+        [
+          {
+            "node": "Create Offers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Offers": {
+      "main": [
+        [
+          {
+            "node": "Create Signed Deals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Signed Deals": {
+      "main": [
+        [
+          {
+            "node": "Keep Non Matches",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Search Parent Folder": {
+      "main": [
+        [
+          {
+            "node": "Search Offers Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Offers Folder": {
+      "main": [
+        [
+          {
+            "node": "Move File To Folder1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move File To Folder1": {
+      "main": [
+        []
+      ]
+    },
+    "No Operation, do nothing2": {
+      "main": [
+        [
+          {
+            "node": "Clients: Remove Duplicates",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Parent Folder1": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Values1": {
+      "main": [
+        [
+          {
+            "node": "Only if we are evaluating",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Search files and folders1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge PDF & OCR": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Merge PDF": {
+      "main": [
+        [
+          {
+            "node": "Merge PDF & OCR",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Prepare Merge OCR": {
+      "main": [
+        [
+          {
+            "node": "Merge PDF & OCR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set File UploadName": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Set Values1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Create folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates1": {
+      "main": [
+        [
+          {
+            "node": "Keep Non-Matches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Merge Offers Input 2": {
+      "main": [
+        [
+          {
+            "node": "Keep Non-Matches",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Prepare Merge Offers Input 1": {
+      "main": [
+        [
+          {
+            "node": "Search Parent Folder1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keep Non-Matches": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Keep Non Matches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keep Non Matches": {
+      "main": [
+        [
+          {
+            "node": "Move File To Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Prepare Merge Offers Input 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Prepare Merge Offers Input 2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Search Parent Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates2": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Get Messages": [
+      {
+        "json": {
+          "id": "19a9b19973a84b0b",
+          "threadId": "19a9ae281b8db932",
+          "snippet": "From: Nadezhda Privalikhina Sent: Saturday, November 15, 2025 8:24:26 PM To: n8nbuilderscohort@gmail.com <n8nbuilderscohort@gmail.com> Subject: Follow-up Proposal: User Research Study Dear Sarah,",
+          "payload": {
+            "mimeType": "multipart/related"
+          },
+          "sizeEstimate": 91829,
+          "historyId": "14356962",
+          "internalDate": "1763538732000",
+          "labels": [
+            {
+              "id": "INBOX",
+              "name": "INBOX"
+            },
+            {
+              "id": "IMPORTANT",
+              "name": "IMPORTANT"
+            },
+            {
+              "id": "CATEGORY_PERSONAL",
+              "name": "CATEGORY_PERSONAL"
+            }
+          ],
+          "From": "Nadezhda Privalikhina <privalikhinanadia@outlook.com>",
+          "To": "\"tdgcontent@gmail.com\" <tdgcontent@gmail.com>",
+          "Subject": "FW: Follow-up Proposal: User Research Study"
+        }
+      }
+    ],
+    "Reply to a message": [
+      {
+        "json": {
+          "reply": "Hi Nadezhda,\nI noticed that your email is missing an attachment with the proposal :-) Can you please add that and send the email again?\nAll the best,\nYour n8n Assistant"
+        }
+      }
+    ],
+    "Schedule Trigger": [
+      {
+        "json": {
+          "timestamp": "2025-11-21T10:05:25.608+01:00",
+          "Readable date": "November 21st 2025, 10:05:25 am",
+          "Readable time": "10:05:25 am",
+          "Day of week": "Friday",
+          "Year": "2025",
+          "Month": "November",
+          "Day of month": "21",
+          "Hour": "10",
+          "Minute": "05",
+          "Second": "25",
+          "Timezone": "Europe/Brussels (UTC+01:00)"
+        }
+      }
+    ],
+    "LlamaIndex: Upload a file": [
+      {
+        "json": {
+          "id": "ff85fbf8-4b2b-44b2-9601-c00b1adc7051",
+          "status": "PENDING"
+        }
+      }
+    ],
+    "Llama Index: Check Status": [
+      {
+        "json": {
+          "id": "ff85fbf8-4b2b-44b2-9601-c00b1adc7051",
+          "status": "SUCCESS"
+        }
+      }
+    ],
+    "Wait": [
+      {
+        "json": {
+          "id": "ff85fbf8-4b2b-44b2-9601-c00b1adc7051",
+          "status": "PENDING"
+        }
+      }
+    ],
+    "Llama Index: Get Results": [
+      {
+        "json": {
+          "markdown": "\nMomentum\nDIGITAL\nTechVision GmbH\nAttn: Sarah Schmidt\nFriedrichstrae 210\n10969 Berlin\nBerlin, 20. November 2025\n\n# Proposal for User Research Study - Product Dashboard Redesign\n\nDear Sarah,\n\nThank you for your positive response to our Agile Workshop proposal. During our conversation, you mentioned that your product team is also struggling with your internal analytics dashboard - users find it confusing and rarely use it effectively.\n\nWe'd like to propose a focused user research study to understand why the dashboard isn't working and what your team actually needs.\n\n# Context\n\nYour product team uses an internal analytics dashboard daily to track KPIs, user behavior, and product performance. However, feedback suggests that:\n\n- Important metrics are hard to find\n- The interface is cluttered and overwhelming\n- Different team members need different views but get the same dashboard\n- Data is there, but insights are hidden\n\nThis is impacting decision-making speed and data-driven culture.\n\n# Objectives\n\nConduct a rapid user research study to:\n\n- Understand how different roles use (or don't use) the dashboard\n- Identify pain points and unmet needs\n- Map out ideal workflows for different user types\n- Provide actionable recommendations for dashboard improvements\n\n\n\n---\n\n\n# Create a prioritized roadmap for redesign\n\n# Approach\n\nLean UX research methodology - fast, focused, actionable. We'll spend time with your team, observe real usage, and deliver practical recommendations within 3 weeks.\n\n# Services\n\n# 1. Research Phase (Week 1-2)\n\n- Kickoff meeting with stakeholders\n- 8-10 user interviews (Product Managers, Analysts, Engineers)\n- 4 contextual inquiry sessions (observe people using dashboard in real work)\n- Current dashboard audit (UX heuristics evaluation)\n- Analytics review (which features are actually used?)\n\n# 2. Analysis &#x26; Synthesis (Week 2)\n\n- User persona refinement (dashboard usage patterns)\n- Pain point mapping\n- Needs prioritization (must-have vs nice-to-have)\n- Comparative analysis (best practices from similar tools)\n\n# 3. Recommendations &#x26; Roadmap (Week 3)\n\n- Research findings presentation (with video clips)\n- Quick-win improvements (can be done immediately)\n- Redesign recommendations (with sketches/wireframes)\n- Prioritized implementation roadmap\n- Executive summary (1-pager for leadership)\n\n# Timeline\n\nDuration: 3 weeks from project start\n\n\n\n---\n\n\n# Commercial Terms\n\nFor this research study, we anticipate the following effort:\n\n| Phase                | Roles              | Effort (Person Days) | Cost (EUR, net) |\n| -------------------- | ------------------ | -------------------- | --------------- |\n| Research             | UX Researcher      | 6.0                  | 9,500           |\n|                      | Senior UX Designer | 2.0                  |                 |\n| Analysis & Synthesis | UX Researcher      | 2.0                  | 4,500           |\n|                      | Senior UX Designer | 3.0                  |                 |\n| Recommendations      | Senior UX Designer | 2.5                  | 3,500           |\n|                      | UX Researcher      | 1.0                  |                 |\n| Total (EUR, net)     |                    |                      | 17,500          |\n\nAll prices are in Euro and exclude 19% VAT.\n\nPackage Deal: If both the Agile Workshop and this User Research study are booked together, we offer a combined discount of 10% on the total: €21,600 (net) instead of €24,000.\n\n# What You Get:\n\n- Complete research findings report (PDF)\n\n\n\n---\n\n# Video highlights from user sessions\n\n# Prioritized recommendations with wireframe sketches\n\n# Implementation roadmap\n\n# Executive summary presentation\n\n# Validity\n\nThis proposal is valid for 90 days.\n\n# Contract Acceptance\n\nAcceptance of this proposal must be in written form.\n\n# Payment Terms\n\n50% upon project start, 50% upon delivery of final recommendations.\n\nThis research can run in parallel with the Agile Workshop or immediately after - whatever timing works best for your team.\n\nWe look forward to helping TechVision build a dashboard your team will actually love using.\n\nBerlin, November 20, 2025\n\nMarcus Weber\n\nManaging Partner\n\nMomentum Digital GmbH",
+          "job_metadata": {
+            "credits_used": 0,
+            "job_credits_usage": 0,
+            "job_pages": 0,
+            "job_auto_mode_triggered_pages": 0,
+            "job_is_cache_hit": true
+          }
+        }
+      }
+    ],
+    "If: Status Success": [
+      {
+        "json": {
+          "id": "ff85fbf8-4b2b-44b2-9601-c00b1adc7051",
+          "status": "SUCCESS"
+        }
+      }
+    ]
+  },
+  "versionId": "9b009e65-a663-4140-8e27-6929308c3b5b",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-25T11:46:28.961Z",
+      "createdAt": "2025-11-25T11:46:28.961Z",
+      "role": "workflow:owner",
+      "workflowId": "1Cr1E2KSrRkZxcnR",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
