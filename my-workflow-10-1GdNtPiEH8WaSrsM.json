@@ -1,0 +1,443 @@
+{
+  "updatedAt": "2025-07-30T09:44:07.201Z",
+  "createdAt": "2025-07-30T09:44:07.201Z",
+  "id": "1GdNtPiEH8WaSrsM",
+  "name": "My workflow 10",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cc0761a3-53c7-42eb-82aa-e6c59043f46d",
+              "name": "url3",
+              "value": "https://www.mcdonalds.com/us/en-us.html",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1328,
+        608
+      ],
+      "id": "9354ce79-00fd-46eb-8c8d-ba86d9e6d8d0",
+      "name": "URL 3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cc0761a3-53c7-42eb-82aa-e6c59043f46d",
+              "name": "url2",
+              "value": "https://www.nvidia.com/en-us/",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1328,
+        384
+      ],
+      "id": "f2b6dc74-9ed1-484b-a54a-aca389c43bf8",
+      "name": "URL 2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cc0761a3-53c7-42eb-82aa-e6c59043f46d",
+              "name": "url1",
+              "value": "https://www.apple.com/",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1328,
+        160
+      ],
+      "id": "4859f33b-f06b-40f4-ac5d-5ce00379c35b",
+      "name": "URL 1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        928,
+        384
+      ],
+      "id": "24056b4b-65bb-42a5-938f-0f5dad7bb07f",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        912,
+        2352
+      ],
+      "id": "83cbb288-ae6b-4493-8e6a-b10de8e9747c",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "364ea10d-5c32-4e9d-9687-0d895ccbfc72",
+              "name": "urls",
+              "value": "=[\"{{ $json.url1 }}\",\"{{ $json.url2 }}\",\"{{ $json.url3 }}\"]",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {
+          "ignoreConversionErrors": false
+        }
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        2352
+      ],
+      "id": "99f3c88c-a22f-4014-8f8a-eaf38ecf4147",
+      "name": "Turn into Array1"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "urls",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1328,
+        2352
+      ],
+      "id": "36e46156-ac6f-4ba1-8842-f0ec87bdade1",
+      "name": "Split Out1"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.urls }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1520,
+        2352
+      ],
+      "id": "20b27e12-12cd-41ae-82ce-72946e140050",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1744,
+        2352
+      ],
+      "id": "10cb4638-a162-4f21-8201-1389b6f62660",
+      "name": "Aggregate1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "01550d40-4fa1-4b35-b6d1-3bbdf30d199c",
+              "name": "url1",
+              "value": "={{ $json.data[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "f7e3de2b-b0b5-4999-8b19-ba5b81a70d16",
+              "name": "url2",
+              "value": "={{ $json.data[1] }}",
+              "type": "string"
+            },
+            {
+              "id": "39657d25-8701-4086-8456-1ae24104a075",
+              "name": "url3",
+              "value": "={{ $json.data[2] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1968,
+        2352
+      ],
+      "id": "e7b6d27b-dfd9-4d25-aba8-7c774fdb068b",
+      "name": "Output1"
+    },
+    {
+      "parameters": {
+        "content": "# Solution\n## Note: There are a few ways to do this, but this is how I solved it",
+        "height": 760,
+        "width": 1980,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        288,
+        2000
+      ],
+      "id": "09df801f-5840-466a-9e03-7ce531e23fe9",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cc0761a3-53c7-42eb-82aa-e6c59043f46d",
+              "name": "url1",
+              "value": "https://www.apple.com/",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        528,
+        2192
+      ],
+      "id": "652e1741-ce90-49ab-ac04-491bf5f52e03",
+      "name": "URL_1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cc0761a3-53c7-42eb-82aa-e6c59043f46d",
+              "name": "url3",
+              "value": "https://www.mcdonalds.com/us/en-us.html",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        528,
+        2528
+      ],
+      "id": "1389f229-24d4-472a-b666-cb6ff266e3f4",
+      "name": "URL_3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cc0761a3-53c7-42eb-82aa-e6c59043f46d",
+              "name": "url2",
+              "value": "https://www.nvidia.com/en-us/",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        528,
+        2352
+      ],
+      "id": "c29cae5b-1b5f-476d-a8f9-1bbea7030e0c",
+      "name": "URL_2"
+    },
+    {
+      "parameters": {
+        "content": "## 🤖 Puzzle Challenge: Merge Raw HTML from Multiple URLs\n\nYou received **three separate URLs** from different data sources.  \nEach one points to a unique webpage that you'll need to fetch and process.  \n\nYour goal is to **retrieve the raw HTML** from each of these URLs and combine them into a **single item** that looks like this:\n\n## 🟨 Input URLs\n- `url1`: https://www.apple.com/\n- `url2`: https://www.nvidia.com/en-us/\n- `url3`: https://www.mcdonalds.com/us/en-us.html\n\n## 🎯 Your Goal\nUse the appropriate nodes (like HTTP Request, Merge, Set, or Function) to:\n- Fetch raw HTML from each URL\n- Combine all results into **one item**\n- Return this final structure:\n\n```json\n{\n  \"url1\": raw html,\n  \"url2\": raw html,\n  \"url3\": raw html\n}\n```\n\nThis one's a bit trickier! If you get stuck, scroll down and inspect each node to understand how the data transforms step-by-step.  \n\n> 💡 Tip: This isn’t the only correct solution. If you end up with the correct final structure, you’ve succeeded in manipulating the data.\n\nSOLUTION is below. Don't spoil it!\n",
+        "height": 840,
+        "width": 800
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "763abebd-2434-4289-b935-0ac8cf7518a8",
+      "name": "Sticky Note1"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "URL 3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "URL 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "URL 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Turn into Array1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Turn into Array1": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Output1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "URL_1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "URL_3": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "URL_2": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "34ae56ed-6663-4225-98fa-af3c7ff76673",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-07-30T09:44:07.203Z",
+      "createdAt": "2025-07-30T09:44:07.203Z",
+      "role": "workflow:owner",
+      "workflowId": "1GdNtPiEH8WaSrsM",
+      "projectId": "sOkLWMWXpC3Wjh6d"
+    }
+  ],
+  "tags": []
+}
