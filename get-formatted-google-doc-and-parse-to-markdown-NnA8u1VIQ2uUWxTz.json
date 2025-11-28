@@ -1,0 +1,134 @@
+{
+  "updatedAt": "2025-11-19T10:36:45.000Z",
+  "createdAt": "2025-11-19T10:21:48.778Z",
+  "id": "NnA8u1VIQ2uUWxTz",
+  "name": "Get Formatted Google Doc And Parse to Markdown",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d9214f5e-1b16-484f-8168-5856f2d1e51e",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "=https://docs.googleapis.com/v1/documents/1bbgFbyGJzi-ZZwqBD7Aq5_-YTtmQiKo8-YwOYV8nljc",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDocsOAuth2Api",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        192,
+        0
+      ],
+      "id": "9f9bf963-8561-4ff3-878f-b138e1d751cf",
+      "name": "Get Formatted Google Doc",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "DMF0US2wzutvmZiH",
+          "name": "Google Docs account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Input: previous node returns the full Docs JSON from documents.get\n// Output: one item: { markdown: \"...\" }\n\nconst doc = $input.first().json;\n\n// ========== helpers ==========\nfunction escapeMd(s) {\n  // Keep it simple: escape only characters that can break lists/links\n  return s.replace(/([_*[\\]()~])/g, \"\\\\$1\");\n}\n\nfunction inlineFromTextRun(tr = {}) {\n  if (!tr.content) return \"\";\n  // Normalize vertical tab to newline and strip trailing paragraph newline\n  let t = tr.content.replace(/\\u000B/g, \"\\n\").replace(/\\n$/u, \"\");\n  if (!t) return \"\";\n\n  const st = tr.textStyle || {};\n\n  // Link first (so styles wrap the [text](url))\n  if (st.link && st.link.url) {\n    t = `[${escapeMd(t)}](${st.link.url})`;\n  } else {\n    t = escapeMd(t);\n  }\n\n  // Apply inline marks (order: bold -> italic -> strike)\n  if (st.strikethrough) t = `~~${t}~~`;\n  if (st.italic)        t = `*${t}*`;\n  if (st.bold)          t = `**${t}**`;\n\n  // (Underline isn’t standard in MD; omit or add HTML if you want)\n  return t;\n}\n\nfunction textFromElements(elements = []) {\n  let s = \"\";\n  for (const el of elements) {\n    if (el.textRun) s += inlineFromTextRun(el.textRun);\n    else if (el.pageBreak) s += \"\\n\\n---\\n\\n\";\n  }\n  // Collapse stray internal newlines a bit but keep deliberate breaks\n  s = s.replace(/\\u000B/g, \"\\n\").replace(/[ \\t]+$/gm, \"\");\n  return s.replace(/\\s+$/u, \"\");\n}\n\nconst headingMap = {\n  TITLE: \"# \",\n  SUBTITLE: \"### \",\n  HEADING_1: \"# \",\n  HEADING_2: \"## \",\n  HEADING_3: \"### \",\n  HEADING_4: \"#### \",\n  HEADING_5: \"##### \",\n  HEADING_6: \"###### \",\n};\n\n// Build list metadata from the doc (numbered vs bullet, glyphs, starts)\nconst listMeta = {};\nfor (const [listId, list] of Object.entries(doc.lists || {})) {\n  const levels = list.listProperties?.nestingLevels || [];\n  listMeta[listId] = levels.map((lvl) => {\n    // Important: when glyphSymbol is set, it's a BULLET (even if glyphFormat is \"%0\")\n    const isBullet = !!lvl?.glyphSymbol;\n    const isNumbered = !isBullet && !!(lvl?.glyphType || (lvl?.glyphFormat && /%[0-9]+/u.test(lvl.glyphFormat)));\n\n    return {\n      bullet: isBullet,\n      numbered: isNumbered,\n      glyphType: lvl?.glyphType || null,\n      glyphFormat: lvl?.glyphFormat || null,\n      glyphSymbol: lvl?.glyphSymbol || null,\n      start: (typeof lvl?.startNumber === \"number\" ? lvl.startNumber : 1),\n    };\n  });\n}\n\n// Per-list counters to compute the next ordinal for numbered lists\nconst listState = {}; // { [listId]: { counters: number[] } }\n\nfunction toAlpha(n, upper = true) {\n  let s = \"\";\n  while (n > 0) { n--; s = String.fromCharCode(65 + (n % 26)) + s; n = Math.floor(n / 26); }\n  return upper ? s : s.toLowerCase();\n}\n\nfunction toRoman(n, upper = true) {\n  const vals = [\n    [1000,\"M\"],[900,\"CM\"],[500,\"D\"],[400,\"CD\"],\n    [100,\"C\"],[90,\"XC\"],[50,\"L\"],[40,\"XL\"],\n    [10,\"X\"],[9,\"IX\"],[5,\"V\"],[4,\"IV\"],[1,\"I\"]\n  ];\n  let res = \"\";\n  for (const [v, sym] of vals) {\n    while (n >= v) { res += sym; n -= v; }\n  }\n  return upper ? res : res.toLowerCase();\n}\n\nfunction numeralFor(n, glyphType) {\n  switch (glyphType) {\n    case \"ALPHA\": // some docs use generic\n    case \"ALPHA_UPPER\": return toAlpha(n, true);\n    case \"ALPHA_LOWER\": return toAlpha(n, false);\n    case \"ROMAN\":\n    case \"ROMAN_UPPER\": return toRoman(n, true);\n    case \"ROMAN_LOWER\": return toRoman(n, false);\n    case \"DECIMAL\":\n    default: return String(n);\n  }\n}\n\nfunction nextNumberToken(listId, level) {\n  const meta = (listMeta[listId] && listMeta[listId][level]) || { start: 1, glyphType: \"DECIMAL\", glyphFormat: \"%1.\" };\n  if (!listState[listId]) listState[listId] = { counters: [] };\n  const st = listState[listId];\n\n  if (st.counters[level] == null) st.counters[level] = meta.start;\n  const current = st.counters[level];\n\n  const numeral = numeralFor(current, meta.glyphType || \"DECIMAL\");\n  // Prefer a dot if glyphFormat lacks punctuation\n  let token = (meta.glyphFormat && /%[0-9]+/u.test(meta.glyphFormat))\n    ? meta.glyphFormat.replace(/%[0-9]+/gu, numeral)\n    : `${numeral}.`;\n\n  // Ensure it ends with '.' or ')' for proper Markdown lists\n  if (!/[.)]$/.test(token)) token = `${token}.`;\n\n  // Advance counter and reset deeper levels\n  st.counters[level] = current + 1;\n  for (let i = level + 1; i < st.counters.length; i++) st.counters[i] = null;\n\n  return token;\n}\n\n// Heuristic: promote bold + large single-line paragraphs to headings if not already a heading\nfunction maybePromoteToHeading(para, plainText) {\n  if (!plainText || para.bullet) return null;\n  const style = para.paragraphStyle?.namedStyleType || \"NORMAL_TEXT\";\n  if (style.startsWith(\"HEADING_\") || style === \"TITLE\" || style === \"SUBTITLE\") return null;\n\n  const els = para.elements || [];\n  // Single element, bold, large font?\n  if (els.length === 1 && els[0].textRun) {\n    const ts = els[0].textRun.textStyle || {};\n    const size = ts.fontSize?.magnitude || 0;\n    if (ts.bold && size >= 20) return \"HEADING_2\";\n    if (ts.bold && size >= 14) return \"HEADING_3\";\n  }\n  return null;\n}\n\nfunction paraToMarkdown(para) {\n  // Page break paragraphs: emit a thematic break\n  if (para.elements?.some(e => e.pageBreak)) return \"\\n---\\n\";\n\n  const text = textFromElements(para.elements || []);\n  // Ignore truly empty paragraphs\n  if (!text.trim()) return \"\";\n\n  let style = para.paragraphStyle?.namedStyleType || \"NORMAL_TEXT\";\n  const bullet = para.bullet;\n\n  // Smart promotion based on bold+font size\n  const promoted = maybePromoteToHeading(para, text);\n  if (promoted) style = promoted;\n\n  const isHeading = style === \"TITLE\" || style === \"SUBTITLE\" || style.startsWith(\"HEADING_\");\n\n  if (isHeading) {\n    const prefix = headingMap[style] || \"## \";\n    return `${prefix}${text}`;\n  }\n\n  if (bullet) {\n    const level = bullet.nestingLevel ?? 0;\n    const listId = bullet.listId;\n    const meta = listMeta[listId]?.[level];\n    const indent = \"  \".repeat(level);\n\n    if (meta?.numbered) {\n      const tok = nextNumberToken(listId, level); // \"1.\", \"a.\", \"i.\"\n      return `${indent}${tok} ${text}`;\n    } else {\n      // true bullets (glyphSymbol present)\n      return `${indent}- ${text}`;\n    }\n  }\n\n  return text; // plain paragraph\n}\n\n// ========== walk the document ==========\nconst lines = [];\nlet prevWasBlock = false;\n\nfor (const block of doc.body?.content ?? []) {\n  if (!block.paragraph) continue;\n  const md = paraToMarkdown(block.paragraph);\n\n  // Keep single blank lines between blocks\n  if (md === \"\") {\n    if (prevWasBlock) lines.push(\"\"); // at most one blank line\n    prevWasBlock = false;\n    continue;\n  }\n\n  if (lines.length && prevWasBlock) lines.push(\"\");\n  lines.push(md);\n  prevWasBlock = true;\n}\n\n// Join and tidy\nlet markdown = lines.join(\"\\n\")\n  .replace(/[ \\t]+$/gm, \"\")     // trailing spaces\n  .replace(/\\n{3,}/g, \"\\n\\n\");  // compress extra blank lines\n\nreturn [{ json: { markdown } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        0
+      ],
+      "id": "be398f62-8ed7-4e00-81ba-615a23a34f21",
+      "name": "Parse Formatted Google Doc to Markdown"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b219925d-2cac-4d69-936e-cf09f1f9cbc7",
+              "name": "markdown",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        608,
+        0
+      ],
+      "id": "30d43a24-ffbf-456c-915d-b30482c6b8ce",
+      "name": "Edit Fields"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get Formatted Google Doc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Formatted Google Doc": {
+      "main": [
+        [
+          {
+            "node": "Parse Formatted Google Doc to Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Formatted Google Doc to Markdown": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "63f10fce-97e5-4c14-b4e7-f077a6ad4153",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-19T10:21:48.784Z",
+      "createdAt": "2025-11-19T10:21:48.784Z",
+      "role": "workflow:owner",
+      "workflowId": "NnA8u1VIQ2uUWxTz",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
