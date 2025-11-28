@@ -1,0 +1,108 @@
+{
+  "updatedAt": "2025-11-28T11:03:09.000Z",
+  "createdAt": "2025-11-27T14:52:46.949Z",
+  "id": "G6zMrQN6AaA5yJjS",
+  "name": "Update n8n workflows in Github",
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "accessToken",
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "Tuxedomoon25",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n_workflows",
+          "mode": "list",
+          "cachedResultName": "n8n_workflows",
+          "cachedResultUrl": "https://github.com/serop-ba/n8n_workflows"
+        },
+        "filePath": "={{ $('Start').item.json.fileName }}",
+        "binaryData": false,
+        "fileContent": "={{ $('Start').item.json.data }}",
+        "commitMessage": "=updated file {{ $json.workflow_name }}",
+        "additionalParameters": {}
+      },
+      "id": "f62e7119-a785-4a52-834e-dead2bc6ff35",
+      "name": "Update file",
+      "type": "n8n-nodes-base.github",
+      "position": [
+        1680,
+        144
+      ],
+      "webhookId": "27218087-8df7-474d-a39f-70cfa9c34ec8",
+      "typeVersion": 1,
+      "credentials": {
+        "githubApi": {
+          "id": "EX2BxPzh24b0rzFp",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "id": "30265648-615a-4e2f-919e-c22cb63651b6",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        1472,
+        144
+      ],
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "fileName",
+              "type": "any"
+            },
+            {
+              "name": "data",
+              "type": "any"
+            },
+            {
+              "name": "workflow_name",
+              "type": "any"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Update file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": null,
+  "versionId": "2247268c-b76f-4121-8fe4-581fac12ca1a",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-27T14:52:46.953Z",
+      "createdAt": "2025-11-27T14:52:46.953Z",
+      "role": "workflow:owner",
+      "workflowId": "G6zMrQN6AaA5yJjS",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
