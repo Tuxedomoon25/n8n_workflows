@@ -1,0 +1,77 @@
+{
+  "updatedAt": "2025-11-08T09:24:19.000Z",
+  "createdAt": "2025-11-08T09:20:44.955Z",
+  "id": "Ous3GNAHgVQ67dQC",
+  "name": "Default Error Workflow",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2d9e3b07-499f-4077-88f8-d26c1f8d5147",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "toRecipients": "tdgcontent@gmail.com",
+        "subject": "=Error in workflow  {{ $json.workflow.name }}",
+        "bodyContent": "=Hi Timo,\n\nYou have an error in  {{ $json.workflow.name }} in the following node: {{ $json.execution.lastNodeExecuted }}.\n\nHere is the error message:\n\n{{ $json.execution.error.message }}\n\nI suggest you check what's wrong :-)\n\nYour AI assistant",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e23ab710-cb0b-458a-9916-ff51ddc66180",
+      "name": "Send a message",
+      "webhookId": "d8591d61-637f-4da5-b48c-b9098f6f287d",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "GjRRMCkirf26rczd",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "2c103992-4db8-4345-85c4-8d28d631804f",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-08T09:20:44.961Z",
+      "createdAt": "2025-11-08T09:20:44.961Z",
+      "role": "workflow:owner",
+      "workflowId": "Ous3GNAHgVQ67dQC",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
