@@ -1,0 +1,332 @@
+{
+  "updatedAt": "2025-08-01T19:40:55.508Z",
+  "createdAt": "2025-08-01T19:40:55.508Z",
+  "id": "IR1xRRAQ27ZT0czP",
+  "name": "My workflow 12",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        240
+      ],
+      "id": "51cb7b08-2bdc-4ab6-9798-5c60cfbd640d",
+      "name": "When chat message received",
+      "webhookId": "673b8f68-e06e-438e-bb6a-ae99ae0aa98b"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        2368
+      ],
+      "id": "3cd51aec-bf5b-40bd-815c-47d230cb2787",
+      "name": "OpenRouter Chat Model"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "36fbda50-0922-4648-ac0f-5a6537014e64",
+              "name": "Title",
+              "value": "={{ $json.output.title }}",
+              "type": "string"
+            },
+            {
+              "id": "ecd160b9-bef7-4004-a831-67ffbd6eb494",
+              "name": "Setting",
+              "value": "={{ $json.output.setting }}",
+              "type": "string"
+            },
+            {
+              "id": "c5f18080-05bd-4b03-90df-1376f448d38a",
+              "name": "Genre",
+              "value": "={{ $json.output.genre }}",
+              "type": "string"
+            },
+            {
+              "id": "c1ec3bdd-8b14-4066-b877-87f7d4d810e3",
+              "name": "Characters",
+              "value": "={{ $json.output.characters.map(char => `${char.name} (${char.role}): ${char.description}`).join('\\n\\n') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1472,
+        2208
+      ],
+      "id": "f5a35e73-e21f-49e6-924c-9c67e961e471",
+      "name": "Output"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"title\": \"string (the title of the story)\",\n  \"setting\": \"string (a description of the story’s environment, time period, or location)\",\n  \"genre\": \"string (e.g. science fiction, fantasy, thriller, romance, etc.)\",\n  \"characters\": [\n    {\n      \"name\": \"string (name of the character)\",\n      \"role\": \"string (e.g. protagonist, antagonist, sidekick, etc.)\",\n      \"description\": \"string (a brief description of the character’s personality, appearance, or backstory)\"\n    }\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1360,
+        2368
+      ],
+      "id": "de73f097-2987-40b7-b275-8588d15e3cb6",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=# Overview\nYou are a story generator. Given a short story idea or prompt, respond in JSON with the following fields:\n\n- title (string)\n- setting (string)\n- genre (string)\n- characters (array of objects with name, role, description)\n\nOutput only valid JSON. No explanations or extra text.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1104,
+        2208
+      ],
+      "id": "e443c6dd-42d7-4375-83ae-ee9196285c00",
+      "name": "Solution"
+    },
+    {
+      "parameters": {
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "# Overview  \nYou are an AI agent that generates creative stories based on a short input prompt. Your output must be returned in a structured JSON format for downstream workflows.\n\n## Context  \n- The AI agent receives a brief text prompt describing the premise or inspiration for a story.  \n- Your output will be parsed by a structured output parser, so proper JSON formatting is essential.  \n- The story should be logically segmented into its metadata and content parts.  \n- The agent must enrich minimal prompts with creative and coherent storytelling elements.\n\n## Instructions  \n1. Accept a short input prompt as the story seed.  \n2. Based on the prompt, generate a story and extract the following components:  \n   - `title`: A compelling and relevant title for the story.  \n   - `setting`: A brief description of the time and place in which the story occurs.  \n   - `genre`: The primary genre (e.g., fantasy, sci-fi, mystery).  \n   - `characters`: An array of character objects. Each object must include:\n     - `name`: The full name of the character.  \n     - `role`: The character’s role in the story (e.g., protagonist, antagonist, sidekick).  \n     - `description`: A brief but vivid summary of the character.  \n3. Return the full story structured in valid JSON format with the above fields.  \n4. Do not include any explanatory text outside the JSON. Only output JSON.\n\n## Tools  \n- Structured Output Parser  \n- Internal language generation models  \n\n## Examples  \n- Input:  \n  \"A boy discovers a hidden portal in his school library.\"  \n- Output:  \n```json\n{\n  \"title\": \"The Portal Beneath the Pages\",\n  \"setting\": \"A present-day school library in a quiet suburban town\",\n  \"genre\": \"Fantasy\",\n  \"characters\": [\n    {\n      \"name\": \"Eli Thompson\",\n      \"role\": \"Protagonist\",\n      \"description\": \"A curious 12-year-old boy with a love for books and adventure.\"\n    },\n    {\n      \"name\": \"Ms. Wren\",\n      \"role\": \"Mentor\",\n      \"description\": \"The mysterious librarian who knows more about the portal than she lets on.\"\n    }\n  ]\n}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        240
+      ],
+      "id": "b0d598b5-5ced-43f6-8ae3-fede5d11a5f0",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "36fbda50-0922-4648-ac0f-5a6537014e64",
+              "name": "Title",
+              "value": "=",
+              "type": "string"
+            },
+            {
+              "id": "ecd160b9-bef7-4004-a831-67ffbd6eb494",
+              "name": "Setting",
+              "value": "=",
+              "type": "string"
+            },
+            {
+              "id": "c5f18080-05bd-4b03-90df-1376f448d38a",
+              "name": "Genre",
+              "value": "=",
+              "type": "string"
+            },
+            {
+              "id": "c1ec3bdd-8b14-4066-b877-87f7d4d810e3",
+              "name": "Characters",
+              "value": "=",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1344,
+        240
+      ],
+      "id": "52e773a8-2be8-4e9c-8c03-22caa0105ffc",
+      "name": "Desired Output"
+    },
+    {
+      "parameters": {
+        "content": "# Solution\nThis isn't the only right way to do it. Also, don't worry about the crazy JavaScript functions in the characters variable. I just did that to clean everything up so you guys could see it better. ",
+        "height": 480,
+        "width": 1060,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        784,
+        2048
+      ],
+      "id": "04a4a82c-e065-48f5-a5b3-68060269b3e3",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## 🧩 Puzzle Challenge: Build a Structured Output Parser for Story Generation\n\nYou’re working with an **AI agent** that generates creative stories based on a short input prompt.  \nYour task is to configure the system so that the agent’s output is structured in a **clean JSON format**.\n\nThe final output should break the story into clearly defined parts so it’s easy to use later in your workflow.\n\n## 📝 Your Prompt Example\n“Two kids discover a hidden cave beneath their school.”\n\n## 🎯 Your Goal\nSet up the system so that when the agent receives a short prompt like this, it returns structured data with the following fields:\n- `title`\n- `setting`\n- `genre`\n- `characters` (an array of character objects)\n\n🔍 You can view the exact format you're aiming for by inspecting the **Set node titled \"Desired Output\"**.\n\n## 🧠 Hints & Tips\n- Use a **Structured Output Parser** to ensure the agent’s response is formatted properly.\n- You’ll need to configure the **system prompt** to give the model clear instructions on what structure you expect.\n- Make sure variables are passed cleanly into your **Output node**.\n- Consider brainstorming the system prompt with **ChatGPT or Claude** as a thought partner!\n\nThis one’s a bit more advanced, but it’s a great exercise in using AI as a **structured output generator** rather than just a blob of text.\n\n> 💡 Tip: Scroll down to see one solution — it’s not the only way to solve this, but it will show how everything fits together.\n\nSOLUTION is below. Don’t spoil it!\n",
+        "height": 860,
+        "width": 800
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8d001e83-4b88-4512-a36a-3911bd6c6e98",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"title\": {\n      \"type\": \"string\",\n      \"description\": \"The title of the story\"\n    },\n    \"setting\": {\n      \"type\": \"string\",\n      \"description\": \"The setting of the story\"\n    },\n    \"genre\": {\n      \"type\": \"string\",\n      \"description\": \"The genre of the story\"\n    },\n    \"characters\": {\n      \"type\": \"array\",\n      \"description\": \"The characters in the story\"\n    }\n  },\n  \"required\": [\"title\", \"setting\", \"genre\", \"characters\"]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1216,
+        448
+      ],
+      "id": "62990094-c7ae-42bb-abd5-5641b40d0c2e",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        896,
+        448
+      ],
+      "id": "36963d07-a0bb-49fd-aa4f-793a83434b94",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "BXQ4vUjtWypRq3eL",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Solution",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Solution",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Solution": {
+      "main": [
+        [
+          {
+            "node": "Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Desired Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "d2b1d7b8-bc52-4dae-a029-bbffddbf99dc",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-08-01T19:40:55.511Z",
+      "createdAt": "2025-08-01T19:40:55.511Z",
+      "role": "workflow:owner",
+      "workflowId": "IR1xRRAQ27ZT0czP",
+      "projectId": "sOkLWMWXpC3Wjh6d"
+    }
+  ],
+  "tags": []
+}
