@@ -1,0 +1,88 @@
+{
+  "updatedAt": "2025-11-28T11:03:06.000Z",
+  "createdAt": "2025-11-27T14:53:00.934Z",
+  "id": "B7YhEGCKVqNrBjGm",
+  "name": "List n8n workflows from Github",
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "accessToken",
+        "resource": "file",
+        "operation": "list",
+        "owner": {
+          "__rl": true,
+          "value": "Tuxedomoon25",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n_workflows",
+          "mode": "list"
+        },
+        "filePath": "="
+      },
+      "id": "722b985d-aaa8-4ff9-ab8e-bfbfe6eefceb",
+      "name": "List files from repo",
+      "type": "n8n-nodes-base.github",
+      "position": [
+        -640,
+        656
+      ],
+      "webhookId": "354d699e-44b0-4444-9d31-af7fd4ff5561",
+      "typeVersion": 1,
+      "alwaysOutputData": true,
+      "credentials": {
+        "githubApi": {
+          "id": "EX2BxPzh24b0rzFp",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "id": "9b473ba5-dd4b-4c87-9c16-9671a98f2197",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -848,
+        656
+      ],
+      "parameters": {
+        "inputSource": "passthrough"
+      }
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "List files from repo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": null,
+  "versionId": "dc041fda-4f0d-4da1-be55-454244334578",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-27T14:53:00.939Z",
+      "createdAt": "2025-11-27T14:53:00.939Z",
+      "role": "workflow:owner",
+      "workflowId": "B7YhEGCKVqNrBjGm",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
