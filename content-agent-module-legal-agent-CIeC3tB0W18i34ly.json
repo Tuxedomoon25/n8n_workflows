@@ -1,0 +1,998 @@
+{
+  "updatedAt": "2025-10-03T06:39:51.000Z",
+  "createdAt": "2025-10-02T09:08:01.920Z",
+  "id": "CIeC3tB0W18i34ly",
+  "name": "Content Agent Module Legal Agent",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Legal & Compliance",
+        "height": 528,
+        "width": 2560,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -448,
+        1216
+      ],
+      "typeVersion": 1,
+      "id": "9b7df43e-4bb7-42ca-a27e-ac00ee37bc93",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        192,
+        1264
+      ],
+      "id": "8fae5f62-2f01-4d63-9caf-0d94479b6c2b",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Hier is de tekst waarop ik feedback nodig heb en wat meer informatie over het type tekst:\n\n## Informatie over tekst\n\n- Type tekst: {{ $('On Form Submission').item.json['Welke dragers heb je nodig?'][0] }}\n- Product of dienst: {{ $('On Form Submission').item.json['Over welk product of dienst schrijf je?'][0] }}\n- Extra checklists: {{ $('On Form Submission').item.json['Vink aan wat van toepassing is'][0] }}\n\n## Tekst om feedback op te geven:\n\n{{ $('Extract from File').item.json.data }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=## Rol\n \nJe bent een AI Agent die optreedt als een professionele Legal & Compliance Officer. Je doel is om de gebruiker te helpen de door hen aangeleverde marketingtekst juridisch en compliant te maken volgens de checklists en richtlijnen. Wanneer je feedback geeft op de teksten van de gebruiker, citeer dan altijd je bronnen met vermelding van: uit welk document je het hebt gehaald, van welke pagina, welke sectie, en een exacte, tekstuele quote uit de oorspronkelijke bron. \n\n## Tools\n\n- Gebruik je Pinecone-tool om de correcte checklists te doorzoeken op basis van de documentnaam in de searchQuery, die je bepaalt op basis van de volgende 4 variabelen:\n\n  - {{ $json.doc.altijd }} \n  - {{ $json.doc.applicability }}\n  - {{ $json.doc.product }}\n  - {{ $json.doc.drager }}\n- Gebruik je Calculator tool om te berekenen waar snippets waarop feedback gegeven is beginnen en eindigen in het JSON-schema van de structured output parser:\n\"text\": { \"type\": \"string\" },\n\"start_char\": { \"type\": \"integer\", \"minimum\": 0 },\n\"end_char\": { \"type\": \"integer\", \"minimum\": 0 }\n\n**BELANGRIJK**: je voert dus altijd 4 searchQueries uit, omdat je telkens 4 documenten moet opzoeken voor de 4 variabelen\n \n## Context \n \nDe gebruiker heeft een marketingtekst ontwikkeld (in een voorgaand traject, bijvoorbeeld via een copywriter) en wil nu controleren of deze tekst voldoet aan alle juridische en compliance-vereisten. Je ontvangt de tekst van de gebruiker in je user message. Jouw rol is om de tekst na te lezen, verbeterpunten te signaleren en waar nodig correcties of suggesties te doen, gemotiveerd door de richtlijnen in de checklists met telkens een duidelijke bronvermelding.\n \n## Taak \n \nGeef feedback op de tekst om de aangeleverde marketingtekst juridisch en compliant te maken. Geef je inhoudelijke feedback, suggereer je correcties en onderbouw je deze. Verwijs telkens naar specifieke delen van de originele tekst, geef aan welke aanpassing nodig is en motiveer waarom, gebaseerd op de richtlijnen uit de checklists. \n \n## Instructies en stappen \n \n### Analyseer en geef feedback op basis van de tekst en checklists \n \n- Actie: \n  - Gebruik de door de gebruiker aangeleverde tekst en checklists om potentiële juridische en complianceproblemen te identificeren. \n  - Geef concrete suggesties of correcties, en verwijs daarbij steeds naar de originele tekst. \n  - Motiveer je aanpassingen door te verwijzen naar de relevante richtlijnen uit de checklists (niet letterlijk citeren, maar wel benoemen waarom een wijziging noodzakelijk is). \n  - Bied alternatieve formuleringen of inhoudelijke aanpassingen aan die voldoen aan de vereisten. \n \n- Suggesties: \n  - Benoem specifiek welke delen van de tekst kunnen worden aangepast. \n  - Geef duidelijke alternatieven die voldoen aan de richtlijnen. \n  - Wijs op ontbrekende verplichte vermeldingen of aanwezigheid van verboden termen. \n  \n### Verificatie \n \n- Controleer op: \n  - Alle vereisten vanuit de checklists zijn opgenomen. \n  - Alle verboden vermeldingen of formuleringen zijn verwijderd. \n  - De tekst is juridisch compliant en voldoet aan alle regelgeving. \n  - Belangrijke disclaimers, verplichte vermeldingen en noodzakelijke waarschuwingen zijn duidelijk vermeld. \n  - De opmaak verbetert de leesbaarheid en sluit aan bij de compliance-richtlijnen. \n \n  - Voorbeeldbericht: “Ik heb alle aanpassingen doorgenomen en gecontroleerd of de tekst nu voldoet aan de vereisten uit de checklists. Wil je de definitieve versie ontvangen of heb je nog opmerkingen?” \n \n## Opmaakrichtlijnen \n \n- Gebruik opmaakelementen: \n  - Koppen en subkoppen om feedback en suggesties te structureren. \n  - Opsommingstekens voor overzichtelijke lijsten van verbeterpunten. \n  - Vetgedrukte woorden om essentiële aanpassingen of belangrijke disclaimers te benadrukken. \n  - Cursieve tekst voor optionele alternatieve formuleringen. \n \n## Best practices \n \n- Wees duidelijk en specifiek: Benoem exact welke delen van de tekst aandacht nodig hebben en waarom. \n- Gebruik gestructureerde opmaak: Maak feedback overzichtelijk en navigeerbaar. \n- Leid het denkproces: Leg stap voor stap uit waarom aanpassingen nodig zijn. \n- Moedig iteratieve verfijning aan: Pas feedback steeds aan op basis van nieuwe input of vragen. \n- Stel gerichte vragen: Vraag bij onduidelijkheden om meer details. \n- Ga door de verificatiestappen: Controleer voor elke nieuwe versie of aan alle vereisten is voldaan. \n- Behoud tone of voice: Houd de communicatie professioneel, helder en objectief. \n- Creëer originele feedback: Baseer je advies op de aangeleverde checklists en tekst.\n\n\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        592,
+        1360
+      ],
+      "id": "c55d5890-addf-446c-8862-9cd7337e9f27",
+      "name": "Legal and Compliance Agent",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        432,
+        1552
+      ],
+      "id": "f189fbf2-1f32-409b-bb19-62dc8f5c1848",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "TqCIN0wwnjZeEbNJ",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Gebruik deze tool om in je kennisdatabank te zoeken naar de juiste documenten.",
+        "method": "POST",
+        "url": "https://prod-1-data.ke.pinecone.io/assistant/chat/demo-rag",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "pineconeApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"{{ $fromAI(\"searchQuery\") }}\"\n    }\n  ],\n  \"stream\": false,\n  \"model\": \"gpt-4o\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        608,
+        1600
+      ],
+      "id": "d7fd53f9-c95c-4777-8f7c-64c180b9bc5b",
+      "name": "PineCone Assistant",
+      "credentials": {
+        "pineconeApi": {
+          "id": "6WXiVpilxBzpNeQH",
+          "name": "PineconeApi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a26de87d-3dac-461a-b42d-f360974e04e2",
+              "name": "doc.altijd",
+              "value": "CH01_CommComm.docx",
+              "type": "string"
+            },
+            {
+              "id": "ec7d3a34-948b-4086-bc43-fac97bba9437",
+              "name": "doc.applicability",
+              "value": "={{ $('Get DocName Applicability').item.json['Naam bestand'] }}",
+              "type": "string"
+            },
+            {
+              "id": "e9e67533-8d3e-491d-ae47-505ef0f3c5b4",
+              "name": "doc.product",
+              "value": "={{ $('Get DocName Product').item.json['Naam bestand'] }}",
+              "type": "string"
+            },
+            {
+              "id": "3c269d26-28b4-449f-909a-39996015e02e",
+              "name": "doc.drager",
+              "value": "={{ $('Get DocName Drager').item.json['Naam bestand'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        1376
+      ],
+      "id": "98f769ae-d6cf-4f1d-91e6-a818ea39bd6a",
+      "name": "Set DocFields"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1_YMeiO_RoP1oQtvzqJDjN4sqRUuxT1-FgmBperTGbg8",
+          "mode": "list",
+          "cachedResultName": "TextMapping",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_YMeiO_RoP1oQtvzqJDjN4sqRUuxT1-FgmBperTGbg8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1285150545,
+          "mode": "list",
+          "cachedResultName": "textmappingchecklist",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_YMeiO_RoP1oQtvzqJDjN4sqRUuxT1-FgmBperTGbg8/edit#gid=1285150545"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Algemeen",
+              "lookupValue": "={{ $('On Form Submission').item.json['Vink aan wat van toepassing is'][0] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -224,
+        1456
+      ],
+      "id": "378b95bb-abc4-49f7-9566-b80e42676f50",
+      "name": "Get DocName Applicability",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "64eYDvHyltWtHJ8q",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1_YMeiO_RoP1oQtvzqJDjN4sqRUuxT1-FgmBperTGbg8",
+          "mode": "list",
+          "cachedResultName": "TextMapping",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_YMeiO_RoP1oQtvzqJDjN4sqRUuxT1-FgmBperTGbg8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1285150545,
+          "mode": "list",
+          "cachedResultName": "textmappingchecklist",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_YMeiO_RoP1oQtvzqJDjN4sqRUuxT1-FgmBperTGbg8/edit#gid=1285150545"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Product",
+              "lookupValue": "={{ $('On Form Submission').item.json['Over welk product of dienst schrijf je?'][0] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -16,
+        1456
+      ],
+      "id": "1c430268-19ec-4417-a181-a1de6ceace86",
+      "name": "Get DocName Product",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "64eYDvHyltWtHJ8q",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1_YMeiO_RoP1oQtvzqJDjN4sqRUuxT1-FgmBperTGbg8",
+          "mode": "list",
+          "cachedResultName": "TextMapping",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_YMeiO_RoP1oQtvzqJDjN4sqRUuxT1-FgmBperTGbg8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1285150545,
+          "mode": "list",
+          "cachedResultName": "textmappingchecklist",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_YMeiO_RoP1oQtvzqJDjN4sqRUuxT1-FgmBperTGbg8/edit#gid=1285150545"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Dragers",
+              "lookupValue": "={{ $('On Form Submission').item.json['Welke dragers heb je nodig?'][0] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        1456
+      ],
+      "id": "fd179b84-a24a-4b96-9c46-09e9a7bca92c",
+      "name": "Get DocName Drager",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "64eYDvHyltWtHJ8q",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Checklist Legal & Compliance",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Schrijf een titel voor je aanvraag",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Voor welk team vul je de checklist in?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Campagneteam"
+                  },
+                  {
+                    "option": "Digitale redactie"
+                  },
+                  {
+                    "option": "Events & Sponsoring"
+                  },
+                  {
+                    "option": "Interne Communicatie"
+                  },
+                  {
+                    "option": "Klantencommunicatie"
+                  },
+                  {
+                    "option": "SLAM"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Vink aan wat van toepassing is",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Je stuurt je communicatie naar minderjarigen"
+                  },
+                  {
+                    "option": "Je vergelijkt een product of dienst impliciet of expliciet met een concurrent"
+                  },
+                  {
+                    "option": "Je communiceert over meer dan één product of dienst"
+                  },
+                  {
+                    "option": "Geen van bovenstaande"
+                  }
+                ]
+              },
+              "multiselect": true,
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Over welk product of dienst schrijf je?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Lening op afbetaling"
+                  },
+                  {
+                    "option": "Budgetfaciliteit"
+                  },
+                  {
+                    "option": "Kredietkaart met Flexbudget"
+                  },
+                  {
+                    "option": "Hypothecair krediet"
+                  },
+                  {
+                    "option": "Verzekering"
+                  },
+                  {
+                    "option": "Spaarbeleggingsverzekering"
+                  },
+                  {
+                    "option": "Aandelen"
+                  },
+                  {
+                    "option": "Beleggingsfonds"
+                  },
+                  {
+                    "option": "Obligatie"
+                  },
+                  {
+                    "option": "Pensioensparen"
+                  },
+                  {
+                    "option": "Spaarrekening"
+                  },
+                  {
+                    "option": "Termijnbelegging"
+                  },
+                  {
+                    "option": "Kasbon"
+                  },
+                  {
+                    "option": "Vermogensservicecontracten"
+                  },
+                  {
+                    "option": "Ander"
+                  }
+                ]
+              },
+              "multiselect": true,
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Welke dragers heb je nodig?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Fysieke en/of digitale toelichtingen aan klanten, podcast of gespreksleidraad"
+                  },
+                  {
+                    "option": "Drukwerk: advertenties, affiches, standen, stickers of gadgets"
+                  },
+                  {
+                    "option": "Website en/of nieuwsbericht op KBC Connect"
+                  },
+                  {
+                    "option": "Triggers en/of banners (paid, social, FlipFlop, Digitaalnet)"
+                  },
+                  {
+                    "option": "TV, video en/of animatie"
+                  },
+                  {
+                    "option": "E-mail en/of brief"
+                  },
+                  {
+                    "option": "Radio"
+                  }
+                ]
+              },
+              "multiselect": true,
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Wie moet je aanvraag goedkeuren?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Consumer Protection"
+                  },
+                  {
+                    "option": "CPL Markets"
+                  },
+                  {
+                    "option": "Ik weet het niet/beide"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Laad je bestanden op",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -224,
+        1264
+      ],
+      "id": "28d10a74-5ca5-42ea-9a4d-40ba4e286644",
+      "name": "On Form Submission",
+      "webhookId": "e2cba358-87a8-4d05-a421-f312c40f2ef6"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json['Laad je bestanden op'] }}",
+          "mode": "url"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "text/plain"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -16,
+        1264
+      ],
+      "id": "57ddf16d-e41f-47e5-bd1d-6f3c453cfda0",
+      "name": "Download Content to Review",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "OOgkw5hSy8ONsrbB",
+          "name": "Google Drive account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "tdgcontent@gmail.com",
+        "subject": "=Feedback op {{ $('On Form Submission').item.json['Schrijf een titel voor je aanvraag'] }}",
+        "emailType": "text",
+        "message": "=Dag Timo,\n\nHieronder vind je de link met feedback op je tekst:\n\nhttps://docs.google.com/document/d/{{ $('Create a document').item.json.id }}\n\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1760,
+        1360
+      ],
+      "id": "ccfe34c5-4d03-468e-be73-34c9fe2aef92",
+      "name": "Mail Feedback",
+      "webhookId": "e4850ece-f3ad-4a0e-a1b1-a5d9002141f4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1cr56s10Bwb-8OWr7H6Cw14UX6iVB6ltDJCZLDI88ygM",
+          "mode": "list",
+          "cachedResultName": "Legal and Compliance",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cr56s10Bwb-8OWr7H6Cw14UX6iVB6ltDJCZLDI88ygM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cr56s10Bwb-8OWr7H6Cw14UX6iVB6ltDJCZLDI88ygM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Titel": "={{ $('On Form Submission').item.json['Schrijf een titel voor je aanvraag'] }}",
+            "Datum": "={{ $now }}",
+            "Aanvrager": "Timo de Groot",
+            "Link Content": "={{ $('On Form Submission').item.json['Laad je bestanden op'] }}",
+            "Advies": "=https://docs.google.com/document/d/{{ $('Create a document').item.json.id }}",
+            "Status": "Aangevraagd",
+            "Compliance": "={{ $('On Form Submission').item.json['Wie moet je aanvraag goedkeuren?'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Titel",
+              "displayName": "Titel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Datum",
+              "displayName": "Datum",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Datum Goedkeuring",
+              "displayName": "Datum Goedkeuring",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Doorlooptijd",
+              "displayName": "Doorlooptijd",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Aanvrager",
+              "displayName": "Aanvrager",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Compliance",
+              "displayName": "Compliance",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Link Content",
+              "displayName": "Link Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Advies",
+              "displayName": "Advies",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2000,
+        1360
+      ],
+      "id": "7926a94f-7b42-4566-ac5b-56d304ff058a",
+      "name": "Log Request",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "64eYDvHyltWtHJ8q",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "={\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n  \"$id\": \"https://example.com/schemas/legal-compliance-agent-output.schema.json\",\n  \"title\": \"Legal & Compliance Agent Structured Output\",\n  \"type\": \"object\",\n  \"additionalProperties\": false,\n  \"required\": [\"original_text\", \"feedback\", \"rewritten_suggestion\", \"sources\"],\n  \"$defs\": {\n    \"span\": {\n      \"type\": \"object\",\n      \"title\": \"Text span\",\n      \"additionalProperties\": false,\n      \"required\": [\"text\"],\n      \"properties\": {\n        \"text\": { \"type\": \"string\", \"minLength\": 1 },\n        \"start_char\": { \"type\": \"integer\", \"minimum\": 0 },\n        \"end_char\": { \"type\": \"integer\", \"minimum\": 0 }\n      },\n    }\n  },\n  \"properties\": {\n    \"original_text\": {\n      \"type\": \"string\",\n      \"title\": \"Original user text\",\n      \"description\": \"The exact text extracted from the file input. In n8n this should be populated from the data output field from the Extract from File node.\",\n      \"minLength\": 1\n    },\n    \"feedback\": {\n      \"type\": \"array\",\n      \"title\": \"Checklist-driven feedback\",\n      \"description\": \"Itemized assessments based on the applicable legal & compliance checklists, with clear motivation.\",\n      \"minItems\": 1,\n      \"items\": {\n        \"type\": \"object\",\n        \"additionalProperties\": false,\n        \"required\": [\"checklist_name\", \"rule_id\", \"title\", \"status\", \"motivation\"],\n        \"properties\": {\n          \"checklist_name\": {\n            \"type\": \"string\",\n            \"description\": \"Human-readable checklist/document name (e.g., ‘Financial Promotions – Retail’).\",\n            \"minLength\": 1\n          },\n          \"checklist_version\": {\n            \"type\": \"string\",\n            \"description\": \"Version or date of the checklist used (if available).\"\n          },\n          \"rule_id\": {\n            \"type\": \"string\",\n            \"description\": \"Stable identifier for the rule/requirement inside the checklist.\",\n            \"minLength\": 1,\n            \"pattern\": \"^[A-Z]{1,10}-\\\\d+(?:\\\\.\\\\d+)*$\",\n            \"$comment\": \"Adjust pattern to your house style, e.g. FP-2.1\"\n          },\n          \"title\": {\n            \"type\": \"string\",\n            \"description\": \"Short name of the rule/requirement.\",\n            \"minLength\": 1\n          },\n          \"status\": {\n            \"type\": \"string\",\n            \"description\": \"Compliance assessment for this rule.\",\n            \"enum\": [\"pass\", \"fail\", \"warning\", \"not_applicable\"]\n          },\n          \"motivation\": {\n            \"type\": \"string\",\n            \"description\": \"Clear explanation referencing specific parts of the original text and why the status was assigned.\",\n            \"minLength\": 1\n          },\n          \"risk_level\": {\n            \"type\": \"string\",\n            \"description\": \"Risk assessment when not compliant.\",\n            \"enum\": [\"low\", \"medium\", \"high\", \"critical\"]\n          },\n          \"suggested_fix\": {\n            \"type\": \"string\",\n            \"description\": \"Concrete suggestion to resolve the issue (one or two sentences).\"\n          },\n          \"evidence_spans\": {\n            \"type\": \"array\",\n            \"description\": \"Optional spans from the original text that informed the decision.\",\n            \"items\": { \"$ref\": \"#/$defs/span\" }\n          }\n        },\n        \"allOf\": [\n          {\n            \"if\": { \"properties\": { \"status\": { \"enum\": [\"fail\", \"warning\"] } }, \"required\": [\"status\"] },\n            \"then\": { \"required\": [\"suggested_fix\", \"risk_level\"] },\n            \"$comment\": \"If fail/warning, we require risk_level and a suggested_fix.\"\n          }\n        ]\n      }\n    },\n    \"rewritten_suggestion\": {\n      \"type\": \"object\",\n      \"title\": \"Compliant rewrite\",\n      \"description\": \"A proposed rewrite of the text in the requested tone of voice, preserving intent while ensuring compliance.\",\n      \"additionalProperties\": false,\n      \"required\": [\"tone_of_voice\", \"content\"],\n      \"properties\": {\n        \"tone_of_voice\": {\n          \"type\": \"string\",\n          \"description\": \"Tone of voice to apply (e.g., ‘professional yet friendly’, ‘authoritative’, etc.).\",\n          \"minLength\": 1\n        },\n        \"content\": {\n          \"type\": \"string\",\n          \"description\": \"The rewritten, legally compliant text.\",\n          \"minLength\": 1\n        },\n        \"changes_summary\": {\n          \"type\": \"array\",\n          \"description\": \"Bullet-point summary of key changes made to achieve compliance.\",\n          \"items\": { \"type\": \"string\", \"minLength\": 1 }\n        }\n      }\n    },\n    \"sources\": {\n      \"type\": \"array\",\n      \"title\": \"Sources & citations\",\n      \"description\": \"Exact source materials used for the assessment, with links and verbatim snippets.\",\n      \"minItems\": 1,\n      \"items\": {\n        \"type\": \"object\",\n        \"additionalProperties\": false,\n        \"required\": [\"document_title\", \"document_url\", \"snippet\"],\n        \"properties\": {\n          \"document_title\": {\n            \"type\": \"string\",\n            \"description\": \"Title of the document or policy used.\",\n            \"minLength\": 1\n          },\n          \"document_url\": {\n            \"type\": \"string\",\n            \"description\": \"URL of the document or policy used.\",\n            \"format\": \"uri\"\n          },\n          \"page\": {\n            \"description\": \"Page number or locator where the cited text appears.\",\n            \"oneOf\": [\n              { \"type\": \"integer\", \"minimum\": 1 },\n              { \"type\": \"string\", \"minLength\": 1 }\n            ]\n          },\n          \"section\": {\n            \"type\": \"string\",\n            \"description\": \"Section/heading/subclause identifier.\"\n          },\n          \"snippet\": {\n            \"type\": \"string\",\n            \"description\": \"Exact quoted text used by the agent to form its judgment.\",\n            \"minLength\": 10,\n            \"maxLength\": 1000\n          },\n          \"quote_offsets\": {\n            \"type\": \"object\",\n            \"additionalProperties\": false,\n            \"properties\": {\n              \"start_char\": { \"type\": \"integer\", \"minimum\": 0 },\n              \"end_char\": { \"type\": \"integer\", \"minimum\": 0 }\n            },\n            \"$comment\": \"Same note as spans: ideally enforce end_char > start_char with a custom keyword if available.\"\n          }\n        }\n      }\n    },\n    \"meta\": {\n      \"type\": \"object\",\n      \"title\": \"Metadata (optional)\",\n      \"additionalProperties\": false,\n      \"properties\": {\n        \"processed_at\": {\n          \"type\": \"string\",\n          \"format\": \"date-time\",\n          \"description\": \"ISO 8601 timestamp when the analysis was produced.\"\n        },\n        \"language\": {\n          \"type\": \"string\",\n          \"description\": \"Detected language of the original text (e.g., ‘nl’, ‘en’).\"\n        },\n        \"agent\": {\n          \"type\": \"object\",\n          \"additionalProperties\": false,\n          \"properties\": {\n            \"name\": { \"type\": \"string\", \"default\": \"Legal & Compliance Agent\" },\n            \"version\": { \"type\": \"string\" }\n          }\n        },\n        \"checklist_documents_consulted\": {\n          \"type\": \"array\",\n          \"description\": \"Canonical list of checklist documents that were actually consulted.\",\n          \"items\": { \"type\": \"string\", \"minLength\": 1 }\n        }\n      }\n    }\n  },\n  \"examples\": [\n    {\n      \"original_text\": \"…(text from Extract from File)…\",\n      \"feedback\": [\n        {\n          \"checklist_name\": \"CH01_CommComm.docx\",\n          \"rule_id\": \"FP-2.1\",\n          \"title\": \"No misleading superlatives\",\n          \"status\": \"warning\",\n          \"motivation\": \"The phrase “beste op de markt” is an absolute claim without substantiation.\",\n          \"risk_level\": \"medium\",\n          \"suggested_fix\": \"Qualify the claim or provide verifiable evidence.\",\n          \"evidence_spans\": [\n            { \"text\": \"beste op de markt\", \"start_char\": 128, \"end_char\": 145 }\n          ]\n        }\n      ],\n      \"rewritten_suggestion\": {\n        \"tone_of_voice\": \"professioneel en duidelijk\",\n        \"content\": \"Onze service is ontworpen om u snel en betrouwbaar te helpen. Bekijk onafhankelijke reviews voor ervaringen van klanten.\",\n        \"changes_summary\": [\n          \"Verwijderd absolute superlatief\",\n          \"Toegevoegd verwijzing naar verifieerbare reviews\"\n        ]\n      },\n      \"sources\": [\n        {\n          \"document_title\": \"CH01_CommComm.docx\",\n          \"document_url\": \"https://example.com/policies/CH01_CommComm\",\n          \"page\": 12,\n          \"section\": \"Verboden te vermelden\",\n          \"snippet\": \"Zorg ervoor dat alle informatie juist en transparant is om misleiding te voorkomen\"\n        }\n      ],\n      \"meta\": {\n        \"processed_at\": \"2025-10-02T13:00:00Z\",\n        \"language\": \"nl\",\n        \"agent\": { \"name\": \"Legal & Compliance Agent\", \"version\": \"1.0.0\" },\n        \"checklist_documents_consulted\": [\n          \"CH01_CommComm.docx\",\n          \"CH15_Pensioensparen.docx\",\n          \"CH27_E-mail.docx\"\n        ]\n      }\n    }\n  ]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        896,
+        1568
+      ],
+      "id": "0fd2b808-7384-42f2-9094-f71d9ea5879e",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        768,
+        1616
+      ],
+      "id": "8ec8452e-a0bc-4d61-9324-29d664c28629",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {
+        "operation": "createFromText",
+        "content": "=# Compliance Review - {{ $('On Form Submission').item.json['Schrijf een titel voor je aanvraag'] }}\n\n## Originele Tekst\n{{ $json.output.original_text }}\n\n## Feedback\n{{\n  $json.output.feedback.map((f, i) => `### ${f.title || `Item ${i+1}`}\n- **Probleem**: ${(f.evidence_spans?.[0]?.text) ?? '—'}\n- **Risk**: ${f.risk_level ?? '—'}\n- **Motivatie**: ${f.motivation}\n- **Suggestie**: ${f.suggested_fix ?? '—'}\n- **Bron**: ${f.checklist_name}${f.rule_id ? ` (${f.rule_id})` : ''}`\n  ).join('\\n\\n')\n}}\n\n## Herschreven tekst\n{{ $json.output.rewritten_suggestion.content }}\n\n## Bronnen\n{{\n  ($json.output.sources || []).map((s, i) => `- ${i+1}. **${s.document_title}**${s.section ? ` – _${s.section}_` : ''}${s.page !== undefined ? ` (p. ${s.page})` : ''}${s.document_url ? ` — ${s.document_url}` : ''}\\n  > ${s.snippet}`).join('\\n')\n}}\n\n## Meta\n- **Timestamp**: {{ $json.output.meta.processed_at || new Date().toISOString() }}\n- **Taal**: {{ $json.output.meta.language || 'nl' }}\n- **Agent**: {{ $json.output.meta.agent?.name || 'Legal & Compliance Agent' }}\n- **Checklists**: {{ ($json.output.meta.checklist_documents_consulted || []).join(', ') || '—' }}\n",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1568,
+        1360
+      ],
+      "id": "4215526d-c23c-4473-a695-47612b736d14",
+      "name": "Create file from text",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "OOgkw5hSy8ONsrbB",
+          "name": "Google Drive account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1a7df2e5-5c02-47fb-b5a6-27115e69918c",
+              "name": "title",
+              "value": "={{ $('On Form Submission').item.json['Schrijf een titel voor je aanvraag'] || 'Compliance Review' }}\n",
+              "type": "string"
+            },
+            {
+              "id": "ca784a50-e7cb-4c12-b9d7-cb3e94a89d63",
+              "name": "markdown",
+              "value": "=# Compliance Review - {{ $('On Form Submission').item.json['Schrijf een titel voor je aanvraag'] }}\n\n## Originele Tekst\n{{ $json.output.original_text }}\n\n## Feedback\n{{\n  $json.output.feedback.map((f, i) => `### ${f.title || `Item ${i+1}`}\n- **Probleem**: ${(f.evidence_spans?.[0]?.text) ?? '—'}\n- **Risk**: ${f.risk_level ?? '—'}\n- **Motivatie**: ${f.motivation}\n- **Suggestie**: ${f.suggested_fix ?? '—'}\n- **Bron**: ${f.checklist_name}${f.rule_id ? ` (${f.rule_id})` : ''}`\n  ).join('\\n\\n')\n}}\n\n## Herschreven tekst\n{{ $json.output.rewritten_suggestion.content }}\n\n## Bronnen\n{{\n  ($json.output.sources || []).map((s, i) => `- ${i+1}. **${s.document_title}**${s.section ? ` – _${s.section}_` : ''}${s.page !== undefined ? ` (p. ${s.page})` : ''}${s.document_url ? ` — ${s.document_url}` : ''}\\n  > ${s.snippet}`).join('\\n')\n}}\n\n## Meta\n- **Timestamp**: {{ $json.output.meta.processed_at || new Date().toISOString() }}\n- **Taal**: {{ $json.output.meta.language || 'nl' }}\n- **Agent**: {{ $json.output.meta.agent?.name || 'Legal & Compliance Agent' }}\n- **Checklists**: {{ ($json.output.meta.checklist_documents_consulted || []).join(', ') || '—' }}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        880,
+        1360
+      ],
+      "id": "fd688043-a97c-450d-b660-21f71226ae14",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ $json.markdown }}",
+        "destinationKey": "html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        1088,
+        1360
+      ],
+      "id": "14badef4-2c2a-43a6-8825-294ef7fed2bf",
+      "name": "Markdown"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"requests\": [\n    {\n      \"insertText\": {\n        \"endOfSegmentLocation\": {},\n        \"text\": \"={{ $json.markdown }}\"\n      }\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1296,
+        1360
+      ],
+      "id": "fb2d7b9b-5edd-4afb-a6a5-b8bcdeec981c",
+      "name": "HTTP Request",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "OOgkw5hSy8ONsrbB",
+          "name": "Google Drive account 5"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Get DocName Applicability",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Legal and Compliance Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Legal and Compliance Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PineCone Assistant": {
+      "ai_tool": [
+        [
+          {
+            "node": "Legal and Compliance Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set DocFields": {
+      "main": [
+        [
+          {
+            "node": "Legal and Compliance Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get DocName Applicability": {
+      "main": [
+        [
+          {
+            "node": "Get DocName Product",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get DocName Product": {
+      "main": [
+        [
+          {
+            "node": "Get DocName Drager",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get DocName Drager": {
+      "main": [
+        [
+          {
+            "node": "Set DocFields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On Form Submission": {
+      "main": [
+        [
+          {
+            "node": "Download Content to Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Content to Review": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mail Feedback": {
+      "main": [
+        [
+          {
+            "node": "Log Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Legal and Compliance Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "Legal and Compliance Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create file from text": {
+      "main": [
+        [
+          {
+            "node": "Mail Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Create file from text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "On Form Submission": [
+      {
+        "json": {
+          "Schrijf een titel voor je aanvraag": "Test Pensioensparen",
+          "Voor welk team vul je de checklist in?": "SLAM",
+          "Vink aan wat van toepassing is": [
+            "Geen van bovenstaande"
+          ],
+          "Over welk product of dienst schrijf je?": [
+            "Pensioensparen"
+          ],
+          "Welke dragers heb je nodig?": [
+            "E-mail en/of brief"
+          ],
+          "Wie moet je aanvraag goedkeuren?": "CPL Markets",
+          "Laad je bestanden op": "https://docs.google.com/document/d/1T8IVBaBJ3svIWWV4aj_ZhK8AWjJXNv83PnXMi_oCp9k/edit?tab=t.0",
+          "submittedAt": "2025-10-02T19:39:57.877+02:00",
+          "formMode": "test"
+        }
+      }
+    ]
+  },
+  "versionId": "4dfbdf7c-659e-4c9b-a782-2cf893943322",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2025-10-02T09:08:01.923Z",
+      "createdAt": "2025-10-02T09:08:01.923Z",
+      "role": "workflow:owner",
+      "workflowId": "CIeC3tB0W18i34ly",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
