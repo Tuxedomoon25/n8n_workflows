@@ -1,0 +1,74 @@
+{
+  "updatedAt": "2025-11-13T11:54:10.509Z",
+  "createdAt": "2025-11-13T11:54:10.509Z",
+  "id": "27e07jpxodVoO12R",
+  "name": "My workflow 16",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3ffb2b7a-e023-452b-8a2d-3fdba12f6803",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "1tUEq85velR0op5EkVoSzeEBap2TXOl08yTUrKO8tJrU"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "ccdd7c07-4c6a-4aab-90b6-bb02de03656d",
+      "name": "Get a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "DMF0US2wzutvmZiH",
+          "name": "Google Docs account 2"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "c582514a-60ec-4e51-943c-b2dba62877cf",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-13T11:54:10.516Z",
+      "createdAt": "2025-11-13T11:54:10.516Z",
+      "role": "workflow:owner",
+      "workflowId": "27e07jpxodVoO12R",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
