@@ -1,0 +1,329 @@
+{
+  "updatedAt": "2025-07-26T12:46:51.632Z",
+  "createdAt": "2025-07-26T12:46:51.632Z",
+  "id": "H8L7qqNiL0OVfpcI",
+  "name": "My workflow 8",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        832,
+        128
+      ],
+      "id": "36a39bed-d840-423b-8b38-8ca01a9e78ec",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "customer_ID",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        528,
+        1568
+      ],
+      "id": "b53a82bc-8da3-4079-84f6-93d2676e6104",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "83687222-f465-4d73-98c1-b41ebfb4810a",
+              "name": "Full Name",
+              "value": "={{ $json.full_name }}",
+              "type": "string"
+            },
+            {
+              "id": "a186b0c6-5e31-4490-b6be-1c2898f6ffc1",
+              "name": "Message",
+              "value": "={{ $json.msg }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        752,
+        1568
+      ],
+      "id": "cd96fe3f-f46d-4c23-a1e0-f5015f76f611",
+      "name": "Output"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7291dde5-67e7-4d4b-aaaa-931a72726e52",
+              "name": "customer_ID",
+              "value": "123",
+              "type": "string"
+            },
+            {
+              "id": "d596f9ab-d1e6-47e9-91d7-8a7d2236f3da",
+              "name": "full_name",
+              "value": "Sarah Mills",
+              "type": "string"
+            },
+            {
+              "id": "f7f28d55-f8ac-4d30-8cbd-2424fdae814a",
+              "name": "email_address",
+              "value": "sarah@example.com",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        272,
+        1440
+      ],
+      "id": "0247181a-0ae0-4a2c-90e9-e1a75c49a937",
+      "name": "Input-1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e9edf7ef-6bd5-44f6-837a-56a6e60c1401",
+              "name": "customer_ID",
+              "value": "123",
+              "type": "string"
+            },
+            {
+              "id": "f169028a-79cb-47a1-a308-bda33454331e",
+              "name": "msg",
+              "value": "I'm interested in your AI automation services!",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        272,
+        1712
+      ],
+      "id": "d07373aa-9a55-4fdf-94aa-281475d1772a",
+      "name": "Input-2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7291dde5-67e7-4d4b-aaaa-931a72726e52",
+              "name": "customer_ID",
+              "value": "123",
+              "type": "string"
+            },
+            {
+              "id": "d596f9ab-d1e6-47e9-91d7-8a7d2236f3da",
+              "name": "full_name",
+              "value": "Sarah Mills",
+              "type": "string"
+            },
+            {
+              "id": "f7f28d55-f8ac-4d30-8cbd-2424fdae814a",
+              "name": "email_address",
+              "value": "sarah@example.com",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1088,
+        0
+      ],
+      "id": "4b6ec957-b8ea-4c85-a228-3c124cfeabe3",
+      "name": "Input 1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e9edf7ef-6bd5-44f6-837a-56a6e60c1401",
+              "name": "customer_ID",
+              "value": "123",
+              "type": "string"
+            },
+            {
+              "id": "f169028a-79cb-47a1-a308-bda33454331e",
+              "name": "msg",
+              "value": "I'm interested in your AI automation services!",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1088,
+        240
+      ],
+      "id": "53c06539-dc56-4c12-8a0b-999cf36461a4",
+      "name": "Input 2"
+    },
+    {
+      "parameters": {
+        "content": "# Solution",
+        "height": 520,
+        "width": 1020,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        32,
+        1360
+      ],
+      "id": "b151ef49-1713-4800-90b6-38564667ab38",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## 🧩 Puzzle Challenge: Merge and Clean Up Customer Data\n\nYou're given two separate inputs:\n\n1. **Customer Info**: Includes a `customer_id`, full name, and email.\n2. **Customer Message**: Includes the same `customer_id` and a message.\n\n\n✅ Expected Output\n\nFull Name: Sarah Mills\nMessage: I'm interested in your AI Automation services!\n\n\n💡 Hint: You'll need to rename fields like `full_name` to `full name` and `msg` to `message` after merging.\n\nGood luck!\n\nSOLUTION is below. Don't spoil it!",
+        "height": 400,
+        "width": 740
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "67054cb0-63b0-4322-bfd8-7a316a1c8ee0",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1440,
+        128
+      ],
+      "id": "cddc7440-5f2d-4175-a29a-d968d45280c6",
+      "name": "Merge1"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Input 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Input 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input-1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input-2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Input 1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input 2": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "14bfc0ca-9c34-4eff-a8f9-edf2ff53d826",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-07-26T12:46:51.634Z",
+      "createdAt": "2025-07-26T12:46:51.634Z",
+      "role": "workflow:owner",
+      "workflowId": "H8L7qqNiL0OVfpcI",
+      "projectId": "sOkLWMWXpC3Wjh6d"
+    }
+  ],
+  "tags": []
+}
