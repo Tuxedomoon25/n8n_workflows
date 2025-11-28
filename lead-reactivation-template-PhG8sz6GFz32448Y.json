@@ -1,0 +1,1141 @@
+{
+  "updatedAt": "2025-11-28T09:18:23.000Z",
+  "createdAt": "2025-11-28T07:29:00.910Z",
+  "id": "PhG8sz6GFz32448Y",
+  "name": "Lead Reactivation Template",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "# TODO N8N Email Sending Workflow - Tasks\n\n## Task 1: Create Schedule Trigger\nSet up a trigger that runs Monday-Friday every 10 minutes between 8 AM and 6 PM\n\n## Task 2: Query Active Campaigns\nSearch Airtable for campaigns where `campaign_status = 'active'`\n\n## Task 3: Loop Through Campaigns\nProcess each campaign one at a time (use Split in Batches)\n\n## Task 4: Check if Campaign Has Table ID\nAdd a conditional to verify the campaign has a `table_id` before proceeding\n\n## Task 5: Find Emails Ready to Send\nQuery emails where:\n- `email_sent_at` is empty (not yet sent)\n- `scheduled_at` is in the past (send time has arrived)\nUse the formula: `AND({email_sent_at} = BLANK(), DATETIME_DIFF(NOW(), {scheduled_at}, 'seconds') > 0)`\n\n## Task 6: Check if Emails Exist\nAdd a conditional to stop if no emails are ready to send\n\n## Task 7: Loop Through All Emails\nProcess each email one at a time (use Split in Batches with reset condition)\n\n## Task 8: Convert Email to HTML\nWrite JavaScript to convert the `ai_generated_email` text to HTML format:\n- Replace newlines with `<br>` tags\n- Wrap content in `<p>` tags\n- Keep all other fields intact\n\n## Task 9: Send Email via Gmail\nSend the email using Gmail:\n- To: `client_email`\n- Subject: `ai_generated_subject`\n- Message: the HTML version created in Task 8\n\n## Task 10: Mark Email as Sent (Success)\nUpdate Airtable record with `email_sent_at = today's date` when email sends successfully\n\n## Task 11: Mark Email as Failed\nIf the email send fails, update Airtable record with `email_sent_at = 'failed'`\n\n## Task 12: Add Delay Between Emails\nWait 30 seconds after each email before processing the next one\nThen loop back to process more emails",
+        "height": 1376,
+        "width": 912,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1088,
+        2384
+      ],
+      "id": "95fd95cd-8d94-4f63-9ff7-26654d079562",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appzMySidsphI2uN6",
+          "mode": "list",
+          "cachedResultName": "Client Automation",
+          "cachedResultUrl": "https://airtable.com/appzMySidsphI2uN6"
+        },
+        "table": {
+          "__rl": true,
+          "value": "={{ $('Create new table').item.json.id }}",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "client_email": "={{ $('Call The CRM to Get the Data').item.json.client_email}}",
+            "client_name": "={{ $('Call The CRM to Get the Data').item.json.client_name }}",
+            "sales_email": "serop@neuronnix.com",
+            "sales_name": "={{ $('Call The CRM to Get the Data').item.json.sales_person }}",
+            "products_bought": "={{ $('Call The CRM to Get the Data').item.json.products_bought }}",
+            "sales_date": "={{ $('Call The CRM to Get the Data').item.json.sold_at.toDateTime().format('yyyy-MM-dd') }}",
+            "ai_generated_subject": "={{ $json.output.email_subject }}",
+            "ai_generated_email": "={{ $json.output.email_body }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "client_email",
+              "displayName": "client_email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "client_name",
+              "displayName": "client_name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "sales_email",
+              "displayName": "sales_email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "sales_name",
+              "displayName": "sales_name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "products_bought",
+              "displayName": "products_bought",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "sales_date",
+              "displayName": "sales_date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "emailed_before_by",
+              "displayName": "emailed_before_by",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "ai_generated_subject",
+              "displayName": "ai_generated_subject",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ai_generated_email",
+              "displayName": "ai_generated_email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "approved",
+              "displayName": "approved",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "feedback",
+              "displayName": "feedback",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "scheduled_at",
+              "displayName": "scheduled_at",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "email_sent_at",
+              "displayName": "email_sent_at",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "exclude_email",
+              "displayName": "exclude_email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "excluded_at",
+              "displayName": "excluded_at",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1936,
+        672
+      ],
+      "id": "b5093a61-632f-449a-a50f-6ed9aef827f6",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xUnrdaqhZW0pnp9K",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### Generate Email\n",
+        "height": 1280,
+        "width": 896,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "439eaf30-97b9-482e-bc00-ae53dabc1419",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "### Get the data \nshould include: \n1. name & email of customer\n2. what they bought \n3. when they bought it \n4. based on sold or lost, decide which email to send",
+        "height": 1280,
+        "width": 880,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -896,
+        32
+      ],
+      "id": "7ee6d99a-6107-4522-94c7-2d4f68871398",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "authentication": "airtableTokenApi",
+        "baseId": {
+          "__rl": true,
+          "value": "appdGX58tZCz2Tz6S",
+          "mode": "id"
+        },
+        "tableId": {
+          "__rl": true,
+          "value": "tblRbbZWADoguYzni",
+          "mode": "id"
+        },
+        "triggerField": "Created",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.airtableTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1776,
+        608
+      ],
+      "id": "60aa7ea2-ebfa-4425-ac4c-f6a7f47937c1",
+      "name": "Trigger when new campaign starts",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xUnrdaqhZW0pnp9K",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "value": "appdGX58tZCz2Tz6S",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblRbbZWADoguYzni",
+          "mode": "id"
+        },
+        "id": "={{ $json.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -1568,
+        608
+      ],
+      "id": "40d894dc-dc66-4330-8466-05555a5d9f3d",
+      "name": "Get new campaign",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xUnrdaqhZW0pnp9K",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### Trigger the workflow \nneed to change base ID\nneed to change table ID",
+        "height": 1280,
+        "width": 880,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1808,
+        32
+      ],
+      "id": "6d2a0543-78e0-4d72-98c2-db04088d5fd1",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.airtable.com/v0/meta/bases/appdGX58tZCz2Tz6S/tables",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "airtableTokenApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"name\": \"{{ $('Get new campaign').item.json.User }}:{{ $('Get new campaign').item.json['Campaign Name'] }}\",\n  \"fields\": [\n  \n    {\n      \"type\": \"email\",\n      \"name\": \"client_email\"\n    },\n\n    {\n      \"type\": \"singleLineText\",\n      \"name\": \"client_name\"\n    },\n    {\n      \"type\": \"email\",\n      \"name\": \"sales_email\"\n    },\n    {\n      \"type\": \"singleLineText\",\n      \"name\": \"sales_name\"\n    },\n    {\n      \"type\": \"multilineText\",\n      \"name\": \"products_bought\"\n    },\n    {\n      \"type\": \"singleLineText\",\n      \"name\": \"sales_date\"\n    },\n   {\n      \"type\": \"multilineText\",\n      \"name\": \"emailed_before_by\"\n    },\n    {\n      \"type\": \"multilineText\",\n      \"name\": \"ai_generated_subject\"\n    },\n    {\n      \"type\": \"multilineText\",\n      \"name\": \"ai_generated_email\"\n    },\n\n \n    {\n      \"type\": \"checkbox\",\n      \"options\": {\n        \"icon\": \"check\",\n        \"color\": \"greenBright\"\n      },\n      \"name\": \"approved\"\n    },\n   {\n      \"type\": \"multilineText\",\n      \"name\": \"feedback\"\n    },\n    {\"type\": \"dateTime\",\n    \"name\" : \"scheduled_at\",\n        \"options\": {\n          \"dateFormat\": { \"name\": \"iso\" },\n          \"timeFormat\": { \"name\": \"24hour\" },\n          \"timeZone\":   \"Europe/London\"\n        }\n},\n    {\n      \"type\": \"singleLineText\",\n      \"name\": \"email_sent_at\"\n    }\n  ]\n}",
+        "options": {
+          "redirect": {
+            "redirect": {
+              "followRedirects": false
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1088,
+        624
+      ],
+      "id": "a66b4b4a-b53c-47a2-ad40-355c4f916bbf",
+      "name": "Create new table",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "o1fCovf5SGXhwvZZ",
+          "name": "Bearer Auth Airtable"
+        },
+        "airtableTokenApi": {
+          "id": "xUnrdaqhZW0pnp9K",
+          "name": "Airtable Personal Access Token account"
+        },
+        "airtableApi": {
+          "id": "RQXEGusYZaZ7zMgP",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appdGX58tZCz2Tz6S",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblRbbZWADoguYzni",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('If').item.json.id }}",
+            "table_id": "={{ $json.id }}",
+            "campaign_status": "active"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "record_id",
+              "displayName": "record_id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "start_date",
+              "displayName": "start_date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "end_date",
+              "displayName": "end_date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "buying_status",
+              "displayName": "buying_status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Sold",
+                  "value": "Sold"
+                },
+                {
+                  "name": "Lost",
+                  "value": "Lost"
+                },
+                {
+                  "name": "Stalled",
+                  "value": "Stalled"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "minimum_sales",
+              "displayName": "minimum_sales",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "User",
+              "displayName": "User",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Serop Baghdadlian",
+                  "value": "Serop Baghdadlian"
+                },
+                {
+                  "name": "James Copeland",
+                  "value": "James Copeland"
+                },
+                {
+                  "name": "Chris Leslie",
+                  "value": "Chris Leslie"
+                },
+                {
+                  "name": "David Capon",
+                  "value": "David Capon"
+                },
+                {
+                  "name": "Jacquie Holdsworth",
+                  "value": "Jacquie Holdsworth"
+                },
+                {
+                  "name": "Kerry Long",
+                  "value": "Kerry Long"
+                },
+                {
+                  "name": "Marc Peterson",
+                  "value": "Marc Peterson"
+                },
+                {
+                  "name": "Ewen Evans",
+                  "value": "Ewen Evans"
+                },
+                {
+                  "name": "Rick Petford",
+                  "value": "Rick Petford"
+                },
+                {
+                  "name": "Steve Copeland",
+                  "value": "Steve Copeland"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Created",
+              "displayName": "Created",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Last Modified",
+              "displayName": "Last Modified",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Campaign Name",
+              "displayName": "Campaign Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "table_id",
+              "displayName": "table_id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "campaign_status",
+              "displayName": "campaign_status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "active",
+                  "value": "active"
+                },
+                {
+                  "name": "completed",
+                  "value": "completed"
+                },
+                {
+                  "name": "paused",
+                  "value": "paused"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -848,
+        624
+      ],
+      "id": "f76a180e-4fe5-49ed-a772-99f320a0680d",
+      "name": "Add table ID",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xUnrdaqhZW0pnp9K",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### Check if client is present in other campaigns, then add hint that it was contacted in a specific campaign",
+        "height": 1280,
+        "width": 1420,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        928,
+        32
+      ],
+      "id": "5491e8a6-2dd7-4cef-b269-3e65ea25bf4f",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=\nName: {{ $json.client_name.split(\" \")[0] }}\nThis is the list of products that the client bought: {{ $json.products_bought }}]\nPurchase date: {{ $json.sold_at.toDateTime().format('yyyy-MM-dd') }}\nToday date: {{ $today.format('yyyy-MM-dd') }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=# Role\nYou are an email marketing expert working at a company called MeasureMeRight that sell measurement devices.\n\n# Task\nYour job is to generate a very interesting and exciting email to reactivate previous customers that bought things with you. Ask them about the product and ask them if they would be interested in similar product categories that we offer. \n\n# Format\n- Subject: Generate a short, interesting subject that makes them want to click on it, add their first name in the subject as well to make it personal. The email subjects should be less salesy and avoid the use of exclamation marks. \n  - Example subjects:\n    - Checking on your recent purchase (client first name)\n    - Following up on your order (client first name)\n    - Following op on your recent project (client first name)\n    - Is there anything else I can help with (client first name)?\n- Body: write a friendly, concise plain text body (50-120 words). Follow these instructions:\n  1. Greet the customer by first name\n  2. Ask them how they are doing\n  3. Say the reason you are reaching out is because you wanted to check how (the product that they bought) is performing.\n  4. Mention what they bought and when (don't mention specific data, but say something like, \"you bought ... from us about months, days, weeks ago,\" you need to be precise in the number and pay attention to the year, some values are from previous years.\n  5. Ask them about the performance, e.g. I'm just emailing to check it's performing as expected and to see whether you have any other requirements or questions?\n  6. Also, a reminder that the product range shown on our website is a fraction of what we can supply, so if you have any other projects planned, please do get in touch and I'll be delighted to help.\n  7. Mention looking forward to hearing from you.\n  8. Sign off as {{ $json.sales_person }}\n  9. Remove all dashes in the email, replace them with commas if needed.\n  10. Format the email well, add new lines where needed so it looks like a well formatted email. For example: add a new line after saying hope you are doing well.\n\n# Notes\nWhen mentioning products, make the product first letter in capital letter. If the user bought multiple products, mention one product and say one word that describes the products categories, such as accessories, measurement devices, etc"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        400,
+        624
+      ],
+      "id": "70933fc0-d1d7-4e8f-ba42-4b41ec53e398",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n\t\"type\": \"object\",\n\t\"properties\": {\n\t\t\"email_subject\": {\n\t\t\t\"type\": \"string\"\n\t\t},\n\t\t\"email_body\": {\n\t\t\t\t\"type\": \"string\"\n\t\t}\n\t}\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        640,
+        896
+      ],
+      "id": "58e69aa7-8965-434e-87da-2eeda48bd1b5",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        272,
+        880
+      ],
+      "id": "5733b12e-48f7-4d44-a818-3c7ae93ce17d",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "2SEnYMIY90aMM4SC",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Add instructions here",
+        "height": 224,
+        "width": 512
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        208,
+        560
+      ],
+      "id": "79aea129-0d73-4974-aca9-e38472b24042",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "jsCode": "const startHour = 8; // 08:00 AM\nconst endHour = 18; // 18:00 PM\nconst totalSlots = $input.first().json.daily_emails_limit;\nconst minGapMinutes = 5;\n\nconst baseDate = new Date();\nconst amsterdamDate = new Intl.DateTimeFormat('en-GB', {\n  timeZone: 'Europe/Amsterdam',\n  year: 'numeric',\n  month: '2-digit',\n  day: '2-digit',\n}).formatToParts(baseDate);\n\n// Extract date parts\nconst day = amsterdamDate.find(p => p.type === 'day').value;\nconst month = amsterdamDate.find(p => p.type === 'month').value;\nconst year = amsterdamDate.find(p => p.type === 'year').value;\n\n// Create a base date in Amsterdam time\nconst baseDateStr = `${year}-${month}-${day}T${String(startHour).padStart(2, '0')}:00:00`;\nconst startTime = new Date(`${baseDateStr}+01:00`); // CET/CEST assumed — adjust if needed\nconst endTime = new Date(startTime);\nendTime.setHours(endHour, 0, 0, 0);\n\nconst totalAvailableMinutes = (endTime - startTime) / 60000;\n\nlet usedMinutes = [];\n\nfunction isValid(minute) {\n  return !usedMinutes.some(m => Math.abs(m - minute) < minGapMinutes);\n}\n\n// Generate valid time slots\nwhile (usedMinutes.length < totalSlots) {\n  const rand = Math.floor(Math.random() * totalAvailableMinutes);\n  if (isValid(rand)) {\n    usedMinutes.push(rand);\n  }\n}\n\nusedMinutes.sort((a, b) => a - b);\n\n// Format time in Amsterdam timezone\nconst formatter = new Intl.DateTimeFormat('en-GB', {\n  timeZone: 'Europe/Amsterdam',\n  hour12: false,\n  year: 'numeric',\n  month: '2-digit',\n  day: '2-digit',\n  hour: '2-digit',\n  minute: '2-digit',\n  second: '2-digit'\n});\n\nconst result = usedMinutes.map(offset => {\n  const slotTime = new Date(startTime.getTime() + offset * 60000);\n  const parts = formatter.formatToParts(slotTime);\n  const dateStr = `${parts.find(p => p.type === 'year').value}-${parts.find(p => p.type === 'month').value}-${parts.find(p => p.type === 'day').value}T${parts.find(p => p.type === 'hour').value}:${parts.find(p => p.type === 'minute').value}:${parts.find(p => p.type === 'second').value}`;\n  return {\n    json: {\n      slot: dateStr // Amsterdam local time\n    }\n  };\n});\n\nreturn result;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4336,
+        2896
+      ],
+      "id": "2a13abce-9b51-44ed-b841-71825130152b",
+      "name": "generate random schedules1"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -5024,
+        2896
+      ],
+      "id": "394de3d9-b282-4f50-897c-53c46a7330d8",
+      "name": "Mo-Fr at 7am"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appdGX58tZCz2Tz6S",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblRbbZWADoguYzni",
+          "mode": "id"
+        },
+        "filterByFormula": "{campaign_status} = 'active'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -4768,
+        2896
+      ],
+      "id": "5ee0ed04-29ab-4daf-a8ca-7077558fad9f",
+      "name": "Search Active Campaigns",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xUnrdaqhZW0pnp9K",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# TODO N8N Email Scheduling Workflow - Tasks\n\n## Task 1: Create Schedule Trigger\nSet up a trigger that runs Monday-Friday at 7 AM\n\n## Task 2: Query Active Campaigns\nSearch Airtable for campaigns where `campaign_status = 'active'`\n\n## Task 3: Loop Through Campaigns\nProcess each campaign one at a time (use Split in Batches)\n\n## Task 4: Find Approved Emails\nFor each campaign, query emails where `approved = TRUE()` AND `scheduled_at = BLANK()`\nLimit results to the campaign's `daily_emails_limit`\n\n## Task 5: Generate Random Time Slots\nWrite JavaScript to create distributed send times:\n- Business hours: 8 AM - 6 PM (Amsterdam timezone)\n- Minimum 5 minutes between slots\n- Generate as many slots as there are emails\n\n## Task 6: Merge Emails with Time Slots\nCombine the approved emails with generated time slots (position by position)\n\n## Task 7: Check if Data is Empty\nAdd a conditional to stop if there are no emails to schedule\n\n## Task 8: Get Email Sending Limits\nQuery the `email_counter_config` Data Table by sender email to get current count and daily limit\n\n## Task 9: Check Rate Limit\nAdd a conditional: if `daily_current >= daily_limit`, skip scheduling\n\n## Task 10: Update Airtable with Scheduled Time\nUpdate the email record with the `scheduled_at` timestamp (match by record ID)\n\n## Task 11: Increment Email Counter\nUpdate the sender's `daily_current` count in the Data Table by +1\n\n## Task 12: Loop Through All Emails\n### Use Split in Batches to process each merged email one at a time",
+        "height": 1232,
+        "width": 752,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -5824,
+        2480
+      ],
+      "id": "b5b5b717-a41e-45bc-a668-d0b9a07e0b02",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appzMySidsphI2uN6",
+          "mode": "list",
+          "cachedResultName": "Client Automation",
+          "cachedResultUrl": "https://airtable.com/appzMySidsphI2uN6"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblRbbZWADoguYzni",
+          "mode": "list",
+          "cachedResultName": "Form Data",
+          "cachedResultUrl": "https://airtable.com/appzMySidsphI2uN6/tblRbbZWADoguYzni"
+        },
+        "filterByFormula": "{campaign_status} = 'active'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        128,
+        2704
+      ],
+      "id": "58cab329-f9aa-4fba-9a38-bd545c03d9e8",
+      "name": "Search Active campaings",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xUnrdaqhZW0pnp9K",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "*/10 8-18 * * 1-5"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -112,
+        2704
+      ],
+      "id": "7c41025b-ff9d-4edb-8d26-a65214695aaf",
+      "name": "Daily Executor Mo-Fr Every 10mins"
+    },
+    {
+      "parameters": {
+        "content": "Watch out for having 2 loop nodes in n8n, the behaviour is weird, you need to add \n{{ $node['Loop over emails'].context['done'] }}\n\nin the reset option in the node"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        192,
+        2944
+      ],
+      "id": "37fc57f0-5543-4dcc-a758-ad244becdbb9",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": "={{ $node['Loop over emails'].context['done'] }}"
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        448,
+        2992
+      ],
+      "id": "47131386-f845-4c79-908f-fe273c52e329",
+      "name": "Loop over emails"
+    },
+    {
+      "parameters": {
+        "content": "## Optional TODO\n# Analytics Table Design for N8N Email Workflow\n\n## Main Analytics Table: \"Email Campaign Analytics\"\n\n### Fields to Track:\n\n1. **campaign_name** (Lookup from Form Data)\n   - Auto-populate from linked campaign\n\n2. **date** (Date)\n   - The specific date of the analytics snapshot\n   - Use this for daily grouping\n\n3. **scheduled_count** (Number)\n   - Total emails scheduled on this date\n   - Updated when Task 10/11 completes in first workflow\n\n4. **sent_count** (Number)\n   - Total emails actually sent on this date\n   - Updated when email_sent_at is marked with a date in second workflow\n\n5. **failed_count** (Number)\n   - Total emails marked as 'failed'\n   - Tracked separately from sent_count",
+        "height": 752,
+        "width": 896
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2304,
+        2288
+      ],
+      "id": "b49c6644-0ddb-4de1-a001-927f607e47c9",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "50895bbd-8e7b-456c-a23c-bf0404de0071",
+              "leftValue": "={{ $json.fields.table_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1376,
+        608
+      ],
+      "id": "0552d30c-5faa-44e5-820d-eda9e1c6e874",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "qoIbeWiE5Kn8lnrY",
+          "mode": "list",
+          "cachedResultName": "Lead Reactivation Table",
+          "cachedResultUrl": "/projects/w3Lu2TV4iFAK2ZBu/datatables/qoIbeWiE5Kn8lnrY"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "sales_person",
+              "keyValue": "={{ $json.fields.User }}"
+            },
+            {
+              "keyName": "amount",
+              "condition": "gte",
+              "keyValue": "={{ $json.fields.minimum_sales }}"
+            },
+            {
+              "keyName": "sold_at",
+              "condition": "gte",
+              "keyValue": "={{ $json.fields.start_date }}"
+            },
+            {
+              "keyName": "sold_at",
+              "condition": "lte",
+              "keyValue": "={{ $json.fields.end_date }}"
+            },
+            {
+              "keyName": "deal_status",
+              "keyValue": "={{ $json.fields.buying_status.toLowerCase() }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        624
+      ],
+      "id": "49311202-c0d6-4407-b60c-a15d400eb01c",
+      "name": "Call CRM to Get Data"
+    }
+  ],
+  "connections": {
+    "Trigger when new campaign starts": {
+      "main": [
+        [
+          {
+            "node": "Get new campaign",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get new campaign": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create new table": {
+      "main": [
+        [
+          {
+            "node": "Add table ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add table ID": {
+      "main": [
+        [
+          {
+            "node": "Call CRM to Get Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mo-Fr at 7am": {
+      "main": [
+        [
+          {
+            "node": "Search Active Campaigns",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daily Executor Mo-Fr Every 10mins": {
+      "main": [
+        [
+          {
+            "node": "Search Active campaings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Create new table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call CRM to Get Data": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "430aafd2-f428-47e9-86c6-bc38065dbc1a",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-28T07:29:00.918Z",
+      "createdAt": "2025-11-28T07:29:00.918Z",
+      "role": "workflow:owner",
+      "workflowId": "PhG8sz6GFz32448Y",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
