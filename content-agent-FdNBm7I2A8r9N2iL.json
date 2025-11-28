@@ -1,0 +1,822 @@
+{
+  "updatedAt": "2025-07-11T14:06:20.000Z",
+  "createdAt": "2025-07-11T13:48:58.229Z",
+  "id": "FdNBm7I2A8r9N2iL",
+  "name": "Content Agent",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sharepoint-webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        200
+      ],
+      "id": "346ec5a3-bb25-46ec-9246-a40807c45db6",
+      "name": "SharePoint Webhook Trigger",
+      "webhookId": "sharepoint-status-change"
+    },
+    {
+      "parameters": {
+        "content": "## 1. Trigger Stage\nMonitors SharePoint list for status change from 'To Do' to 'In Progress'. Configure webhook in SharePoint to point to this n8n webhook URL. The webhook should pass item metadata including title, topic, audience, CTA, and briefing documents.",
+        "height": 260
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        20,
+        -200
+      ],
+      "id": "f6a4e850-11ff-4100-9cb1-da369fa308fc",
+      "name": "Trigger Note"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SHAREPOINT_API_URL }}/sites/{{ $json.siteId }}/drive/root/children",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "microsoftOAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"name\": \"{{ $json.title }}_{{ $now.toISO() }}\",\n  \"folder\": {},\n  \"@microsoft.graph.conflictBehavior\": \"rename\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        200,
+        200
+      ],
+      "id": "31db0da9-34f7-46f0-9822-5d394eb18498",
+      "name": "Create Working Folder"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Research the following topic: {{ $json.topic }}\n\nTarget Audience: {{ $json.audience }}\nContent Type: {{ $json.contentType }}\nKey Messages: {{ $json.keyMessages }}\n\nProvide comprehensive research including:\n1. Industry insights and trends\n2. Relevant statistics and data\n3. Competitor content analysis\n4. Best practices\n5. Potential content angles",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a Research Assistant AI specializing in content strategy and market research. Provide detailed, data-driven insights that will inform content creation. Always cite sources when possible."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        400,
+        200
+      ],
+      "id": "ea034761-b78e-4226-8abe-fa16ce664e64",
+      "name": "Research Assistant Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        260,
+        460
+      ],
+      "id": "aea1197e-b86e-4c14-88ff-44bbcf97aaa4",
+      "name": "Azure OpenAI GPT-4o"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        480
+      ],
+      "id": "1cad66d1-73f0-4b9d-b7dd-a8306f8bda1f",
+      "name": "Research Memory"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"summary\": {\n      \"type\": \"string\",\n      \"description\": \"Executive summary of research findings\"\n    },\n    \"insights\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      },\n      \"description\": \"Key insights discovered\"\n    },\n    \"statistics\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"stat\": {\"type\": \"string\"},\n          \"source\": {\"type\": \"string\"}\n        }\n      }\n    },\n    \"recommendations\": {\n      \"type\": \"array\",\n      \"items\": {\"type\": \"string\"}\n    }\n  },\n  \"required\": [\"summary\", \"insights\", \"statistics\", \"recommendations\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        760,
+        440
+      ],
+      "id": "086bbfac-4ac6-434a-b4e5-dd9524f5358e",
+      "name": "Research Output Parser"
+    },
+    {
+      "parameters": {
+        "content": "## 2. Research Stage\nAI Agent performs comprehensive research using web search. The structured output includes summary, insights, statistics, and recommendations. Configure Azure OpenAI credentials.",
+        "height": 260
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        420,
+        -200
+      ],
+      "id": "1eb8b248-df20-427e-9578-90fdfada8e0e",
+      "name": "Research Note"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.TEAMS_API_URL }}/v1/teams/{{ $env.TEAM_ID }}/channels/{{ $env.CHANNEL_ID }}/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "microsoftOAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"body\": {\n    \"contentType\": \"html\",\n    \"content\": \"<h3>Research Summary Approval Required</h3><p>Topic: {{ $('SharePoint Webhook Trigger').item.json.title }}</p><p>{{ $json.summary }}</p>\"\n  },\n  \"attachments\": [\n    {\n      \"contentType\": \"application/vnd.microsoft.card.adaptive\",\n      \"content\": {\n        \"type\": \"AdaptiveCard\",\n        \"version\": \"1.4\",\n        \"body\": [\n          {\n            \"type\": \"TextBlock\",\n            \"text\": \"Research Summary\",\n            \"weight\": \"bolder\",\n            \"size\": \"large\"\n          },\n          {\n            \"type\": \"TextBlock\",\n            \"text\": \"{{ $json.summary }}\",\n            \"wrap\": true\n          }\n        ],\n        \"actions\": [\n          {\n            \"type\": \"Action.Submit\",\n            \"title\": \"Approve\",\n            \"data\": {\n              \"action\": \"approve\",\n              \"workflowId\": \"{{ $workflow.id }}\"\n            }\n          },\n          {\n            \"type\": \"Action.Submit\",\n            \"title\": \"Reject\",\n            \"data\": {\n              \"action\": \"reject\",\n              \"workflowId\": \"{{ $workflow.id }}\"\n            }\n          }\n        ]\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        200
+      ],
+      "id": "b5e97b68-fef0-4f37-a94d-d5040cd064dd",
+      "name": "Send Research Approval"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Create a comprehensive content brief based on the following research:\n\n{{ $('Research Assistant Agent').item.json }}\n\nOriginal Request:\nTitle: {{ $('SharePoint Webhook Trigger').item.json.title }}\nTopic: {{ $('SharePoint Webhook Trigger').item.json.topic }}\nAudience: {{ $('SharePoint Webhook Trigger').item.json.audience }}\nCTA: {{ $('SharePoint Webhook Trigger').item.json.cta }}\n\nGenerate a detailed brief including:\n1. Content objective\n2. Target audience profile\n3. Key messages (3-5)\n4. Brand tone and voice\n5. Content outline with sections\n6. Type of communication\n7. Call to action details",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a Content Strategy AI specializing in creating comprehensive content briefs. Ensure all briefs align with brand guidelines and are actionable for content writers."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        200
+      ],
+      "id": "bb1cb4a5-603c-417c-a57d-8a6be20626d4",
+      "name": "Briefing AI Agent"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"objective\": {\n      \"type\": \"string\",\n      \"description\": \"Primary content objective\"\n    },\n    \"audienceProfile\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"demographics\": {\"type\": \"string\"},\n        \"painPoints\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}},\n        \"preferences\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}}\n      }\n    },\n    \"keyMessages\": {\n      \"type\": \"array\",\n      \"items\": {\"type\": \"string\"}\n    },\n    \"toneAndVoice\": {\n      \"type\": \"string\"\n    },\n    \"outline\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"section\": {\"type\": \"string\"},\n          \"content\": {\"type\": \"string\"}\n        }\n      }\n    },\n    \"communicationType\": {\"type\": \"string\"},\n    \"callToAction\": {\"type\": \"string\"}\n  },\n  \"required\": [\"objective\", \"audienceProfile\", \"keyMessages\", \"toneAndVoice\", \"outline\", \"communicationType\", \"callToAction\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1160,
+        480
+      ],
+      "id": "217a52b3-cbfb-4b31-891b-4b8f5524eb24",
+      "name": "Brief Output Parser"
+    },
+    {
+      "parameters": {
+        "content": "## 3. Briefing Stage\nGenerates content brief with all required elements. The structured output ensures consistency and completeness. Requires Teams approval before proceeding.",
+        "height": 260
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        -200
+      ],
+      "id": "fab420d5-d35b-4860-967b-117d732d433d",
+      "name": "Briefing Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Write content based on this approved brief:\n\n{{ $('Briefing AI Agent').item.json }}\n\nCreate engaging, SEO-optimized content that:\n1. Follows the outlined structure\n2. Incorporates all key messages\n3. Maintains the specified tone and voice\n4. Includes the call to action naturally\n5. Is optimized for the target audience",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an expert Content Writer AI. Create high-quality, engaging content that meets all brief requirements while maintaining brand consistency and SEO best practices."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1300,
+        200
+      ],
+      "id": "d0cddf81-4263-4898-b33c-105e6d72c833",
+      "name": "Content Writer Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Evaluate the following content against these criteria:\n\nContent:\n{{ $json.content }}\n\nEvaluation Criteria:\n1. Tone and voice alignment with brief\n2. Clarity and readability (target: grade 8-10)\n3. SEO optimization (keywords, headings, meta)\n4. Structure and flow\n5. CTA effectiveness\n\nProvide a score (1-10) for each criterion and specific improvement suggestions.",
+        "options": {
+          "systemMessage": "You are a Content Quality Evaluator AI. Provide objective assessments and actionable feedback to improve content quality."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1340,
+        500
+      ],
+      "id": "913cd9ac-52de-4f92-b437-c422894fb216",
+      "name": "Content Evaluator Agent"
+    },
+    {
+      "parameters": {
+        "content": "## 4. Content Creation Stage\nContent is written, evaluated, and optimized in a loop until quality criteria are met. Configure evaluation thresholds and maximum iterations.",
+        "height": 260
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        -200
+      ],
+      "id": "9126b33d-0a06-47c6-b8ef-4212ac6feb57",
+      "name": "Content Creation Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Create image generation prompts for PixelDojo based on:\n\nContent Title: {{ $('SharePoint Webhook Trigger').item.json.title }}\nTopic: {{ $('SharePoint Webhook Trigger').item.json.topic }}\nAudience: {{ $('SharePoint Webhook Trigger').item.json.audience }}\nBrand Guidelines: {{ $('SharePoint Webhook Trigger').item.json.brandGuidelines }}\n\nGenerate 3 different prompt variations that:\n1. Align with brand visual identity\n2. Support the content message\n3. Appeal to target audience\n4. Include style, composition, and mood descriptors",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an expert Visual Content Strategist AI specializing in creating detailed image generation prompts that align with brand guidelines and content objectives."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1700,
+        200
+      ],
+      "id": "5316e42d-3ce2-4fef-b52a-9722de0a6552",
+      "name": "Image Prompt Creator Agent"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.pixeldojo.com/v1/generate",
+        "authentication": "headerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.PIXELDOJO_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"prompt\": \"{{ $json.prompts[0] }}\",\n  \"model\": \"pixeldojo-xl\",\n  \"width\": 1920,\n  \"height\": 1080,\n  \"quality\": \"high\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1960,
+        420
+      ],
+      "id": "4afdfc81-9cc9-46dd-af58-cd4bc234a666",
+      "name": "Generate Image - PixelDojo"
+    },
+    {
+      "parameters": {
+        "content": "## 5. Image Generation Stage\nCreates prompts and generates images via PixelDojo API. Configure PixelDojo API credentials. Images are stored and sent for approval.",
+        "height": 260
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        -200
+      ],
+      "id": "f7f3bab1-1ff4-4842-b03b-8e573415e4e3",
+      "name": "Image Generation Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Perform compliance check on the following content:\n\n{{ $('Content Writer Agent').item.json.content }}\n\nCheck for:\n1. Legal compliance issues\n2. Brand guideline violations\n3. Regulatory requirements\n4. Copyright/trademark concerns\n5. Accessibility standards\n6. Data privacy compliance\n\nProvide detailed findings and risk assessment.",
+        "options": {
+          "systemMessage": "You are a Compliance and Legal AI specialist. Identify potential compliance issues and provide risk assessments with remediation recommendations."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        2100,
+        200
+      ],
+      "id": "7f27a738-4a83-4e0b-a52e-3176703a39c4",
+      "name": "Compliance Checker Agent"
+    },
+    {
+      "parameters": {
+        "content": "## 6. Compliance Stage\nAI agent reviews content for legal, brand, and regulatory compliance. High-risk issues trigger immediate escalation.",
+        "height": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2100,
+        -200
+      ],
+      "id": "80b6bf65-03a6-4de6-9799-a10034275f8f",
+      "name": "Compliance Note"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.deepl.com/v2/translate",
+        "authentication": "headerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "DeepL-Auth-Key {{ $env.DEEPL_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"text\": [\"{{ $('Content Writer Agent').item.json.content }}\"],\n  \"source_lang\": \"NL\",\n  \"target_lang\": \"FR\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2440,
+        100
+      ],
+      "id": "27e13958-84cc-4863-906d-7fd510279efb",
+      "name": "Translate to French"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.deepl.com/v2/translate",
+        "authentication": "headerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "DeepL-Auth-Key {{ $env.DEEPL_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"text\": [\"{{ $('Content Writer Agent').item.json.content }}\"],\n  \"source_lang\": \"NL\",\n  \"target_lang\": \"EN\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2440,
+        300
+      ],
+      "id": "c8890b0d-9b24-4a94-9f49-9618ab7a6945",
+      "name": "Translate to English"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.deepl.com/v2/translate",
+        "authentication": "headerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "DeepL-Auth-Key {{ $env.DEEPL_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"text\": [\"{{ $('Content Writer Agent').item.json.content }}\"],\n  \"source_lang\": \"NL\",\n  \"target_lang\": \"DE\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2420,
+        460
+      ],
+      "id": "ed64961e-1601-4f9e-b0ab-0fe9e496b767",
+      "name": "Translate to German"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "{{ $env.AEM_API_URL }}/api/assets",
+        "authentication": "headerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.AEM_API_TOKEN }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2660,
+        100
+      ],
+      "id": "d8805b28-b358-44b6-80fb-6b8cda2966f7",
+      "name": "Upload to AEM DAM"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "{{ $env.AEM_API_URL }}/api/pages",
+        "authentication": "headerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.AEM_API_TOKEN }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"title\": \"{{ $('SharePoint Webhook Trigger').item.json.title }}\",\n  \"content\": {\n    \"nl\": \"{{ $('Content Writer Agent').item.json.content }}\",\n    \"fr\": \"{{ $('Translate to French').item.json.translations[0].text }}\",\n    \"en\": \"{{ $('Translate to English').item.json.translations[0].text }}\",\n    \"de\": \"{{ $('Translate to German').item.json.translations[0].text }}\"\n  },\n  \"metadata\": {\n    \"seoTitle\": \"{{ $json.seoTitle }}\",\n    \"metaDescription\": \"{{ $json.metaDescription }}\",\n    \"keywords\": \"{{ $json.keywords }}\"\n  },\n  \"assets\": [\"{{ $('Upload to AEM DAM').item.json.assetId }}\"]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2660,
+        380
+      ],
+      "id": "8339c2f9-29fe-4cf8-ad2e-a2e42ad2dfe6",
+      "name": "Create AEM Page"
+    },
+    {
+      "parameters": {
+        "content": "## 7. Implementation Stage\nTranslates content to multiple languages and publishes to AEM. Configure AEM API credentials and DeepL API key. Includes fallback HTML generation if publishing fails.",
+        "height": 260
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2440,
+        -200
+      ],
+      "id": "53cfab0d-4c31-485b-a10d-1e0da689246c",
+      "name": "Implementation Note"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        2860,
+        200
+      ],
+      "id": "6c4b38bb-9a71-470b-9201-9bd121e243ac",
+      "name": "Daily Analytics Check"
+    },
+    {
+      "parameters": {
+        "url": "{{ $env.ADOBE_ANALYTICS_API_URL }}/reports",
+        "authentication": "oAuth2",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "rsid",
+              "value": "{{ $env.REPORT_SUITE_ID }}"
+            },
+            {
+              "name": "dimension",
+              "value": "variables/page"
+            },
+            {
+              "name": "metric",
+              "value": "metrics/pageviews,metrics/bounces"
+            },
+            {
+              "name": "dateRange",
+              "value": "{{ $now.minus({days: 1}).toISO() }}/{{ $now.toISO() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3100,
+        200
+      ],
+      "id": "8accfc03-d212-4b1d-b35f-d22373258416",
+      "name": "Get Adobe Analytics Data"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Analyze the following performance metrics:\n\n{{ $json }}\n\nProvide insights on:\n1. Traffic patterns and trends\n2. Engagement metrics (bounce rate, time on page)\n3. Conversion performance\n4. Areas of concern\n5. Actionable recommendations\n\nFlag any metrics that are significantly below expectations.",
+        "options": {
+          "systemMessage": "You are an Analytics AI specialist. Interpret web analytics data and provide actionable insights for content optimization."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        3340,
+        200
+      ],
+      "id": "46adab9b-f4e3-4af4-bbb9-92ad9f546532",
+      "name": "Analytics Analyst Agent"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Use this tool to search the internet for current information, statistics, and competitor analysis",
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n    \"api_key\": \"{{ $env.TAVILY_API_KEY }}\",\n    \"query\": \"{searchQuery}\",\n    \"search_depth\": \"advanced\",\n    \"include_answer\": true,\n    \"max_results\": 5\n}",
+        "placeholderDefinitions": {
+          "values": [
+            {
+              "name": "searchQuery",
+              "description": "The search query for finding relevant information",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        540,
+        460
+      ],
+      "id": "afdc1875-cedc-4ba0-880b-38aa60d86d86",
+      "name": "Web Search Tool"
+    }
+  ],
+  "connections": {
+    "Research Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Research Assistant Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Research Assistant Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI GPT-4o": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Research Assistant Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Web Search Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Research Assistant Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Assistant Agent": {
+      "main": [
+        [
+          {
+            "node": "Send Research Approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SharePoint Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Create Working Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Working Folder": {
+      "main": [
+        [
+          {
+            "node": "Research Assistant Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Research Approval": {
+      "main": [
+        [
+          {
+            "node": "Briefing AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brief Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Briefing AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Writer Agent": {
+      "main": [
+        [
+          {
+            "node": "Content Evaluator Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Evaluator Agent": {
+      "main": [
+        [
+          {
+            "node": "Image Prompt Creator Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Prompt Creator Agent": {
+      "main": [
+        [
+          {
+            "node": "Generate Image - PixelDojo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image - PixelDojo": {
+      "main": [
+        [
+          {
+            "node": "Compliance Checker Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compliance Checker Agent": {
+      "main": [
+        [
+          {
+            "node": "Translate to French",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Translate to English",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Translate to German",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Upload to AEM DAM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Adobe Analytics Data": {
+      "main": [
+        [
+          {
+            "node": "Analytics Analyst Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daily Analytics Check": {
+      "main": [
+        [
+          {
+            "node": "Get Adobe Analytics Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "c91d47f6-b225-4377-a9bd-c78860844d1f",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-07-11T13:48:58.235Z",
+      "createdAt": "2025-07-11T13:48:58.235Z",
+      "role": "workflow:owner",
+      "workflowId": "FdNBm7I2A8r9N2iL",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
