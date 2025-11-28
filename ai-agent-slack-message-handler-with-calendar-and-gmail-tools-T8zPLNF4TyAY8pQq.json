@@ -1,0 +1,401 @@
+{
+  "updatedAt": "2025-06-28T14:36:27.813Z",
+  "createdAt": "2025-06-28T14:36:27.813Z",
+  "id": "T8zPLNF4TyAY8pQq",
+  "name": "AI Agent Slack Message Handler with Calendar and Gmail Tools",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "message",
+        "events": [
+          "message"
+        ]
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        220,
+        260
+      ],
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "Slack Trigger",
+      "webhookId": "slack-webhook-123",
+      "credentials": {
+        "slackApi": {
+          "id": "slackCred123",
+          "name": "Slack Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 1. Slack Message Trigger\nThis node listens for incoming Slack messages. You need to:\n- Configure Slack OAuth credentials\n- Set up the webhook URL in your Slack app\n- Choose the channels/conversations to monitor",
+        "height": 140,
+        "width": 250,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        100
+      ],
+      "id": "note1-abcd-ef12-3456-7890abcdef12",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an AI assistant that interprets user messages and decides whether to use the Calendar tool or Gmail tool based on the content.\n\nFor calendar-related requests (scheduling, checking availability, creating events, etc.), use the Calendar tool.\n\nFor email-related requests (sending emails, reading emails, drafting messages, etc.), use the Gmail tool.\n\nAfter using the appropriate tool, provide a structured response with:\n- tool_used: 'calendar' or 'gmail'\n- action_taken: description of what was done\n- result: summary of the outcome\n- response_message: a friendly message to send back to the user"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        520,
+        260
+      ],
+      "id": "agent123-4567-890a-bcde-f1234567890a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "content": "## 2. AI Agent Interpreter\nThis agent analyzes the Slack message and decides which tool to use:\n- Calendar tool for scheduling/events\n- Gmail tool for email operations\n\nThe agent outputs structured data for logging and response",
+        "height": 140,
+        "width": 250,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        520,
+        100
+      ],
+      "id": "note2-bcde-f123-4567-890abcdef123",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "options": {
+          "model": "openai/gpt-4-turbo"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        420,
+        460
+      ],
+      "id": "model123-4567-890a-bcde-f1234567890b",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "openRouterCred123",
+          "name": "OpenRouter API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Use this tool to interact with Google Calendar for scheduling, creating events, checking availability, and managing calendar entries",
+        "resource": "event",
+        "operation": "create",
+        "calendar": {
+          "__rl": true,
+          "value": "primary",
+          "mode": "list"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.1,
+      "position": [
+        540,
+        460
+      ],
+      "id": "calendar123-4567-890a-bcde-f1234567890c",
+      "name": "Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "calendarCred123",
+          "name": "Google Calendar OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        660,
+        460
+      ],
+      "id": "gmail123-4567-890a-bcde-f1234567890d",
+      "name": "Gmail",
+      "webhookId": "gmail-webhook-123",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gmailCred123",
+          "name": "Gmail OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"tool_used\": {\n      \"type\": \"string\",\n      \"description\": \"Which tool was used: 'calendar' or 'gmail'\"\n    },\n    \"action_taken\": {\n      \"type\": \"string\",\n      \"description\": \"Description of the action performed\"\n    },\n    \"result\": {\n      \"type\": \"string\",\n      \"description\": \"Summary of the outcome\"\n    },\n    \"response_message\": {\n      \"type\": \"string\",\n      \"description\": \"Friendly message to send back to the user\"\n    }\n  },\n  \"required\": [\"tool_used\", \"action_taken\", \"result\", \"response_message\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        780,
+        460
+      ],
+      "id": "parser123-4567-890a-bcde-f1234567890e",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "content": "## 3. Tool Configuration\nConfigure credentials for:\n- **Google Calendar**: OAuth2 for calendar access\n- **Gmail**: OAuth2 for email access\n- **OpenRouter**: API key for AI model\n\nThe output parser ensures consistent structured data",
+        "height": 140,
+        "width": 250,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        580,
+        580
+      ],
+      "id": "note3-cdef-1234-5678-90abcdef1234",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "sheet",
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $env.GOOGLE_SHEET_ID }}",
+          "mode": "string"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "AI_Agent_Log",
+          "mode": "string"
+        },
+        "dataMode": "autoMapInputData",
+        "options": {
+          "cellFormat": "USER_ENTERED"
+        },
+        "columnToMatchOn": "timestamp"
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        820,
+        260
+      ],
+      "id": "sheets123-4567-890a-bcde-f1234567890f",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sheetsCred123",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 4. Google Sheets Logging\nLogs all interactions to a spreadsheet:\n- Timestamp\n- User/channel info from Slack\n- Tool used (calendar/gmail)\n- Action taken\n- Result\n\nSet GOOGLE_SHEET_ID in environment variables",
+        "height": 140,
+        "width": 250,
+        "color": 1
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        820,
+        100
+      ],
+      "id": "note4-def1-2345-6789-0abcdef12345",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "channel": "={{ $node[\"Slack Trigger\"].json.channel }}",
+        "messageType": "text",
+        "text": "={{ $json.response_message }}",
+        "options": {
+          "thread_ts": "={{ $node[\"Slack Trigger\"].json.ts }}"
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        260
+      ],
+      "id": "slack123-4567-890a-bcde-f1234567890g",
+      "name": "Slack",
+      "credentials": {
+        "slackApi": {
+          "id": "slackCred123",
+          "name": "Slack Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 5. Slack Response\nSends the AI's response back to Slack:\n- Uses the same channel as the trigger\n- Threads the response to the original message\n- Confirms the action taken\n\nUses the same Slack credentials as the trigger",
+        "height": 140,
+        "width": 250,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        100
+      ],
+      "id": "note5-ef12-3456-7890-abcdef123456",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare data for Google Sheets logging\nconst slackData = $node[\"Slack Trigger\"].json;\nconst agentOutput = $input.first().json;\n\nreturn {\n  timestamp: new Date().toISOString(),\n  user: slackData.user || slackData.user_name || 'unknown',\n  channel: slackData.channel || slackData.channel_name || 'unknown',\n  original_message: slackData.text || '',\n  tool_used: agentOutput.tool_used || 'none',\n  action_taken: agentOutput.action_taken || 'none',\n  result: agentOutput.result || 'none',\n  response_message: agentOutput.response_message || 'Error processing request'\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        670,
+        260
+      ],
+      "id": "code123-4567-890a-bcde-f1234567890h",
+      "name": "Prepare Log Data"
+    }
+  ],
+  "connections": {
+    "Slack Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Prepare Log Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Log Data": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "errorWorkflow": "",
+    "timezone": "America/New_York"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": null,
+  "versionId": "de631443-6c3f-4fdd-bdb0-b975cfa1bbcb",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-06-28T14:36:27.820Z",
+      "createdAt": "2025-06-28T14:36:27.820Z",
+      "role": "workflow:owner",
+      "workflowId": "T8zPLNF4TyAY8pQq",
+      "projectId": "sOkLWMWXpC3Wjh6d"
+    }
+  ],
+  "tags": []
+}
