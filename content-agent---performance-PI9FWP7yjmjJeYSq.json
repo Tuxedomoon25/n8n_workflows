@@ -1,0 +1,239 @@
+{
+  "updatedAt": "2025-09-24T10:24:14.000Z",
+  "createdAt": "2025-09-10T10:41:52.283Z",
+  "id": "PI9FWP7yjmjJeYSq",
+  "name": "Content Agent - Performance",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "b7db187e-b81e-4109-8af8-af4ffc5686c5",
+      "name": "When executed by another node",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1920,
+        -208
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "2adaf354-aeaa-4fe5-af69-ba092f9d22c0",
+      "name": "Build Tracking Payloads",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -1600,
+        -208
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "abc333eb-2768-4c1e-a3bb-a8f2954b565f",
+      "name": "SharePoint — Save tracking.json",
+      "type": "n8n-nodes-base.microsoftSharepoint",
+      "typeVersion": 1,
+      "position": [
+        -1328,
+        -208
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "03502657-0d52-43ef-852e-713a4a539b26",
+      "name": "Expose Approve/Reject URLs",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -1088,
+        -272
+      ]
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "options": {}
+      },
+      "id": "1652f4fd-ae2f-41d0-92b3-90a7f5184adf",
+      "name": "WAIT for approval",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        -272
+      ],
+      "webhookId": "de0382c0-1900-4e84-bfb8-a8e3be6d5489"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.query.action}}",
+              "operation": "equal",
+              "value2": "approve"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d3076a0e-f774-4e00-b39b-6f83e27e8137",
+      "name": "Approved?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -688,
+        -272
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "81e9772d-607c-462b-a031-f546750a7579",
+      "name": "Return Approved",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -464,
+        -352
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "e5745fa6-c7b9-4645-bfbf-fd09feb0f7e2",
+      "name": "Return Rejected",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -464,
+        -176
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "passThrough",
+        "options": {}
+      },
+      "id": "b49cf140-7007-44a5-b600-4e399b633ebd",
+      "name": "Return to parent",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        -256
+      ]
+    }
+  ],
+  "connections": {
+    "When executed by another node": {
+      "main": [
+        [
+          {
+            "node": "Build Tracking Payloads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Tracking Payloads": {
+      "main": [
+        [
+          {
+            "node": "Expose Approve/Reject URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Expose Approve/Reject URLs": {
+      "main": [
+        [
+          {
+            "node": "WAIT for approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WAIT for approval": {
+      "main": [
+        [
+          {
+            "node": "Approved?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approved?": {
+      "main": [
+        [
+          {
+            "node": "Return Approved",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return Rejected",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Approved": {
+      "main": [
+        [
+          {
+            "node": "Return to parent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Rejected": {
+      "main": [
+        [
+          {
+            "node": "Return to parent",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "df79858b-19d5-425a-8293-6e749e3025af",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-09-10T10:41:52.285Z",
+      "createdAt": "2025-09-10T10:41:52.285Z",
+      "role": "workflow:owner",
+      "workflowId": "PI9FWP7yjmjJeYSq",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
