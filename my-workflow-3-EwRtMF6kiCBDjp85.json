@@ -1,0 +1,57 @@
+{
+  "updatedAt": "2025-07-17T14:33:20.572Z",
+  "createdAt": "2025-07-17T14:33:20.572Z",
+  "id": "EwRtMF6kiCBDjp85",
+  "name": "My workflow 3",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "dad8fb60-96ea-41ec-9452-c19f2af96bc1",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "7c3d874b-e0c8-4800-bd3a-9dfac8d8bb6a",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-07-17T14:33:20.576Z",
+      "createdAt": "2025-07-17T14:33:20.576Z",
+      "role": "workflow:owner",
+      "workflowId": "EwRtMF6kiCBDjp85",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
