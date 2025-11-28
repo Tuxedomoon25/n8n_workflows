@@ -1,0 +1,28 @@
+{
+  "updatedAt": "2025-11-12T08:33:20.000Z",
+  "createdAt": "2025-11-11T13:54:42.521Z",
+  "id": "Tz1AQgBv2yVKoJpX",
+  "name": "Proposal Generator",
+  "active": false,
+  "isArchived": true,
+  "nodes": [],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "fed6d5d6-4f2c-4575-92c1-ff5a5c47b42e",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-11T13:54:42.525Z",
+      "createdAt": "2025-11-11T13:54:42.525Z",
+      "role": "workflow:owner",
+      "workflowId": "Tz1AQgBv2yVKoJpX",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
