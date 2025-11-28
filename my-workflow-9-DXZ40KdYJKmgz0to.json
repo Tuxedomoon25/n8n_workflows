@@ -1,0 +1,224 @@
+{
+  "updatedAt": "2025-07-30T09:37:17.784Z",
+  "createdAt": "2025-07-30T09:37:17.784Z",
+  "id": "DXZ40KdYJKmgz0to",
+  "name": "My workflow 9",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## 🤖 Puzzle Challenge: Extract Structured Data Using AI\nYou received a chunk of messy, unstructured text from a customer support ticket.  \nYour goal is to use an **AI node** (such as the Information Extractor or OpenAI) to convert this into a clean, structured format.\n\n\n## 🟨 Input Text\nTicket : \"Hi my name is Jason Park. I run a digital marketing agency called Brightside Ads and we're looking for help with AI automation to improve lead qualification. You can reach me at jason@brightside.com. Thanks!\"\n\n\n## 🎯 Your Goal\nUse an **AI node** to extract and return structured data with these fields:\n- `name`\n- `company`\n- `email`\n- `request`\n\n\n### ✅ Expected Output\n  \"name\": \"Jason Park\",\n  \"company\": \"Brightside Ads\",\n  \"email\": \"jason@brightside.com\",\n  \"request\": \"help with AI automation to improve lead qualification\"\n\nGood luck!\n\nSOLUTION is below. Don't spoil it!\n\n\n",
+        "height": 640,
+        "width": 800
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9beeee76-8826-4129-bffb-5bb79a5d4ef9",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        912,
+        240
+      ],
+      "id": "db75a027-d46c-44bc-b2c5-65e381cae189",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.Ticket }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "name",
+              "description": "the full name of the person contacting us",
+              "required": true
+            },
+            {
+              "name": "company",
+              "description": "the name of the company they represent (if mentioned)"
+            },
+            {
+              "name": "email",
+              "description": "the person's email address"
+            },
+            {
+              "name": "request",
+              "description": "a concise summary of what they are asking for or need help with",
+              "required": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1,
+      "position": [
+        512,
+        1600
+      ],
+      "id": "883badb7-d2a0-4719-8d94-3e952c961e36",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        448,
+        1808
+      ],
+      "id": "8161c256-56e8-4131-aba0-22a69d1f6cde",
+      "name": "OpenRouter Chat Model"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "702f61e2-3d24-4e5e-81ff-c139ae4f3a1c",
+              "name": "Ticket",
+              "value": "Hi my name is Jason Park. I run a digital marketing agency called Brightside Ads and we're looking for help with AI automation to improve lead qualification. You can reach me at jason@brightside.com. Thanks!",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        240
+      ],
+      "id": "6336c83b-fa72-46d5-ae9d-1b76dea10676",
+      "name": "Ticket1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "702f61e2-3d24-4e5e-81ff-c139ae4f3a1c",
+              "name": "Ticket",
+              "value": "Hi my name is Jason Park. I run a digital marketing agency called Brightside Ads and we're looking for help with AI automation to improve lead qualification. You can reach me at jason@brightside.com. Thanks!",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        288,
+        1600
+      ],
+      "id": "c6ffa843-6eea-4b6e-9265-5e636d0ff7ac",
+      "name": "Ticket_"
+    },
+    {
+      "parameters": {
+        "content": "# Solution",
+        "height": 520,
+        "width": 1020,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        32,
+        1440
+      ],
+      "id": "56304e9f-4f4c-4a78-bbef-3bc3c20d3a8e",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        1328,
+        240
+      ],
+      "id": "545befe4-ca95-4b7b-b260-8ea90c9a2727",
+      "name": "Information Extractor1"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Ticket1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ticket_": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ticket1": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "0a2209f8-f0eb-487e-b4a6-867a1ee2bf38",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-07-30T09:37:17.786Z",
+      "createdAt": "2025-07-30T09:37:17.786Z",
+      "role": "workflow:owner",
+      "workflowId": "DXZ40KdYJKmgz0to",
+      "projectId": "sOkLWMWXpC3Wjh6d"
+    }
+  ],
+  "tags": []
+}
