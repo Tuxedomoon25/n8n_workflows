@@ -1,0 +1,846 @@
+{
+  "updatedAt": "2025-11-05T10:24:00.000Z",
+  "createdAt": "2025-11-05T08:49:46.574Z",
+  "id": "UPvIDwNxI5sEdWYI",
+  "name": "Email Auto-Responder",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {
+          "sender": ""
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e90fd1a5-d86a-4499-9ed2-8a3852eb5042",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Gmail Trigger').item.json.Subject }}",
+                    "rightValue": "LaunchPort Contact Form",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f95158e9-dd37-4eda-87d7-f2b8edea0321"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "WebsiteForm"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "60a7cf52-185d-475d-b7cb-e4142b6096ee",
+                    "leftValue": "={{ $('Edit Fields').item.json['Customer Email'] }}",
+                    "rightValue": "={{ $json['Customer Email'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ExistingCustomer"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2124a511-cf87-459d-96e1-bc2408b8e7e8",
+                    "leftValue": "={{ $('Gmail Trigger').item.json.Subject !== 'LaunchPort Contact Form' \n   && $('Edit Fields').item.json['Customer Email'] !== $json['Customer Email'] }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "DirectInquiry"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0aafa81e-7325-40c1-a8df-605d0d5429fb",
+                    "leftValue": "={{ $('Gmail Trigger').item.json.labels }}",
+                    "rightValue": "SPAM",
+                    "operator": {
+                      "type": "array",
+                      "operation": "contains",
+                      "rightType": "any"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "SPAM"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        848,
+        -32
+      ],
+      "id": "cd1947c9-6c41-4e40-971c-b83e111ea659",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1QfsX_bkJZ8a0gVNae0jBdk7R3mIafE-reVTa4ciMgu0",
+          "mode": "list",
+          "cachedResultName": "CRM-lookup",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QfsX_bkJZ8a0gVNae0jBdk7R3mIafE-reVTa4ciMgu0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 589239719,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QfsX_bkJZ8a0gVNae0jBdk7R3mIafE-reVTa4ciMgu0/edit#gid=589239719"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Customer Email",
+              "lookupValue": "={{ $json['Customer Email'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        0
+      ],
+      "id": "f4574d5b-94cb-447f-ad55-2304172abe21",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "64eYDvHyltWtHJ8q",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b87d10bb-45a2-4a5e-a2a5-0687313d27fe",
+              "name": "Customer Email",
+              "value": "={{ (String($json.From || '')\n    .match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}/i)?.[0] || '')\n   .trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "8c640ef5-4d06-4e73-b2c0-80a65498b646",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1648,
+        -224
+      ],
+      "id": "61234907-932d-435b-b78d-1bb66a55272d",
+      "name": "Create a draft",
+      "webhookId": "d6fdd96e-0082-4bb1-8460-214b08ce2d54",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1648,
+        16
+      ],
+      "id": "729f88bf-7bb1-4a7e-b79b-fcd7ec69fe15",
+      "name": "Create a draft1",
+      "webhookId": "63207c1b-729b-4380-89fe-401c6e162221",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1856,
+        -224
+      ],
+      "id": "ca483003-8abf-40e0-ae90-dbb35847f09c",
+      "name": "Send a message",
+      "webhookId": "d822e76a-c491-47f8-aeb9-b122db54e514",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2272,
+        -224
+      ],
+      "id": "50a32c4b-815e-479f-8f98-421916297542",
+      "name": "Send a message1",
+      "webhookId": "efd3263b-78f8-464f-87ba-7abb0081c458",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1856,
+        16
+      ],
+      "id": "0bba4ec2-cb49-4782-985d-e90f1faf455b",
+      "name": "Send message and wait for response",
+      "webhookId": "edf1582d-2faa-4554-8a23-013185e725d7",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2304,
+        16
+      ],
+      "id": "924031de-c883-418b-8fd3-a71996aa593e",
+      "name": "Send a message2",
+      "webhookId": "9edd712f-ca18-45db-a8c7-193c05aa04f5",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1328,
+        624
+      ],
+      "id": "e7838619-ee56-4e81-adc8-bb326c7f9e21",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1648,
+        272
+      ],
+      "id": "ed11b82f-4fa2-4342-a387-65ce02350cd2",
+      "name": "Create a draft2",
+      "webhookId": "4c15285e-0e95-4422-9a24-a345062a1381",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1856,
+        272
+      ],
+      "id": "aae927f6-4147-45fe-b497-8cfe48871cce",
+      "name": "Send message and wait for response1",
+      "webhookId": "42eda1dd-f6c8-4669-b4ad-b66d67f3d75a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "operation": "get",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2080,
+        -224
+      ],
+      "id": "91719234-2e40-457f-9cb0-fd43785d3c7d",
+      "name": "Get a draft",
+      "webhookId": "47d7f800-a39d-4fbf-8936-c35f7eb8c09b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "operation": "get",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2112,
+        16
+      ],
+      "id": "ef6f99ce-27c6-4f10-95f7-ca5643e1c3d6",
+      "name": "Get a draft1",
+      "webhookId": "c69c11df-9a7c-4de0-b5b0-b6f4eb194eb7",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "operation": "get",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2112,
+        272
+      ],
+      "id": "8df83f4f-4ee7-491f-b259-894151e43cee",
+      "name": "Get a draft2",
+      "webhookId": "70943bbe-ae77-4dd2-921c-f974c40296fa",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2320,
+        272
+      ],
+      "id": "69eaddeb-0283-4e79-b4dc-9254690f9502",
+      "name": "Send a message3",
+      "webhookId": "cc97f19b-276f-4add-ab4b-d0e5c9b55f3a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SHjh451w2eMnUKQr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1296,
+        -224
+      ],
+      "id": "b1d0260c-f1e1-44ed-94b9-b544d008267a",
+      "name": "Draft from template"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1280,
+        32
+      ],
+      "id": "de5b7b0c-1c9b-4dc4-aa18-993099b57e1f",
+      "name": "Draft detailed reply"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1296,
+        304
+      ],
+      "id": "b52187d2-8a66-472a-9358-bc4bf0088f30",
+      "name": "Draft from template or open question"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        -96
+      ],
+      "id": "cd668be7-b812-4c32-90d4-f40b84199ed2",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "TqCIN0wwnjZeEbNJ",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        592,
+        0
+      ],
+      "id": "ce5880fb-ee0a-44af-8846-d8691854e634",
+      "name": "Pre-processing Layer"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        544,
+        224
+      ],
+      "id": "3eb67d31-77eb-4a67-9cdc-b34c213f0a2e",
+      "name": "Ollama Chat Model"
+    }
+  ],
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Pre-processing Layer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Draft from template",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Draft detailed reply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Draft from template or open question",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a draft": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Get a draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a draft1": {
+      "main": [
+        [
+          {
+            "node": "Send message and wait for response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message and wait for response": {
+      "main": [
+        [
+          {
+            "node": "Get a draft1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a draft2": {
+      "main": [
+        [
+          {
+            "node": "Send message and wait for response1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a draft": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a draft1": {
+      "main": [
+        [
+          {
+            "node": "Send a message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message and wait for response1": {
+      "main": [
+        [
+          {
+            "node": "Get a draft2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a draft2": {
+      "main": [
+        [
+          {
+            "node": "Send a message3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft from template": {
+      "main": [
+        [
+          {
+            "node": "Create a draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft detailed reply": {
+      "main": [
+        [
+          {
+            "node": "Create a draft1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft from template or open question": {
+      "main": [
+        [
+          {
+            "node": "Create a draft2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Draft from template",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pre-processing Layer": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Pre-processing Layer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Gmail Trigger": [
+      {
+        "json": {
+          "id": "19a52c09655e71ea",
+          "threadId": "19a52c09655e71ea",
+          "snippet": "Google Workspace Payment received Your payment was applied to Google Workspace on 4 Nov 2025. Help Centre Help Centre Contact us Contact us Payments profile ID: 2377-1074-4309 Google LLC 1600",
+          "payload": {
+            "mimeType": "multipart/alternative"
+          },
+          "sizeEstimate": 35540,
+          "historyId": "14335484",
+          "internalDate": "1762324944000",
+          "labels": [
+            {
+              "id": "IMPORTANT",
+              "name": "IMPORTANT"
+            },
+            {
+              "id": "CATEGORY_UPDATES",
+              "name": "CATEGORY_UPDATES"
+            }
+          ],
+          "Subject": "Google Workspace: We've received your payment",
+          "From": "Google Payments <payments-noreply@google.com>",
+          "To": "tdgcontent@gmail.com"
+        }
+      }
+    ]
+  },
+  "versionId": "d7a7b3a8-611e-4e86-8aee-9c19491c0171",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-05T08:49:46.588Z",
+      "createdAt": "2025-11-05T08:49:46.588Z",
+      "role": "workflow:owner",
+      "workflowId": "UPvIDwNxI5sEdWYI",
+      "projectId": "w3Lu2TV4iFAK2ZBu"
+    }
+  ],
+  "tags": []
+}
