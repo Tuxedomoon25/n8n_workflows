@@ -1,0 +1,200 @@
+{
+  "updatedAt": "2025-07-13T10:33:34.000Z",
+  "createdAt": "2025-07-13T09:46:56.023Z",
+  "id": "MYBOF0Jo6gzBoV5R",
+  "name": "Get Documents into Vector Store",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "5ae5ceb7-4469-4262-b42a-d0c8467dc524",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1P43bngH4FBvqd6hMd7DQ4-3voGA5nfJe",
+          "mode": "list",
+          "cachedResultName": "The Art of Designing Behaviour - Astrid Groenewegen.pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/1P43bngH4FBvqd6hMd7DQ4-3voGA5nfJe/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        220,
+        0
+      ],
+      "id": "b5bd52d3-0f96-4a82-a373-51576a08e02a",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "aePP8ZO1KTPBYzTQ",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "testrag1536",
+          "mode": "list",
+          "cachedResultName": "testrag1536"
+        },
+        "options": {
+          "pineconeNamespace": "Test"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        440,
+        0
+      ],
+      "id": "703b88a3-c8ec-4138-87e7-eefbef758005",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "pqfi8XI6ouLWAyHs",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        220
+      ],
+      "id": "7fb77fe4-d379-48c8-93f0-0488b3924adf",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "BXQ4vUjtWypRq3eL",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "textSplittingMode": "custom",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        640,
+        220
+      ],
+      "id": "56bd2b34-000e-46db-9e65-ceb00d6c2763",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        720,
+        440
+      ],
+      "id": "926a194e-40ec-4a26-ae9a-6d423a60db0a",
+      "name": "Recursive Character Text Splitter"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "ab8ce6a5-1050-42c1-ab85-a1e8fae59fd0",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-07-13T09:46:56.025Z",
+      "createdAt": "2025-07-13T09:46:56.025Z",
+      "role": "workflow:owner",
+      "workflowId": "MYBOF0Jo6gzBoV5R",
+      "projectId": "sOkLWMWXpC3Wjh6d"
+    }
+  ],
+  "tags": []
+}
